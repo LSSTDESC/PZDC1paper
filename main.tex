@@ -1,10 +1,11 @@
-\documentclass[a4paper]{article}
-
+%\documentclass[a4paper]{article}
+\documentclass[usenatbib]{mn2e}
 %% Language and font encodings
 \usepackage[english]{babel}
 \usepackage[utf8x]{inputenc}
 \usepackage[T1]{fontenc}
 
+\usepackage{natbib}
 %% Sets page size and margins
 \usepackage[a4paper,top=3cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 
@@ -14,89 +15,199 @@
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 
-\title{Your Paper}
-\author{You}
+\newcommand       \apj  {ApJ}
+\newcommand       \apjl  {ApJL}
+\newcommand       \apjs  {ApJS}
+\newcommand       \aj  {AJ}
+\newcommand       \aap {A \& Ap.}
+\newcommand       \mnras {MNRAS}
+\newcommand       \nat {Nature}
+\newcommand       \araa {ARA\&A}
+\newcommand       \physrep {Phys.~Reports}
+\newcommand       \prd {PhysRevD}
+
+\title{Photo-z for LSST: comparison of PDFs}
+\author{LSST PZ WG}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Your abstract.
+The rationale: - to test different PZ codes on DC1 simulations 
+
+- to focus on the pdf p(z) and to compare results via various metrics
+
+- This is a good way to compare quantitatively results by various groups, and also to credit collaborators, 
+
+The timeline for the paper:
+
+Which Journal? AJ, ApJ, MNRAS? (leaning toward MNRAS, no page charge…) 
+
 \end{abstract}
 
 \section{Introduction}
 
-Your introduction goes here! Some examples of commonly used commands and features are listed below, to help you get started. If you have a question, please use the help menu (``?'') on the top bar to search for help or ask us a question. 
+(Sam Schmidt, Ofer Lahav, Jeff Newman, Alex Malz)
 
-\section{Some examples to get started}
+%* The challenges of PZ in LSST 
+%* Many papers compared point estimates; here we focus on the pdf $p(z)$
+We are entering a new regime with Stage III and Stage IV dark energy experiments[add text about DES, LSST, WFIRST, Euclid, along with references].  The move to imaging based surveys, rather than spectroscopic based, for cosmological measurements makes proper understanding of photometric redshifts ("photo-z's") of paramount importance, as all cosmological distance measures for statistical samples will be dependent on photo-z measurements.  As we push to fainter magnitudes and deeper imaging, we expand our samples to include lower luminosity and higher redshift galaxies.  These populations introduce major degeneracies, for example the Lyman break/Balmer break degeneracy, that were not present in previous large area surveys (SDSS, 2MASS, etc...[spell out and put references]).  The increased sample size that comes with the added depth means that stringent constraints on photo-z accuracy are necessary if systematic errors are not to dominate the statistical errors.  The LSST Science Requirements Document (SRD)\footnote{available at:https://docushare.lsstcorp.org/docushare/dsweb/Get/LPM-17} lists the photometric redshift goals for a magnitude limited sample with $i<25$ as: root mean square error of $\sigma<0.02(1+z)$; $3\sigma$ "catastrophic outlier'' rate below 10\%; bias below 0.003.  Note that at the time the SRD was written, these goals were stated in terms of one signle number estimate of photometric redshift for each galaxy.  Many of the previous studies of photo-z performance focused on single point estimates of the redshift.  Such a simple redshift measure fails to capture the full information in the presence redshift degeneracies, where multiple redshift solutions have considerable likelihood.  In this paper we focus on the full probability density function (PDF), or p(z) for each galaxy.  [What else to say about p(z)?]
 
-\subsection{How to add Comments}
+In order to meet these ambitious goals for photo-z accuracy, every aspect of photo-z estimation will have to be optimized: the algorithms employed, both template and machine-learning based (both in design and implementation),  the spectroscopic data used as a training set for machine learning algorithms or to estimate template sets and train Bayesian priors in template based methods
+storage formats for p(z) that are accurate enough for all science cases while simultaneously compact enough to fit in a reasonably spec'd database.
+In this paper, we focus on current generation photo-z algorithms, comparing the performance of several of the most widely employed codes.  This is similar in spirit to the PHoto-z Accuracy And Testing \citep[PHAT;][]{Hildebrandt:10} effort, though that comparison used many more photometric bands, and compared only point-estimates.  The Dark Energy Survey (DES, REFERENCE!) compared several codes, both for point estimates \citep[]{Sanchez:14}, and using sum of p(z) for collections of galaxies in tomographic bins \citep[]{Bonnett:16}. (mention that this is not the correct way to combine and cite Malz in prep).  
 
-Comments can be added to your project by clicking on the comment icon in the toolbar above. % * <john.hammersley@gmail.com> 2014-09-03T09:54:16.211Z:
-%
-% Here's an example comment!
-%
-To reply to a comment, simply click the reply button in the lower right corner of the comment, and you can close them when you're done.
+In order to isolate the effects of the codes from issues with the training set and template library, we will use two sets of simulated galaxies and construct a training sample that is {\it representative and spanning}.  We will address the very important issue of incomplete spectroscopic coverage in a future paper.
 
-\subsection{How to include Figures}
+The outline of the paper is as follows: in \S\,\ref{pzcodes} we describe the current generation codes employed in the paper; in \S\,\ref{sims} we present the two simulated data sets; in \S\,\ref{metrics} we discuss the "meaning'' of redshift PDFs, and lay out the metrics that we use to evaluate them; in \S\,\ref{results} we show our results and compare the performance of the codes; in \S\,\ref{discussion} we offer our conclusions and discuss future extensions of this work.
 
-First you have to upload the image file from your computer using the upload link the project menu. Then use the includegraphics command to include it in your document. Use the figure environment and the caption command to add a number and a caption to your figure. See the code for Figure \ref{fig:frog} in this section for an example.
+\section{PZ Codes}\label{pzcodes}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.3\textwidth]{frog.jpg}
-\caption{\label{fig:frog}This frog was uploaded via the project menu.}
-\end{figure}
+(Sam Schmidt, Rongpu Zhou, Ibrahim Almosallam, Eric Nuss, Johann Cohen Tanugi, John Soo, Alex Malz)
 
-\subsection{How to add Tables}
+* Existing training and testing codes (briefly, possibly a Table)
 
-Use the table and tabular commands for basic tables --- see Table~\ref{tab:widgets}, for example. 
+* What is the meaning of $p(z)$ in different codes? (Ofer) 
 
-\begin{table}
-\centering
-\begin{tabular}{l|r}
-Item & Quantity \\\hline
-Widgets & 42 \\
-Gadgets & 13
-\end{tabular}
-\caption{\label{tab:widgets}An example table.}
-\end{table}
+* ACTION ITEM: who has what code in place? Are any important codes missing?
 
-\subsection{How to write Mathematics}
+* Action item: make a table of codes (Sam)
 
-\LaTeX{} is great at typesetting mathematics. Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
-\[S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
-      = \frac{1}{n}\sum_{i}^{n} X_i\]
-denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
+\section{The DC1 simulations}\label{sims}
+
+(Sam Schmidt)
+
+* Describe the simulations (Sam, Eve, etc…)
+
+* Describe the template sets (Sam)
+
+* Discuss limitations wrt to the galaxies in nature (Eve, Tina Peters)
+
+In order to test the current generation codes, we created two simulated datasets.  The simulations are completely catalog-based, with no image construction or mock measurements made [phrase this better].  We describe these in detail below.  
+
+\subsection{Buzzard}\label{buzzard}
+
+   The Buzzard-highres-v1.0 catalog construction began with an dark matter only simulation.  This N-body simulation contained 2048$^3$ particles in a 400 Mpc/h box.  [HOW MANY SNAPSHOTS?] time snapshots were saved in order to construct a lightcone [Any smoothing/interpolation done between snapshots?].  Dark matter halos were identified using the {\it Rockstar} software package \citep[]{Behroozi:13}.  These dark matter halos were populated with galaxies with a stellar mass and  absolute r-band magnitude (in the [SDSS or DES?] system) determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep[]{Reddick:13}. 
+
+To assign an spectral energy distribution (SED) to each galaxy, the Adding Density Dependent Spectral Energy Distributions (ADDSEDS) [Is there a reference paper for ADDSEDS?] procedure was used.  This consisted of training an empirical relation between absolute r-band magnitude, local galaxy density, and SED using a sample of $\sim 5e^{5}$ galaxies from the Sloan Digital Sky Survey [PUT PROPER REF FOR specz sample]. [should we mention that we actually only have 5 NNMF components? and they are same as k-correct?].  The distance to the projected fifth-nearest neighbor was used as a proxy for local density in the SDSS training sample.  For each simulated galaxy, a ``random'' [How exactly is this done? random in a certain volume of parameter space, maybe?] galaxy with ``similar'' [again, this needs detail] absolute r-band magnitude and local galaxy density was chosen from the training set, and that training galaxy's SED was assigned to the simulated galaxy.  Given the SED, absolute r-band magnitude, and redshift, we computed apparent magnitudes in the six LSST filter passbands, $ugrizy$.  We assigned magnitude errors in the six bands using the simple model described in Section 3.2 of \citet[]{Ivezic:08}, assuming full 10-year depth observations had been completed [should we list the number of visits and such?].
 
 
-\subsection{How to create Sections and Subsections}
+The total catalog covered 400 square degrees and contained 238 million galaxies to an apparent magnitude limit of $r\!=\!29$ and spanning the redshift range $0\!<\!z\!\leq\!8.7$.  This catalog contained two orders of magnitude more galaxies than were needed for this study, so only $\sim\!8$ square degrees were used.  Systematic problems with galaxy colours above $z\!>\!2$ were observed, so the catalog was trimmed to include only galaxies in the redshift range$0\!<\!z\!\leq\!2.0$.  
 
-Use section and subsections to organize your document. Simply use the section and subsection buttons in the toolbar to create them, and we'll handle all the formatting and numbering automatically.
+break up into test/train, list numbers in each
 
-\subsection{How to add Lists}
 
-You can make lists with automatic numbering \dots
 
-\begin{enumerate}
-\item Like this,
-\item and like this.
-\end{enumerate}
-\dots or bullet points \dots
-\begin{itemize}
-\item Like this,
-\item and like this.
-\end{itemize}
+\section{Metrics for quantifying pdf comparisons}\label{metrics}
 
-\subsection{How to add Citations and a References List}
+(Alex Malz)
 
-You can upload a \verb|.bib| file containing your BibTeX entries, created with JabRef; or import your \href{https://www.overleaf.com/blog/184}{Mendeley}, CiteULike or Zotero library as a \verb|.bib| file. You can then cite entries from it, like this: \cite{greenwade93}. Just remember to specify a bibliography style, as well as the filename of the \verb|.bib|.
+What is the meaning of “pdf”? 
 
-You can find a \href{https://www.overleaf.com/help/97-how-to-include-a-bibliography-using-bibtex}{video tutorial here} to learn more about BibTeX.
+- QQ (Rongpu, Jeff)
 
-We hope you find Overleaf useful, and please let us know if you have any feedback using the help menu above --- or use the contact form at \url{https://www.overleaf.com/contact}!
+- KS (Ofer)
 
-\bibliographystyle{alpha}
-\bibliography{sample}
+- $D_{KL}$ (Alex)
+
+- etc
+
+(JAN: note the distinction between these: the QQ test allows us to test the accuracy of individual  photo-z PDFs taken one at a time, KS and $D_{KL}$ do not.  I'd also suggest expanding our view from KS to include Cramer-von Mises (which is more sensitive to errors on the tails, which matter a lot for cosmology) and Anderson-Darling (which is more sensitive to the tails still).
+
+\section{Results}\label{results}
+
+(Sam Schmidt, Johann Cohen Tanugi, Rongpu Zhou)
+
+- plots
+
+- comparison tables per metric
+
+\section{Summary and Discussion}\label{discussion}
+
+
+(Sam Schmidt, Ofer Lahav, Jeff Newman, Alex Malz, Eve Kovacs, Tony Tyson)
+
+- challenges
+
+Why some codes work better?
+
+(possibly outside scope after this point?)
+Combination of codes? 
+
+-  Future inclusion of AGN effects (Tina Peters)
+
+- future work: from $p(z)$ to $N(z)$; end-to-end analysis towards cosmological parameter, DC2
+
+- future work: $p(z,\alpha)$
+% \section{Some examples to get started}
+
+% \subsection{How to add Comments}
+
+% Comments can be added to your project by clicking on the comment icon in the toolbar above. % * <john.hammersley@gmail.com> 2014-09-03T09:54:16.211Z:
+% %
+% % Here's an example comment!
+% %
+% To reply to a comment, simply click the reply button in the lower right corner of the comment, and you can close them when you're done.
+
+% \subsection{How to include Figures}
+
+% First you have to upload the image file from your computer using the upload link the project menu. Then use the includegraphics command to include it in your document. Use the figure environment and the caption command to add a number and a caption to your figure. See the code for Figure \ref{fig:frog} in this section for an example.
+
+% \begin{figure}
+% \centering
+% \includegraphics[width=0.3\textwidth]{frog.jpg}
+% \caption{\label{fig:frog}This frog was uploaded via the project menu.}
+% \end{figure}
+
+% \subsection{How to add Tables}
+
+% Use the table and tabular commands for basic tables --- see Table~\ref{tab:widgets}, for example. 
+
+% \begin{table}
+% \centering
+% \begin{tabular}{l|r}
+% Item & Quantity \\\hline
+% Widgets & 42 \\
+% Gadgets & 13
+% \end{tabular}
+% \caption{\label{tab:widgets}An example table.}
+% \end{table}
+
+% \subsection{How to write Mathematics}
+
+% \LaTeX{} is great at typesetting mathematics. Let $X_1, X_2, \ldots, X_n$ be a sequence of independent and identically distributed random variables with $\text{E}[X_i] = \mu$ and $\text{Var}[X_i] = \sigma^2 < \infty$, and let
+% \[S_n = \frac{X_1 + X_2 + \cdots + X_n}{n}
+%       = \frac{1}{n}\sum_{i}^{n} X_i\]
+% denote their mean. Then as $n$ approaches infinity, the random variables $\sqrt{n}(S_n - \mu)$ converge in distribution to a normal $\mathcal{N}(0, \sigma^2)$.
+
+
+% \subsection{How to create Sections and Subsections}
+
+% Use section and subsections to organize your document. Simply use the section and subsection buttons in the toolbar to create them, and we'll handle all the formatting and numbering automatically.
+
+% \subsection{How to add Lists}
+
+% You can make lists with automatic numbering \dots
+
+% \begin{enumerate}
+% \item Like this,
+% \item and like this.
+% \end{enumerate}
+% \dots or bullet points \dots
+% \begin{itemize}
+% \item Like this,
+% \item and like this.
+% \end{itemize}
+
+% \subsection{How to add Citations and a References List}
+
+% You can upload a \verb|.bib| file containing your BibTeX entries, created with JabRef; or import your \href{https://www.overleaf.com/blog/184}{Mendeley}, CiteULike or Zotero library as a \verb|.bib| file. You can then cite entries from it, like this: \cite{greenwade93}. Just remember to specify a bibliography style, as well as the filename of the \verb|.bib|.
+
+% You can find a \href{https://www.overleaf.com/help/97-how-to-include-a-bibliography-using-bibtex}{video tutorial here} to learn more about BibTeX.
+
+% We hope you find Overleaf useful, and please let us know if you have any feedback using the help menu above --- or use the contact form at \url{https://www.overleaf.com/contact}!
+
+\bibliographystyle{mn2e}
+\bibliography{references}
 
 \end{document}
