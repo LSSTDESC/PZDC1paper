@@ -38,12 +38,11 @@ The rationale: - to test different PZ codes on DC1 simulations
 - to focus on the pdf p(z) and to compare results via various metrics
 
 - This is a good way to compare quantitatively results by various groups, and also to credit collaborators, 
+\end{abstract}
 
 The timeline for the paper:
 
 Which Journal? AJ, ApJ, MNRAS? (leaning toward MNRAS, no page charge…) 
-
-\end{abstract}
 
 \section{Introduction}
 
@@ -55,7 +54,10 @@ We are entering a new regime with Stage III and Stage IV dark energy experiments
 
 In order to meet these ambitious goals for photo-z accuracy, every aspect of photo-z estimation will have to be optimized: the algorithms employed, both template and machine-learning based (both in design and implementation),  the spectroscopic data used as a training set for machine learning algorithms or to estimate template sets and train Bayesian priors in template based methods
 storage formats for p(z) that are accurate enough for all science cases while simultaneously compact enough to fit in a reasonably spec'd database.
-In this paper, we focus on current generation photo-z algorithms, comparing the performance of several of the most widely employed codes.  This is similar in spirit to the PHoto-z Accuracy And Testing \citep[PHAT;][]{Hildebrandt:10} effort, though that comparison used many more photometric bands, and compared only point-estimates.  The Dark Energy Survey (DES, REFERENCE!) compared several codes, both for point estimates \citep[]{Sanchez:14}, and using sum of p(z) for collections of galaxies in tomographic bins \citep[]{Bonnett:16}. (mention that this is not the correct way to combine and cite Malz in prep).  
+In this paper, we focus on current generation photo-z algorithms, comparing the performance of several of the most widely employed codes.  This is similar in spirit to the PHoto-z Accuracy And Testing \citep[PHAT,][]{Hildebrandt:10} effort, though that comparison used many more photometric bands, and compared only point-estimates.  The Dark Energy Survey (DES, REFERENCE!) compared several codes, both for point estimates \citep[]{Sanchez:14}, and using sum of p(z) for collections of galaxies in tomographic bins \citep[]{Bonnett:16}.
+(mention that this is not the correct way to combine and cite Malz in prep).  
+
+ToDo: Mention SRM, multiple data challenges (DCs), and that this is the first of multiple papers, which will grow in sophistication.
 
 In order to isolate the effects of the codes from issues with the training set and template library, we will use two sets of simulated galaxies and construct a training sample that is {\it representative and spanning}.  We will address the very important issue of incomplete spectroscopic coverage in a future paper.
 
@@ -73,9 +75,16 @@ The outline of the paper is as follows: in \S\,\ref{pzcodes} we describe the cur
 
 * Action item: make a table of codes (Sam)
 
+\subsection{ANNz2}\label{sec:annz2}
+ANNz2\footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{sadeh_annz2:_2016} is a machine learning photo-z estimation method which uses the Toolkit for Multivariate Data Analysis (TMVA) with ROOT\footnote{\url{http://tmva.sourceforge.net/}}. It is a powerful package that incorporates several machine learning algorithms including ANN, boosted decision tree (BDT) and k-nearest neighbour (KNN). ANNz2 can run multiple machine learning algorithms for a single training and outputs photo-z's based on a weighted average of their performances.
+
+Other than the usual regression method to obtain point estimates for photo-z's, ANNz2 is also able to produce redshift posterior probability distributions $P(z)$, conduct classification and support reweighting between samples. The pdfs are produced by propagating the intrinsic uncertainty on the input parameters and the uncertainty in the machine learning method to the expected photo-z solution. ANNz2 also differs from many other codes by its presentation of photo-z uncertainty, it derives uncertainties using the KNN method: first it estimates the photo-z bias between each object and a fixed number of nearest neighbours in parameter space, it then takes the 68th percentile width of the distribution of the bias. This asserts that objects with similar photometric properties should have similar uncertainties, and this error presentation has been shown to perform better than the former \citep{sadeh_annz2:_2016}.
+
+ANNz2 produces four point estimates for each run, but in this study we use the pdf average photo-z, which is the mean photo-z calculated over the pdf. The pdf average photo-z will act as the best point estimate photo-z output for ANNz2. In this study, a set of 5 ANNs with different random seeds are used during each training. 
+
 \section{The DC1 simulations}\label{sims}
 
-(Sam Schmidt)
+(Sam Schmidt, Eve Kovacs, Tina Peters)
 
 * Describe the simulations (Sam, Eve, etc…)
 
@@ -85,24 +94,27 @@ The outline of the paper is as follows: in \S\,\ref{pzcodes} we describe the cur
 
 In order to test the current generation codes, we created two simulated datasets.  The simulations are completely catalog-based, with no image construction or mock measurements made [phrase this better].  We describe these in detail below.  
 
-\subsection{Buzzard}\label{buzzard}
+\subsection{Buzzard (what should we call this officially?)}\label{buzzard}
 
    The Buzzard-highres-v1.0 catalog construction began with an dark matter only simulation.  This N-body simulation contained 2048$^3$ particles in a 400 Mpc/h box.  [HOW MANY SNAPSHOTS?] time snapshots were saved in order to construct a lightcone [Any smoothing/interpolation done between snapshots?].  Dark matter halos were identified using the {\it Rockstar} software package \citep[]{Behroozi:13}.  These dark matter halos were populated with galaxies with a stellar mass and  absolute r-band magnitude (in the [SDSS or DES?] system) determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep[]{Reddick:13}. 
 
 To assign an spectral energy distribution (SED) to each galaxy, the Adding Density Dependent Spectral Energy Distributions (ADDSEDS) [Is there a reference paper for ADDSEDS?] procedure was used.  This consisted of training an empirical relation between absolute r-band magnitude, local galaxy density, and SED using a sample of $\sim 5e^{5}$ galaxies from the Sloan Digital Sky Survey [PUT PROPER REF FOR specz sample]. [should we mention that we actually only have 5 NNMF components? and they are same as k-correct?].  The distance to the projected fifth-nearest neighbor was used as a proxy for local density in the SDSS training sample.  For each simulated galaxy, a ``random'' [How exactly is this done? random in a certain volume of parameter space, maybe?] galaxy with ``similar'' [again, this needs detail] absolute r-band magnitude and local galaxy density was chosen from the training set, and that training galaxy's SED was assigned to the simulated galaxy.  Given the SED, absolute r-band magnitude, and redshift, we computed apparent magnitudes in the six LSST filter passbands, $ugrizy$.  We assigned magnitude errors in the six bands using the simple model described in Section 3.2 of \citet[]{Ivezic:08}, assuming full 10-year depth observations had been completed [should we list the number of visits and such?].
 
-
-The total catalog covered 400 square degrees and contained 238 million galaxies to an apparent magnitude limit of $r\!=\!29$ and spanning the redshift range $0\!<\!z\!\leq\!8.7$.  This catalog contained two orders of magnitude more galaxies than were needed for this study, so only $\sim\!8$ square degrees were used.  Systematic problems with galaxy colours above $z\!>\!2$ were observed, so the catalog was trimmed to include only galaxies in the redshift range$0\!<\!z\!\leq\!2.0$.  
-
-break up into test/train, list numbers in each
+The total catalog covered 400 square degrees and contained 238 million galaxies to an apparent magnitude limit of $r\!=\!29$ and spanning the redshift range $0\!<\!z\!\leq\!8.7$.  This catalog contained two orders of magnitude more galaxies than were needed for this study, so only $\sim\!8$ square degrees were used.  Systematic problems with galaxy colours above $z\!>\!2$ were observed, so the catalog was trimmed to include only galaxies in the redshift range$0\!<\!z\!\leq\!2.0$.  A random subset of the the remaining galaxies was chose, and placed, again at random, into either a "training'' set (10\% of the sample), for which the galaxies true redshifts will be supplied, or a "test'' set (the remaining 90\% of the sample), for which each code will need to predict a redshift PDF for each galaxy. The resulting catalogues contain 111,171 training galaxies and 1,000,883 test galaxies.
 
 
 
 \section{Metrics for quantifying pdf comparisons}\label{metrics}
 
-(Alex Malz)
+(Alex Malz, Rongpu Zhou, Jeff Newman, Ofer Lahav)
 
 What is the meaning of “pdf”? 
+
+The overloaded "$p(z)$" is a widespread abuse of notation; we would like the outputs of our codes to be interpretable as probabilities.  Each PDF is a posterior probability distribution conditioned on a number of things that will differ depending on the method used to derive it; these things will certainly include the photometry associated with the galaxy in question but also the assumptions necessary for the method to be valid and any inputs it takes, such as a template library or training set.  Furthermore, each PDF must not take negative values and must integrate to unity over the range of possible redshifts.
+
+There are a number of metrics that can be used to test the accuracy of an estimate of a probability distribution if the true probability distribution is known.  Even for simulated data, the true photo-$z$ PDF is in general not accessible, and because the PDFs produced by each method are conditioned on different information, it is unclear what would be gleaned from direct comparisons between individual PDFs.  However, we do know the overall redshift distribution $n(z)$ for the \texttt{Buzzard} simulation, which, notably, is itself a probability distribution over redshift and so can be used as the basis for a metric of the photo-$z$ PDFs used to calculate it.  
+
+Though alternatives exist (Malz, et al., in prep), stacking is the most widely accepted method for estimating $n(z)$ from photo-$z$ PDFs.  The exact implementation of the stacked estimator $\hat{n}(z)$ will depend on the parametrization of the photo-$z$ PDFs, which may differ for different codes.  Once an estimator is derived, it may be compared to the true redshift distribution using a number of metrics, described below.
 
 - QQ (Rongpu, Jeff)
 
@@ -113,6 +125,25 @@ What is the meaning of “pdf”?
 - etc
 
 (JAN: note the distinction between these: the QQ test allows us to test the accuracy of individual  photo-z PDFs taken one at a time, KS and $D_{KL}$ do not.  I'd also suggest expanding our view from KS to include Cramer-von Mises (which is more sensitive to errors on the tails, which matter a lot for cosmology) and Anderson-Darling (which is more sensitive to the tails still).
+(AIM: I'm not sure I agree with that statement.  In what way can any of them not be used for individual photo-z PDFs?  I think the bigger issue is that we  can't test accuracy of any of the PDFs because we don't have a concept of a "true" photo-z PDF for each galaxy.)
+
+\subsection{Qualitative Metrics}
+\label{sec:qualmet}
+
+\subsubsection{Q-Q Plot}
+
+\subsubsection{Moments}
+
+\subsection{Quantitative Metrics}
+\label{sec:quantmet}
+
+\subsubsection{RMSE}
+
+\subsubsection{Kolmogorov-Smirnov}
+
+\subsubsection{Anderson-Darling}
+
+\subsubsection{Kullback-Leibler}
 
 \section{Results}\label{results}
 
@@ -124,8 +155,7 @@ What is the meaning of “pdf”?
 
 \section{Summary and Discussion}\label{discussion}
 
-
-(Sam Schmidt, Ofer Lahav, Jeff Newman, Alex Malz, Eve Kovacs, Tony Tyson)
+(Sam Schmidt, Ofer Lahav, Jeff Newman, Alex Malz, Eve Kovacs, Tony Tyson, Tina Peters)
 
 - challenges
 
