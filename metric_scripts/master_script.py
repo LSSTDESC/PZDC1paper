@@ -35,8 +35,49 @@ Kullback-Leibler - Full sample PDF compared to true N(z) distribution.
 """
 
 
-def get_config(input_config):
-    pass
+def load_gridded(catalog_file_name, pz_file_name, z_spec_col,
+                 z_min, z_max, z_step):
+    """ Load a files that are sampled on a reqular grid.
+
+    Load data files that come from codes such as LePHARE and BPZ which
+    sample their PDFs at regular grid points.
+
+    Parameters
+    ----------
+    catalog_file_name : str
+        Name of the catalog file to load containing z_estimated and z_spec
+    pz_file_name : str
+        Name of file containing gridded PDF information
+    z_min : float
+        Minimum redshift of PDFs
+    z_max : float
+        Maximum redshift of PDFs. z_max is defined as inclusive in this calse
+    z_step : float
+        Step size in redshift for PDFs
+    z_spec_col : int
+       Column number of spectroscopic redshift.
+
+    Returns
+    -------
+    A tubple gontaining a list of qp.PDF objects for each estimated pdf
+    in the file and a qp.PDF of the true N(z) created from samples of the
+    distribution.
+    """
+
+    # Load our data and create a the array of redshifts used in the grid.
+    z_array = np.arange(z_min, z_max + z_step / 2., z_step)
+    z_trues = np.loadtxt(catalog_file_name, usecols=z_spec_col)
+    gridded_pdfs = np.loadtxt(pz_file_name)
+
+    # Create our "true" PDF using the samples from the inputed data file.
+    true_pdf = qp.PDF(samples=z_trues)
+
+    # Create a qp.Ensamble objecct for each of the estimated pdfs.
+    estimated_pdfs = qp.Ensemble(gridded_pdfs.shape[0],
+                                 gridded=(z_array, gridded_pdfs))
+
+    return (estimated_pdfs, true_pdf)
+
 
 if __name__ == "__main__":
     pass
