@@ -45,6 +45,28 @@ class EvaluateMetric(object):
         pitlimits[:,1] = self.truths
         return self.ensemble_obj.integrate(limits=pitlimits,using=using,dx=dx)
 
+    def QQvectors(self,using,dx=0.0001,Nquants=101):
+        """Returns quantile quantile vectors for the ensemble using the PIT values,
+        without actually plotting them.  Will be useful in making multi-panel plots 
+        simply take the percentiles of the values in order to get the Qdata
+        quantiles
+        Parameters:
+        using: string
+            which parameterization to evaluate
+        dx: float
+            step size for integral
+        Nquants: int
+            the number of quantile bins to compute, default 100
+        Returns
+        -------
+        numpy arrays for Qtheory and Qdata
+        """
+        pits = self.PIT(using=using,dx=dx)
+        quants = np.linspace(0.,100.,Nquants)
+        Qtheory = quants/100.
+        Qdata = np.percentile(pits,quants)
+        return Qtheory, Qdata
+
     def QQplot(self,using,dx=0.0001,Nquants=101):
         """Quantile quantile plot for the ensemble using the PIT values, 
         simply take the percentiles of the values in order to get the Qdata
@@ -72,6 +94,7 @@ class EvaluateMetric(object):
         plt.legend()
         plt.savefig("QQplot.jpg")
         return
+
 
     def KS(self, using, dx=0.0001):
         """
