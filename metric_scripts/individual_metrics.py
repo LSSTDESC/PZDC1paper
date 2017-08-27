@@ -15,12 +15,15 @@ class EvaluateMetric(object):
             a qp ensemble object containing the N PDFs
         truths: numpy array 
             1D numpy array with the N spec-z values
+        self.pitarray stores the PIT values once they are computed, as they are 
+            used by multiple metrics, so there's no need to compute them twice
         """
 
 #        if ensemble_obj==None or truths==None:
 #            print 'Warning: inputs not complete'
         self.ensemble_obj = ensemble_obj
         self.truths = truths
+        self.pitarray = None #will store once computed as used often
         
 
     def PIT(self,using='gridded',dx=0.0001):
@@ -36,6 +39,7 @@ class EvaluateMetric(object):
         -------
         ndarray
              The values of the PIT for each ensemble object
+             Also stores PIT array in self.pitarray
         """
         if len(self.truths) != self.ensemble_obj.n_pdfs:
             print 'Warning: number of zref values not equal to number of ensemble objects'
@@ -43,7 +47,9 @@ class EvaluateMetric(object):
         n = self.ensemble_obj.n_pdfs
         pitlimits = np.zeros([n,2])
         pitlimits[:,1] = self.truths
-        return self.ensemble_obj.integrate(limits=pitlimits,using=using,dx=dx)
+        tmppit = self.ensemble_obj.integrate(limits=pitlimits,using=using,dx=dx)
+        self.pitarray = np.array(tmppit)
+        return tmppit
 
     def QQvectors(self,using,dx=0.0001,Nquants=101):
         """Returns quantile quantile vectors for the ensemble using the PIT values,
@@ -61,7 +67,11 @@ class EvaluateMetric(object):
         -------
         numpy arrays for Qtheory and Qdata
         """
-        pits = self.PIT(using=using,dx=dx)
+        if self.pitarray is not None:
+            pits = np.array(self.pitarray)
+        else:
+            pits = self.PIT(using=using,dx=dx)
+            self.pitarray = pits
         quants = np.linspace(0.,100.,Nquants)
         Qtheory = quants/100.
         Qdata = np.percentile(pits,quants)
@@ -82,7 +92,11 @@ class EvaluateMetric(object):
         -------
         matplotlib plot of the quantiles
         """
-        pits = self.PIT(using=using,dx=dx)
+        if self.pitarray is not None:
+            pits = np.array(self.pitarray)
+        else:
+            pits = self.PIT(using=using,dx=dx)
+            self.pitarray = pits
         quants = np.linspace(0.,100.,Nquants)
         QTheory = quants/100.
         Qdata = np.percentile(pits,quants)
@@ -111,7 +125,11 @@ class EvaluateMetric(object):
         KS statistic and pvalue
 
         """
-        pits = np.array(self.PIT(using=using,dx=dx))
+        if self.pitarray is not None:
+            pits = np.array(self.pitarray)
+        else:
+            pits = np.array(self.PIT(using=using,dx=dx))
+            self.pitarray = pits
         ks_result = skgof.ks_test(pits, stats.uniform())
         return ks_result.statistic, ks_result.pvalue
 
@@ -130,7 +148,11 @@ class EvaluateMetric(object):
         CvM statistic and pvalue
 
         """
-        pits = np.array(self.PIT(using=using,dx=dx))
+        if self.pitarray is not None:
+            pits = np.array(self.pitarray)
+        else:
+            pits = np.array(self.PIT(using=using,dx=dx))
+            self.pitarray = pits
         cvm_result = skgof.cvm_test(pits, stats.uniform())
         return cvm_result.statistic, cvm_result.pvalue
 
@@ -155,7 +177,11 @@ class EvaluateMetric(object):
         AD statistic and pvalue
 
         """
-        pits = np.array(self.PIT(using=using,dx=dx))
+        if self.pitarray is not None:
+            pits = np.array(self.pitarray)
+        else:
+            pits = np.array(self.PIT(using=using,dx=dx))
+            self.pitarray = pits
         mask = (pits>vmin) & (pits<vmax)
         ad_result = skgof.ad_test(pits[mask], stats.uniform())
         return ad_result.statistic, ad_result.pvalue
