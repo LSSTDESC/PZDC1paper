@@ -185,3 +185,150 @@ class EvaluateMetric(object):
         mask = (pits>vmin) & (pits<vmax)
         ad_result = skgof.ad_test(pits[mask], stats.uniform())
         return ad_result.statistic, ad_result.pvalue
+
+class NzSumEvaluateMetric(object):
+    def __init__(self,ensemble_obj,truth_vals,eval_grid=None,using='gridded',dx=0.001):
+        """an object that takes a qp Ensemble of N PDF objects and an array of
+        N "truth" specz's, will be used to calculate PIT and QQ, plus more stuff
+        later
+        Parameters:
+        ensemble_obj: qp ensemble object 
+            a qp ensemble object of N PDFs that will be stacked
+        truths: numpy array of N true spec-z values
+            1D numpy array with the N spec-z values
+        eval_grid: the numpy array to evaluate the metrics on.  If fed "None"
+            will default to np.arange(0.005,2.12,0.01), i.e. the grid for BPZ
+        """
+
+#        if stackpz_obj==None or truth_vals==None:
+#            print 'Warning: inputs not complete'
+        self.ensemble_obj = ensemble_obj
+        self.truth = truth_vals
+        if eval_grid is None:
+            self.eval_grid = np.arange(0.005,2.12,0.01)
+            print "using default evaluation grid of numpy.arange(0.005,2.12,0.01)\n"
+        else: 
+            self.eval_grid = eval_grid
+        self.using=using
+        self.dx = dx
+        
+        #make a stack of the ensemble object evaluated at the eval_grid points
+        stacked = self.ensemble_obj.stack(loc=self.eval_grid,using='gridded')
+        self.stackpz = qp.PDF(gridded=(stacked['gridded'][0],stacked['gridded'][1]))
+        return
+       
+
+    def NZKS(self):
+        """
+        Compute the Kolmogorov-Smirnov statistic and p-value for the 
+        two distributions of sumpz and true_z
+        Parameters:
+        -----------
+        using: string
+            which parameterization to evaluate
+        dx: float
+            step size for integral
+        Returns:
+        --------
+        KS statistic and pvalue
+
+        """
+        #copy the form of Rongpu's use of skgof functions
+        #will have to use QPPDFCDF class, as those expect objects
+        #that have a .cdf method for a vector of values
+        tmpnzfunc = QPPDFCDF(self.stackpz)
+        nzks = skgof.ks_test(self.truth,tmpnzfunc)
+        return nzks.statistic, nzks.pvalue
+        
+
+#        #copy Kartheik's metric qp.PDF.evaluate returns the array points as
+#        #[0] and the values as [1], so pull out just the values
+#        p1obs = self.stackpz.evaluate(self.eval_grid,using=using, vb=False)[1]
+#        p2truth = self.truth.evaluate(self.eval_grid,using=using, vb=False)[1]
+#       
+#        ks_stat, ks_pval = stats.ks_2samp(p1obs,p2truth)
+#
+#        return ks_stat, ks_pval
+
+    def NZCVM(self):
+      """                                                                              
+      Compute the CramervonMises statistic and p-value for the
+      two distributions of sumpz and true_z vector of spec-z's
+      Parameters:                                                                      
+      -----------
+      using: string
+      which parameterization to evaluate
+      Returns:
+      --------
+      CvM statistic and pvalue
+      """
+      #copy the form of Rongpu's use of skgof functions
+      #will have to use QPPDFCDF class, as those expect objects
+      #that have a .cdf method for a vector of values
+      tmpnzfunc = QPPDFCDF(self.stackpz)
+      nzCvM = skgof.cvm_test(self.truth,tmpnzfunc)
+      return nzCvM.statistic, nzCvM.pvalue
+
+    def NZAD(self):
+      """                                                                              
+      Compute the Anderson Darling statistic and p-value for the
+      two distributions of sumpz and true_z vector of spec-z's
+      Parameters:                                                                      
+      -----------
+      using: string
+      which parameterization to evaluate
+      Returns:
+      --------
+      Anderson-Darling statistic and pvalue
+      """
+      #copy the form of Rongpu's use of skgof functions
+      #will have to use QPPDFCDF class, as those expect objects
+      #that have a .cdf method for a vector of values
+      tmpnzfunc = QPPDFCDF(self.stackpz)
+      nzAD = skgof.ad_test(self.truth,tmpnzfunc)
+      return nzAD.statistic, nzAD.pvalue
+
+
+
+
+class QPPDFCDF(object):
+    def __init__(self,pdf_obj):
+        """an quick wrapper for a qp.PDF object that has .pdf and .cdf 
+        functions for use with skgof functions
+        pdf_obj: qp pdf object with using='gridded' parameterization
+        """
+
+        self.pdf_obj = pdf_obj
+        return
+
+    def pdf(self,grid):
+        """
+        returns pdf of qp.PDF object by calling qp.PDF.evaluate
+        inputs:
+            grid:: float or np ndarray of values to evaluate the pdf at
+        returns:
+            pdf of object evaluated at points in grid
+        """
+        return self.pdf_obj.evaluate(grid,'gridded',False,False)[1]
+
+    def cdf(self,xvals):
+        """
+        returns CDF of qp.PDF object by calling qp.PDF.integrate
+        with limits between 0.0 and loc
+        inputs: 
+            vals: float or np ndarray of values to evaluate the pdf at
+        Returns:
+            the array of cdf values evaluated at vals
+        """
+        vals = np.array(xvals)
+        if vals.size ==1:
+            lims = (0.0,xvals)
+            cdfs = self.pdf_obj.integrate(lims,0.0001,'gridded',False)
+        else:
+            nval = len(vals)
+            cdfs = np.zeros(nval)
+            for i in range(nval):
+                lims = (0.0,vals[i])
+                cdfs[i] = self.pdf_obj.integrate(lims,0.0001,'gridded',False)
+        return cdfs
+    
