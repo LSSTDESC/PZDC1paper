@@ -183,7 +183,9 @@ class EvaluateMetric(object):
             pits = np.array(self.PIT(using=using,dx=dx))
             self.pitarray = pits
         mask = (pits>vmin) & (pits<vmax)
-        ad_result = skgof.ad_test(pits[mask], stats.uniform())
+        print "now with proper uniform range"
+        delv = vmax-vmin
+        ad_result = skgof.ad_test(pits[mask], stats.uniform(loc=vmin,scale=delv))
         return ad_result.statistic, ad_result.pvalue
 
 class NzSumEvaluateMetric(object):
