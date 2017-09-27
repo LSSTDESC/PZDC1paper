@@ -196,8 +196,7 @@ class NzSumEvaluateMetric(object):
             a qp ensemble object of N PDFs that will be stacked
         truths: numpy array of N true spec-z values
             1D numpy array with the N spec-z values
-        eval_grid: the numpy array to evaluate the stacked N(z) on (which will be 
-        fed into a new qp.PDF object).  If fed "None"
+        eval_grid: the numpy array to evaluate the metrics on.  If fed "None"
             will default to np.arange(0.005,2.12,0.01), i.e. the grid for BPZ
         """
 
