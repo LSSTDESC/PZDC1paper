@@ -1,2 +1,2 @@
 # PZDC1paper
-DC1 paper describing PDF results from multiple codes
+metric_tests branch will be for pull requests testing the various metric scripts
