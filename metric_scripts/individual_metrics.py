@@ -188,6 +188,29 @@ class EvaluateMetric(object):
         ad_result = skgof.ad_test(pits[mask], stats.uniform(loc=vmin,scale=delv))
         return ad_result.statistic, ad_result.pvalue
 
+    def cde_loss(self, grid):
+        """Computes the estimated conditional density loss described in
+        Izbicki & Lee 2017 (arXiv:1704.08095).
+
+        Parameters:
+        grid: np array of values at which to evaluate the pdf.
+        Returns:
+        an estimate of the cde loss.
+        """
+        grid, pdfs = self.ensemble_obj.evaluate(grid, norm=True)
+
+        n_obs, n_grid = pdfs.shape
+
+        # Calculate first term E[\int f*(z | X)^2 dz]
+        term1 = np.mean(np.trapz(pdfs ** 2, grid))
+
+        # Calculate second term E[f*(Z | X)]
+        nns = [np.argmin(np.abs(grid - true_z)) for true_z in self.truths]
+        term2 = np.mean(pdfs[range(n_obs), nns])
+
+        return term1 - 2 * term2
+
+
 class NzSumEvaluateMetric(object):
     def __init__(self,ensemble_obj,truth_vals,eval_grid=None,using='gridded',dx=0.001):
         """an object that takes a qp Ensemble of N PDF objects and an array of
@@ -339,4 +362,3 @@ class QPPDFCDF(object):
                 lims = (0.0,vals[i])
                 cdfs[i] = self.pdf_obj.integrate(lims,self.dx,'gridded',False)
         return cdfs
-    
