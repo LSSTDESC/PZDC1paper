@@ -242,22 +242,6 @@ class NzSumEvaluateMetric(object):
         self.stackpz = qp.PDF(gridded=(stacked['gridded'][0],stacked['gridded'][1]))
         return
        
-    def WriteNzSumVec(self, newgrid,outfile="default_Nzoutput.dat"):
-        """
-        write the N(z) vector stored in self.stackpz, evaluated on the array
-        newgrid to output file outfile
-        Also saves the vectors in self.pzsumvec
-        Parameters:
-        -----------
-        newgrid: numpy array of values at which to evaluate stackpz
-        outfile: string, name of outpute to write data to
-        """
-        pzsumvec = self.stackpz.evaluate(newgrid,'gridded',False,False)
-        self.pzsumvec=pzsumvec
-        np.savetxt(outfile,zip(pzsumvec[0],pzsumvec[1]),fmt="%.5g %.5g")
-        return
-
-
 
     def NZKS(self):
         """
@@ -310,16 +294,12 @@ class NzSumEvaluateMetric(object):
       nzCvM = skgof.cvm_test(self.truth,tmpnzfunc)
       return nzCvM.statistic, nzCvM.pvalue
 
-    def NZAD(self, vmin = 0.005, vmax = 1.995, delv = 0.05):
+    def NZAD(self, vmin = 0.005, vmax = 1.995):
       """                                                                              
       Compute the Anderson Darling statistic and p-value for the
       two distributions of sumpz and true_z vector of spec-z's
-      Since the Anderson Darling test requires a properly normalized
-      distribution over the [vmin,vmax] range, will need to create
-      a new qp object defined on the range np.arange(vmin,vmax+delv,delv)
       Parameters:                                      
       vmin, vmax: specz values outside of these values are discarded
-      delv: grid spacing for [vmin,vmax] interval to create new qp
       -----------
       using: string
       which parameterization to evaluate
@@ -333,10 +313,8 @@ class NzSumEvaluateMetric(object):
       print "using %f and %f for vmin and vmax\n"%(vmin,vmax)
       szs = self.truth
       mask = (szs > vmin) & (szs < vmax)
-      vgrid = np.arange(vmin,vmax+delv,delv)
-      veval = self.stackpz.evaluate(vgrid,'gridded',True,False)
-      vobj = qp.PDF(gridded = (veval[0],veval[1]))
-      tmpnzfunc = QPPDFCDF(vobj,self.dx)
+
+      tmpnzfunc = QPPDFCDF(self.stackpz,self.dx)
       nzAD = skgof.ad_test(szs[mask],tmpnzfunc)
       return nzAD.statistic, nzAD.pvalue
 
@@ -362,7 +340,7 @@ class QPPDFCDF(object):
         returns:
             pdf of object evaluated at points in grid
         """
-        return self.pdf_obj.evaluate(grid,'gridded',True,False)[1]
+        return self.pdf_obj.evaluate(grid,'gridded',False,False)[1]
 
     def cdf(self,xvals):
         """
@@ -384,4 +362,3 @@ class QPPDFCDF(object):
                 lims = (0.0,vals[i])
                 cdfs[i] = self.pdf_obj.integrate(lims,self.dx,'gridded',False)
         return cdfs
-    
