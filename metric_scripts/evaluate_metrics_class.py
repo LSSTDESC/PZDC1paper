@@ -13,28 +13,28 @@ class EvaluateMetric(object):
     def __init__(self, pdf_obs = None, pdf_truth = None):
 
         """
-        An object to take in photo-z PDFs from various methods 
+        An object to take in photo-z PDFs from various methods
         and evaluate various metrics of performance.
 
         Parameters
         ----------
-        pdf_obs: a qp object containing a stacked PDF of 
+        pdf_obs: a qp object containing a stacked PDF of
             outputs from the photo-z code in consideration
         pdf_truth: a qp object containing truths /spec-z to
             evaluate the metric against. All the parameters of
             the underlying qp object should still work.
 
-        
-	
+
+
         """
 
-        # check if the two objects are proper qp PDF objects. 
+        # check if the two objects are proper qp PDF objects.
         # return exception if not
 
         if pdf_obs == None or pdf_truth == None:
              print 'Warning: initializing with insufficient data'
 
-        if self.pdf_obs is not None: 
+        if self.pdf_obs is not None:
              self.pdf_obs = pdf_obs
         if self.pdf_truth is not None:
              self.pdf_truth = pdf_truth
@@ -45,7 +45,7 @@ class EvaluateMetric(object):
     def get_KL_divergence(self,limits=(-10.0,10.0), dx=0.01, vb=True):
 
         """
-        Compute the Kullback-Leibler Divergence from 
+        Compute the Kullback-Leibler Divergence from
         the spectroscopic N(z) PDF (truth) to the photo-z PDF estimate
 
         Parameters
@@ -71,7 +71,7 @@ class EvaluateMetric(object):
     def get_QQ_plot(self,quants=None, percent=10., infty=100., vb=True,num_quantiles = 10,plotflag = True):
 
         """
-        Measure quantiles for the two PDFs and produce a QQ plot, to 
+        Measure quantiles for the two PDFs and produce a QQ plot, to
         determine whether the two PDFs are drawn from the same underlying
         probability distribution. The plot is essentially a scatter plot
         of the quantiles of the first PDF against the quantiles of the second.
@@ -110,7 +110,7 @@ class EvaluateMetric(object):
             plt.xlabel('True N(z) quantiles')
             plt.ylabel('Photo-z N(z) quantiles')
             plt.show()
-         
+
         return obs_quantiles, true_quantiles
 
 
@@ -133,7 +133,7 @@ class EvaluateMetric(object):
         rmse: float
             the value of the RMS error between pdf_obs and pdf_truth
         """
-        
+
         rmse = qp.utils.calculate_rmse(self.pdf_obs,self.pdf_truth,limits,dx,vb)
         return rmse
 
@@ -163,20 +163,5 @@ class EvaluateMetric(object):
         # Evaluate the functions on the grid
         p1obs = self.pdf_obs.evaluate(grid, vb=vb)[1]
         p2truth = self.pdf_truth.evaluate(grid, vb=vb)[1]
-       
+
         ksstat, ks_pval     = scipy.stats.ks_2samp(p1obs,p2truth)
-
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
