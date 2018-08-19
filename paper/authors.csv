@@ -17,7 +17,7 @@ Tranin,Hugo,H.~Tranin, Contributor,"Laboratoire Univers et Particules de Montpel
 Freeman,Peter,P.E.~Freeman,Contributor,"Department of Statistics & Data Science, Carnegie Mellon University, 5000 Forbes Avenue, Pittsburgh, PA 15213, USA","Contributed to choice of CDE metrics and to implementation of FlexZBoost",pfreeman@cmu.edu
 Iyer,Kartheik,K.~Iyer,Contributor,"Department of Physics and Astronomy, Rutgers, The State University of New Jersey, 136 Frelinghuysen Road, Piscataway, NJ 08854-8019 USA","assisted in writing metric functions used to evaluate codes",iyer@physics.rutgers.edu
 Kalmbach,J. Bryce,J.B.~Kalmbach,Contributor,"Department of Physics, University of Washington, Box 351560, Seattle, WA 98195, USA","Worked on preparing the figures for the paper.",brycek@uw.edu
-# Kovacs,Eve,E.~Kovacs,[author type],"Argonne National Laboratory, Lemont, IL 60439, USA","[contribution]",kovacs@anl.gov
+Kovacs,Eve,E.~Kovacs,Contributor,"Argonne National Laboratory, Lemont, IL 60439, USA","Ran simulations, discussed data format and properties for SEDs, dust, and ELG corrrections",kovacs@anl.gov
 # DeRose, Joseph,J.~DeRose,[author type],"[Institue Afiliation]","[contribution]",email@email.com
 # Wechsler, Risa,R.~Wechsler,[author type],"Stanford University, Stanford, CA 94305-4060, USA","[contribution]",email@email.com
 # Lahav,Ofer,O.~Lahav,[author type],"Department of Physics and Astronomy, University College London, Gower Street, London WC1E 6BT, UK","[contribution]",o.lahav@ucl.ac.uk
@@ -32,5 +32,5 @@ Pospisil,Taylor,T.~Pospisil,Contributer,"Department of Statistics & Data Science
 # Zhou,Rongpu,R.~Zhou,[author type],"Department of Physics and Astronomy and the Pittsburgh Particle Physics, Astrophysics and Cosmology Center (PITT PACC), University of Pittsburgh, Pittsburgh, PA 15260, USA","[contribution]",rongpu.zhou@pitt.edu
 Izbicki,Rafael,R.~Izbicki,Contributor,"Department of Statistics, Federal University of Sao Carlos, Sao Carlos, Brazil","Co-developed FlexZBoost and the CDE loss statistic, and wrote software for FlexZBoost",rafaelizbicki@gmail.com
 Izbicki,Rafael,R.~Izbicki,Contributor,"External colaborator","Co-developed FlexZBoost and the CDE loss statistic, and wrote software for FlexZBoost",rafaelizbicki@gmail.com
-#Jarvis, Matt~J.,M.J.~Jarvis,"Astrophysics, Department of Physics, University of Oxford, Denys Wilkinson Building, Keble Road, Oxford, OX1 3RH, UK","contributed text on AGN to Discussion section and portions of GPz work",matt.jarvis@physics.ox.ac.uk
-#Jarvis, Matt~J.,M.J.~Jarvis,"Department of Physics and Astronomy, University of the Western Cape, Bellville 7535, South Africa","contributed text on AGN to Discussion section  and portions of GPz work",matt.jarvis@physics.ox.ac.uk
+Jarvis, Matt~J.,M.J.~Jarvis,Contributor,"Astrophysics, Department of Physics, University of Oxford, Denys Wilkinson Building, Keble Road, Oxford, OX1 3RH, UK","Contributed text on AGN to Discussion section and portions of GPz work",matt.jarvis@physics.ox.ac.uk
+Jarvis, Matt~J.,M.J.~Jarvis,Contributor,"Department of Physics and Astronomy, University of the Western Cape, Bellville 7535, South Africa","Contributed text on AGN to Discussion section and portions of GPz work",matt.jarvis@physics.ox.ac.uk
