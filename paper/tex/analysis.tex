@@ -1,0 +1,180 @@
+\section{Metrics for quantifying PDF comparisons}
+\label{sec:metrics}
+%(Alex Malz, Rongpu Zhou, Jeff Newman, Ofer Lahav)
+
+%\red{Maybe it would be best to introduce the summary statistics (KS, CvM, AD) up front and then the ensemble functions and stacked n(z).}
+
+The overloaded ``$p(z)$'' is a widespread abuse of notation; we would like the outputs of photo-$z$ PDF codes to be interpretable as probabilities.
+Obviously photo-$z$ PDFs must not take negative values and must integrate to unity over the range of possible redshifts.
+Additionally, an estimator derived by method $H$ for the photo-$z$ PDF of galaxy $i$ must be understood as a posterior probability distribution
+
+\begin{equation}
+\hat{p}_{j}(z_{i}) = p(z | d_{i}, I_{D}, I_{H}),
+\end{equation}
+conditioned not only on the photometric data $d_{i}$ for that galaxy but also on parameters encompassing a number of things that will differ depending on the method $H$ used to produce it, namely the assumptions $I_{H}$ necessary for the method to be valid and any inputs $I_{D}$ it takes as prior information, such as a template library or training set.
+Because of this, direct comparison of photo-$z$ PDFs produced by different methods is in some sense impossible; even if they share the same prior information $I_{D}$, by definition they cannot be conditioned on the same assumptions $I_{H}$, otherwise they would not be distinct methods at all.
+
+In this study, we isolate the differences in prior information specific to each method by using a single training set $I_{D}^{ML}$ for all machine learning-based codes and a single template library $I_{D}^{T}$ for all template-based codes, and these sets of prior information are carefully constructed to be representative and complete, we have $I_{D}^{ML}\equiv I_{D}^{T}$ for every method $H$.
+Thus, we are saying
+
+\begin{equation}
+\frac{\hat{p}_{i, H}(z)}{\hat{p}_{i, H'}(z)} \approx \frac{p(z | d_{i}, I_{H})}{p(z | d_{i}, I_{H'})},
+\end{equation}
+meaning that we assume comparisons of $\hat{p}_{i, H}(z)$ isolate the effect of the method used to obtain the estimator, which should make examination of differences caused by specifics of the method implementations easier to isolate.
+
+As mentioned previously, there are cosmology probes that require knowledge of individual galaxy $p(z)$ and others that require only knowledge of the ensemble redshift distribution, $N(z)$.
+Due to the paucity of principled techniques for using and validating photo-$z$ PDFs, there are few alternatives to the common practice of reducing photo-$z$ PDFs to point estimates.
+Though this practice should not be encouraged, we also calculate traditional metrics based on the most common point estimators derived from photo-$z$ PDFs.
+Those seeking to establish a connection to traditional ways of thinking about redshift estimation may consult the Appendix for these results.
+
+There are a number of metrics that can be used to test the accuracy of a photo-$z$ interim posterior as an estimator of a true photo-$z$ posterior if it is known.
+Even for simulated data, the true photo-$z$ PDF is in general not accessible unless the redshifts are in fact drawn from the true photo-$z$ PDFs, a mock catalogue generation procedure that has not yet appeared in the literature.
+Furthermore, only limited applications of photo-$z$ PDFs that could be used as the basis for a metric have been presented in the literature.
+The most popular application by far is the calculation of the overall redshift distribution $N(z)$, the true value of which is known for the \textsc{Buzzard} simulation and will be denoted as $N'(z)$.
+Though alternatives exist \citep{Malz:chippr}, stacking according to
+
+\begin{equation} \label{eq:stacked}
+\hat{N}^{H}(z) \approx \frac{1}{N_{tot}}\ \sum_{i}^{N_{tot}}\ \hat{p}^{H}_{i}(z)
+\end{equation}
+is the most widely accepted method for estimating the redshift distribution from photo-$z$ PDFs.
+If we assume that the response of estimators of $N(z)$ is uniform across all approaches $H$, then we may interpret metrics on the accuracy of $\hat{N}(z)$ obtained in this way.
+We must note, however, that this is a poor assumption in general.
+Under the setup of this paper, the true redshift distribution $N'(z) = p(z | I_{D})$ (i.e. because our training data is representative, the interim prior is the truth).  In this ideal case, the method that would give the best approximation to $N'(z)$ would be one that neglects all the information contained in the photometry $\{d_{i}\}_{N_{tot}}$ and gives every galaxy the same photo-$z$ PDF $\hat{p}_{i}(z) = N'(z)$ for all $i$.  This is the exact estimator, \trainz, that we have described in Section~\ref{sec:method:trainz}, and which will serve as a point of reference for the other codes.
+
+The exact implementation of the stacked estimator $\hat{N}^{H}(z)$ will depend on the parametrization of the photo-$z$ PDFs, which may differ across codes and can affect the precision of the estimator \citep{Malz:qp}; even considering a single method under the same parametrization, say a piecewise constant function over bins or a set of samples from the posterior, an estimator using $2N$ bins or samples will trivially be more precise than an estimator using $N$ bins or samples.
+%\red{Note: Let's address how the gridding (endpoints and spacing) affects the metrics, from the email correspondence Re: [LSST-DESC-MEMBERS] Summary of Nov 29 PZ Telecon. (AIM)}
+In order to minimize the effects of such choices, we asked those running all eleven codes to output $p(z)$ parameterized with a generous $\approx 200$ piecewise constant bins spanning $0<z<2$.
+The piecewise constant format is chosen because of its established presence in the literature, and the choice of 200 bins was motivated by the approximate number of columns expected to be available for storage of $p(z)$ for the final LSST Project tables.\footnote{See, e.~g.~the LSST Data Products Definition Document, available at: \url{https://ls.st/dpdd}}
+All $p(z)$ catalogues are processed using the \textsc{qp} software package \citep{Malz:qp}\footnote{available at: \url{http://github.com/aimalz/qp/}} for manipulating and calculating metrics of 1-dimensional PDFs.
+We will discuss the choice of $p(z)$ parameterization further in Section~\ref{sec:results}.
+
+%\red{Divide metrics by application to ensemble of PDFs vs. estimators of the redshift distribution}
+
+\subsection{Metrics of an ensemble of photo-\mathinhead{$z$}{z} interim posteriors}
+\label{sec:qualmet}
+
+\subsubsection{Probability integral transform (PIT)}
+\label{sec:pit}
+%(Alex Malz, Peter Freeman, Sam Schmidt)
+
+The probability integral transform (PIT) \citep{Polsterer:16} is defined for each individual galaxy as:%essentially the derivative of the QQ plot, a histogram of
+
+\begin{align}
+\label{eq:pit}
+\mathrm{PIT} &= \int_{-\infty}^{z_{\rm true}}p(z)\, dz \,.
+\end{align}
+The distribution of PIT values quantifies the behavior of the {\it ensemble} of photo-$z$ PDFs, enabling us to evaluate whether the $p(z)$ is, on average, accurate:  The PIT value is the Cumulative Distribution Function (CDF) of the $p(z)$ evaluated at the true redshift.  A catalogue of photo-$z$ PDFs that are accurate should have a flat PIT histogram (i.e., the individual PIT values as samples from each CDF should match a Uniform(0,1) distribution if the CDFs are accurate).  Specific deviations from flatness indicate inaccuracy: overly broad photo-$z$ PDFs would manifest as underrepresentation of the lowest and highest PIT values, whereas overly narrow photo-$z$ PDFs would manifest as over-representation of the lowest and highest PIT values.
+High frequency at only $\mathrm{PIT}\approx0$ and $\mathrm{PIT}\approx1$ indicates the presence of catastrophic outliers with highly inaccurate photo-$z$ PDFs where the true redshift is outside of the support of $p(z)$.
+\citet{Tanaka:17} use the histogram of PIT values as a diagnostic indicator of overall code performance, while \citet{Freeman:17} independently define the PIT and demonstrate how its individual values may be used both to perform hypothesis testing (via, e.g., the KS, CvM, and AD tests; see below) and to construct quantile-quantile plots.
+%\red{We might want to divide this by redshift to get trends, as the overall PIT could be impacted by true n(z).
+%For example, a PIT with nontrivial shape could be due to that behavior being uniform as a function of redshift or significant inaccuracy only in a small range of redshifts where $n(z)$ is large and a flat PIT elsewhere.}
+
+\subsubsection{Quantile-quantile (QQ) plot}
+\label{sec:qq}
+%(Rongpu Zhou, Jeffrey Newman, Alex Malz)
+
+The quantile-quantile (QQ) plot is a graphical method for comparing two distributions, where the quantiles of one distribution are plotted against the quantiles of the other distribution (A quantile being defined by partitioning a distribution into consecutive intervals containing equal amounts of probability, or equal numbers of objects in each interval).
+%\blue{Include an equation to ensure quantile definition is crystal clear before building upon it for PIT.}\red{Is maybe the above text clear enough?  Text may be more clear than any equation I can come up with--SJS.}
+In this paper we show the quantiles of the PIT values compared to the quantiles of the Uniform distribution that we expect the PIT values to match if $p(z)$ is an accurate probability distribution for all objects.
+The QQ plot provides an easy way to qualitatively assess the differences in various properties such as the moments of an estimating distribution relative to a true distribution.
+%location, scale and skewness.
+In this paper, QQ plots are used for two purposes: (1) for comparing $N(z)$ from photo-$z$ PDFs (estimated using Eq.~\ref{eq:stacked}) with the true $N(z)$, i.e. comparing the estimated distribution of redshifts with the true redshift distribution, and (2) for assessing the overall consistency of an ensemble of photo-$z$ PDFs with their true redshifts on a population level, where the distribution of the PIT values (see previous section) is compared to a uniform distribution between $0$ and $1$.  The QQ plot contains very similar information to that shown in the PIT histogram plot, we include both forms, as visually they each convey the information in a somewhat distinct manner. %\red{is this enough reason to include both?--SJS}
+%\aim{Maybe we should explain why we expect the distribution of CDFs to be uniform.}\red{Note: this is just describing the PIT.  I'm going to swap the order of PIT to come before this, and then say we are evaluating the distribution of PIT values.  I will also add why we expect this to be uniform--SJS}
+
+\subsubsection{Conditional density estimation loss}
+\label{sec:CDE_loss}
+%(Alex Malz, Ann Lee)
+
+With the conditional density estimation loss (CDE loss) we can compare how well different methods estimate individual PDFs for photometric covariates $\x$ rather than looking only at the ensemble distribution.  As in Section~\ref{sec:flexzboost}, we use the notation $f(z \vert \x)$ instead of $p(z)$ to explicitly show the dependence on $\x$.
+
+%\aim{Perhaps this should be rewritten in the same notation used elsewhere in the paper.} \red{I agree, does someone who speaks both stats and astro want to take a shot at this?}
+%\textcolor{cyan}{Ann: We are looking at individual PDFs so the dependence on $\x$ needs to be explicit; this is probably the most accurate notation as it shows both the conditioning clearly as well as whether $\x$ is fixed or random.}
+
+The CDE loss is defined as:
+\begin{equation} \label{eq:cde-loss}
+L(f, \widehat{f}) = \int \int (f(z \mid \x) - \widehat{f}(z \mid \x))^{2} dz dP(\x)
+\end{equation}
+This loss is the CDE equivalent of the RMSE in regression. To estimate this loss we rewrite the loss as
+\begin{equation} \label{eq:estimated-cde-loss}
+\mathbb{E}_\X \left[\int \widehat{f}(z \mid \X)^{2} dz\right] - 2 \mathbb{E}_{\X,Z}\left[\widehat{f}(Z \mid \X)\right] + K_{f},
+\end{equation}
+where the first expectation is with respect to the marginal distribution of the covariates $\X$, the second expectation is with respect to the joint distribution of $\X$ and $Z$, and $K_{f}$ is a constant depending only upon the true conditional densities $f(z\mid \x)$.
+For each method we can estimate these expectations as empirical expectations on the test or validation data \citep[Eq.~7 in][]{Izbicki:17b} without knowledge of the true densities.
+
+%\subsubsection{Continuous Ranked Probability Score (CRPS)}
+%\label{sec:crps}
+%\red{The CRPS is used to assess the accuracy of two probabilistic models respectively.}
+
+\subsection{Metrics over estimated probability distributions}
+\label{sec:quantmet}
+
+In tandem with the QQ and PIT metrics introduced above, we additionally compute the following metrics comparing the empirical CDF of a distribution to the true or expected distribution.  These metrics give a more quantitative measure of the departure from ideal than the more visual PIT histogram and QQ plot.  We compute metrics comparing the CDF of PIT values to a the CDF of a Uniform distribution, and also compute the CDF of the true redshift distribution $N'(z)$ compared the $\hat{N}(z)$ distribution derived from summing the $p(z)$ as described in Eq.~\ref{eq:stacked}.
+
+\subsubsection{Root-mean-square error (RMSE)}
+\label{sec:rmse}
+%(Alex Malz)
+
+We employ the familiar root-mean-square error:
+
+\begin{equation}
+\mathrm{RMSE} = \sqrt{\int_{-\infty}^{\infty}\left(\hat{f}(z)-f'(z)\right)^{2}\,dz},
+\end{equation}
+%may be used for two purposes in this analysis.
+%We calculate it between the true redshift distribution $N'(z)$ and each estimator $\hat{N}(z)$ (derived by Eq.~\ref{eq:stacked}) as well as between the ideal QQ and PIT curves from each method studied and the ideal curves.
+Though this metric does not account for the fact that the redshift distribution function is, in fact, a probability distribution, it can still be interpreted as a measure of the integrated difference between the estimated distribution and the true distribution, and it can be used to quantify the otherwise qualitative metrics.
+
+
+\subsubsection{Kolmogorov-Smirnov (KS) and related statistics}
+\label{sec:ks}
+%(John Soo, Rongpu Zhou)
+
+The \textit{Kolmogorov-Smirnov statistic} $N_{\rm KS}$ is the maximum difference between $F_{\rm phot}(z)$ and $F_{\rm spec}(z)$, the CDFs of the photo-$z$ and spectroscopic redshift respectively:
+
+\begin{equation}
+N_{\rm KS} = \max_{z}\left( \left| F_{\rm phot}(z) - F_{\rm spec}(z) \right| \right).
+\end{equation}
+%The KS test quantifies whether the two redshift distributions are drawn from a similar distribution, independent of binning.
+The KS test quantifies the similarity between two distributions, independent of binning.
+A lower $N_{\rm KS}$ value corresponds to more similar distributions.
+%We calculate two KS test statistics, one to test the distribution of $p(z)$ values, and one to test the stacked estimator $\hat{n}(z)$ of the redshift distribution.
+%The $p(z)$ test compares the CDF of the PIT values described in the previous section to that of a uniform distribution.
+%The $n(z)$ test compares the CDF of the distribution formed by stacking the $p(z)$ for every object in our test set against the CDF of the corresponding true redshifts.
+%In this case a lower $N_{\rm KS}$ value means that the photo-$z$ distribution fits the spectroscopic redshift distribution well. $F_{\rm phot}(z)$ is calculated by stacking the PDFs of every single object in the sample, producing a smooth cumulative $n(z)$ to be compared with $F_{\rm spec}(z)$.
+
+We also consider two variants of the KS statistic: the Cramer-von Mises (CvM) and Anderson-Darling (AD) statistics.
+The CvM statistic is similar to the KS statistic as it is also computed from the distance between the measured CDF and the ideal CDF, but instead of the maximum distance, the CvM statistic calculates the average of the distance squared:
+
+\begin{equation}
+\label{eq:cvm}
+\omega^2 = \int_{-\infty}^{+\infty}\big(F_{\mathrm{meas.}}(x) - F_{\mathrm{ideal}}(x)\big)^2\mathrm{d}F_{\mathrm{ideal}}
+\end{equation}
+% In this paper we use the CvM statistic to evaluate the performance of both $n(z)$ and $p(z)$.
+The AD statistic is a weighted version of the CvM statistic, making it more sensitive to the tails of the distribution:
+
+\begin{equation} \label{eq:ad}
+A^2 = n\int_{-\infty}^{+\infty} \frac{\big(F_{\mathrm{meas.}}(x) - F_{\mathrm{ideal}}(x)\big)^2} {F_{\mathrm{ideal}}(x) (1-F_{\mathrm{ideal}}(x))}\mathrm{d}F_{\mathrm{ideal}}
+\end{equation}
+where $n$ is the sample size.
+%The KS statistic and the CvM and AD statistics related to it are all used to evaluate the performance of both $\hat{n}(z)$ and the QQ and PIT of the CDFs of the ensemble of photo-$z$ interim posteriors.
+
+%\subsubsection{Kullback-Leibler Divergence (KLD)}
+%\label{sec:kl}
+%(Alex Malz)
+%
+%The KLD is a measure of the loss in information when using a probability distribution that is an estimate of a known true probability distribution, so we use
+%\begin{equation}
+%\mathrm{KLD} = \int_{-\infty}^{\infty}n'(z)\log\left[\frac{n'(z)}{\hat{n}(z)}\right]dz
+%\end{equation}
+%as a metric on the stacked redshift distribution estimator of Eq.~\ref{eq:stacked}. Noting the assumptions made in using Eq.~\ref{eq:stacked}, we say that a photo-$z$ PDFs method whose stacked redshift distribution estimator $\hat{n}(z)$ more closely resembles the true redshift distribution $n'(z)$ is desired, i.e. we seek to minimize the KLD.
+
+
+\subsubsection{Moments}
+\label{sec:moments}
+%(Alex Malz)
+For the $\hat{N}(z)$ distributions we additionaly calculate the first three moments of the estimated redshift distribution for each code and compare them to the moments of the true redshift distribution $N'(z)$.
+The $m$th moment of a distribution is defined as
+
+\begin{equation}
+\langle z^{m}\rangle = \int_{-\infty}^{\infty}z^{m}N(z)dz.
+\end{equation}
+Here, we use the moments of the stacked estimator of the redshift distribution function as the basis for a metric. The closer the moments of $\hat{N}(z)$ for a photo-$z$ PDF method are to the moments of the true redshift distribution function $N'(z)$, the better the photo-$z$ PDF method.

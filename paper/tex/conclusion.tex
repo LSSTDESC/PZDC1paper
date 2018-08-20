@@ -1,0 +1,27 @@
+\section{Conclusion}
+\label{sec:conclusion}
+%(Sam Schmidt, Ofer Lahav, Jeff Newman, Alex Malz, Eve Kovacs, Tony Tyson, Tina Peters)
+
+
+%\item \red{inclusion of incompleteness effects on training sample, ``wrong redshifts'', filter curves}
+%\item \red{inclusion of photometric errors, image based effects, blending, lensing, sky, mask, etc...}
+
+In this study we have not accounted for the presence of Active Galactic Nuclei (AGN) contributions to galaxy fluxes. In some cases, AGN will be easily identified from the colors and morphologies, i.e. the case of the brightest quasars where the nuclear activity outshines the host galaxy, and numerous studies have utilized color selection to create large samples of quasars \citep[e.g.][]{Richards:06,Maddox:08,Richards:15}.  In current deep fields, similar in depth to what we expect from LSST, variability information and multi-wavelength data have been critical to not only identify AGN dominated galaxies, but also obtain more accurate photometric redshifts \citep[e.g][]{Salvato:11}.
+
+In addition to AGN dominated galaxies, those with lower levels of nuclear activity present a more insidious problem, where AGN features may not be apparent, but the colors and other host galaxy properties are perturbed relative to galaxies with an inactive nucleus.  In such cases, the presence of the AGN may induce a bias if the template SEDs or empirical datasets do not include low-level AGN counterparts.
+For LSST, we will need to identify and obtain accurate photometric redshifts of all types of AGN for a range of science goals, whether it is to eliminate such objects from cosmology experiments, or to use them with confidence, all the way through to understanding galaxy evolution and the role that AGN may play in influencing galaxy properties over cosmic time.
+
+A promising route to classifying and obtaining accurate photometric redshifts for the AGN population is by combining machine learning with template-fitting techniques, as has recently been demonstrated by \citet{Duncan:18} for radio-selected AGN. This is because AGN are relatively easy to obtain spectroscopic redshifts for over all redshifts due to the strong emission lines that they exhibit, allowing very good training sets for machine learning algorithms to use. Whereas for those galaxies where the AGN is sub-dominant the galaxy templates are still adequate for obtaining reasonable photometric redshifts.
+
+In addition to these improvements, the DESC Photo-$z$ group plans to look at all potential methods to combine the results from multiple photo-$z$ codes to improve $p(z)$ accuracy, similar to the work presented in \citet{Dahlen:13,Carrascokind:14,Duncan:18}.  Taking advantage of multiple algorithms that use observables in slightly different ways has shown promise, however we must be very conscious of whether a potential combination properly treats the covariance between the methods, given that they are estimating quantities based on the same underlying observables.
+Several science cases wish to estimate physical quantities along with redshift, for example galaxy stellar mass and star formation rate.  Proper joint estimation of redshift and physical quantities requires an in depth understanding of galaxy evolution, and progress on accurate bivariate redshift probability distributions will go hand in had with progress on understanding galaxies themselves.  Parameterization and storage of a complex 2-dimensional probability surface for potentially billions of galaxies (or even subsets of hundreds of thousand of particular interest) pose a potential challenge.  These issues will be examined in another future paper.
+
+Finally, while this paper and future papers discussed above focus on photometric redshift codes and estimating accurate $p(z)$ from training data, we plan a separate, but complementary, project to examine calibration of the resultant redshifts via spatial cross-correlations \citep{Newman:2008}, which will be explored in a separate series of future papers.  The overarching plan describing everything laid out in this section is described in more detail in the LSST DESC Science Roadmap (see Footnote in Section~\ref{sec:intro}).  These plans will require significant effort, but they are necessary if we are to make optimal use of the LSST data for astrophysical and cosmological analyses.
+%\begin{enumerate}
+%\item \red{the combination of codes}
+
+%\item \red{$p(z,\alpha)$}
+%\item \red{tomographic analysis later on}
+%\red{this paper deals with training, future papers will also explore calibration via cross-correlation methods}
+%\end{enumerate}
+%\red{mention the SRM once again, say that the plans are extensive, but we do have a plan and a rough timeline.}
