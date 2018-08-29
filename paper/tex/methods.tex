@@ -3,7 +3,7 @@
 
 %(Sam Schmidt, Rongpu Zhou, Ibrahim Almosallam, Eric Nuss, Johann Cohen Tanugi, John Soo)
 
-Here we outline the photo-$z$ PDF codes tested in this study. In total, eleven distinct codes are tested.  This sample is not comprehensive, codes were chosen based on the expertise available within the group; however, those chosen do cover a broad range of the current-generation codes.  Both template-based and machine learning approaches are included and each are described separately in Secs.~\ref{sec:templatecodes} and \ref{sec:trainingcodes} respectively. The list of codes are summarized in Table.~\ref{tab:list_of_codes}.  All code runners were asked to output redshift estimates on linear-spaced bins between redshifts 0 and 2.
+Here we outline the photo-$z$ PDF codes tested in this study. In total, eleven distinct codes are tested.  This sample is not comprehensive, codes were chosen based on the expertise available within the group; however, those chosen do cover a broad range of the current-generation codes.  Both template-based and machine learning approaches are included and each are described separately in Secs.~\ref{sec:templatecodes} and \ref{sec:trainingcodes} respectively. The list of codes are summarized in Table.~\ref{tab:list_of_codes}.  All code runners were asked to output redshift estimates on 200 linear-spaced bins between redshifts 0 and 2.
 
 \begin{table*}  %%% DATA TABLE %%%
 \caption{List of photo-$z$ codes featured in this study. ML here means machine learning.} \label{tab:list_of_codes}\resizebox{\textwidth}{!}{
@@ -34,12 +34,17 @@ The questions that must be answered for each code are: what unique features are 
 %\scc{which parameter (in a general meaning) have been used, which kind of validation has been performed (if any)}
 \subsection{Template-based Approaches}
 \label{sec:templatecodes}
+We test three publicly available and commonly used template-based codes: \textsc{BPZ}, \textsc{EAZY}, and \textsc{LePhare}.  All three codes follow the standard procedure for template-based redshift estimation: calculate model fluxes for a set of template spectral energy distributions (SEDs) on a grid of redshift values and calculating a $\chi^2$ merit function using the observed and model fluxes:
+\begin{equation} \label{eq_temp_chi}
+\chi^2(z,T,A) = \sum_i^{N_{\rm filt}}\left(\frac{F^i_{\rm{obs}}−A \times F^i_{\rm{pred}}(T,z)}{\sigma^i_{\rm{obs}}}\right)^2
+\end{equation}
+\noindent  where $A$ is a normalization factor, $F^i_{\rm{pred}}(T,z)$ is the flux predicted for a template $T$ at redshift $z$. $F^i_{\rm{obs}}$ is the observed flux in a given band $i$ and $\sigma^i_{\rm{obs}}$ is the observed flux error. $N_{\rm tot}$ is the total number of filters, in our case the six $ugrizy$ LSST filters.  Specific implementation details of each code, e.~g.~prior form and implementation, are described below.
 
 \subsubsection{BPZ}
 \label{sec:BPZ}
 %(Sam Schmidt)
 
-\textsc{BPZ}\footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}} \citep[Bayesian Photometric Redshift,][]{Benitez:00} is a template-based photo-$z$ code that compares the expected colors ($C$) calculated for a set of spectral energy distribution (SED) types/templates ($T$) to the observed colors to calculate the likelihood of observing colors at each redshift for each type, $p(C|z,T)$. The code employs an empirically determined Bayesian prior in apparent magnitude ($m_0$) and SED-type. Assuming that the SED-types are spanning and exclusive, we can determine the redshift posterior $p(z|C,m_0)$ by marginalizing over all SED-types with a simple sum \citep[Eq.~3 from][]{Benitez:00}:
+\textsc{BPZ}\footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}} \citep[Bayesian Photometric Redshift,][]{Benitez:00} is a template-based photo-$z$ code that compares the expected colors ($C$) calculated for a set of spectral energy distribution (SED) types/templates ($T$) to the observed colors to calculate the likelihood of observing colors at each redshift for each type, $p(C|z,T)$.  The likelihoods at each redshift are related to the $\chi^2$ in Equation~\ref{eq_temp_chi} by the simple form: likelihood $\propto \, e^{-\chi^2/2}$. The code employs an empirically determined Bayesian prior in apparent magnitude ($m_0$) and SED-type. Assuming that the SED-types are spanning and exclusive, we can determine the redshift posterior $p(z|C,m_0)$ by marginalizing over all SED-types with a simple sum \citep[Eq.~3 from][]{Benitez:00}:
 
 \begin{equation} \label{eq:redshift_posterior}
 p(z|C,m_0)\,\propto\, \sum_{T}p(z,T|m_0)\,p(C|z,T)
@@ -64,34 +69,29 @@ The likelihoods include the application of a type-independent apparent magnitude
 \subsubsection{LePhare}\label{sec:lephare}
 %(C\'ecile Roucelle, Eric Nuss, Johann Cohen-Tanugi)
 
-\textsc{LePhare}\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}}\citep[Photometric Analysis for Redshift Estimate,][]{Arnouts:99,Ilbert:06} is a photo-$z$ reconstruction code based on a $\chi^2$ template-fitting procedure. The observed colors are matched with the colours predicted from a set of spectral energy distribution (SED) which can be either synthetic or based on a semi-empirical approach. \textsc{LePhare} has been used to produce the COSMOS2015 photo-$z$ catalogue \citep{Laigle:16}.
+\textsc{LePhare}\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}}\citep[Photometric Analysis for Redshift Estimate,][]{Arnouts:99,Ilbert:06} is a photo-$z$ reconstruction code based on a $\chi^2$ template-fitting procedure. The observed colors are matched with the colours predicted from a set of spectral energy distribution (SED) which can be either synthetic or based on a semi-empirical approach. %\textsc{LePhare} has been used to produce the COSMOS2015 photo-$z$ catalogue \citep{Laigle:16}.
 
-Each SED is redshifted in steps of $\Delta z = 0.01$ and convolved with the simulated LSST filter transmission curves (accounting for instrument efficiency).  The computed photo-$z$ is then the value that minimizes the merit function $\chi^2 (z,T,A)$ from \citet{Arnouts:99}:
-
-\begin{equation}
-\chi^2(z,T,A) = \sum_f^{N_f}\left(\frac{F^f_{\rm{obs}}−A \times F^f_{\rm{pred}}(T,z)}{\sigma^f_{\rm{obs}}}\right)^2
-\end{equation}
-\noindent where $A$ is a normalization factor, $F^f_{\rm{pred}}(T,z)$ is the flux predicted for a template $T$ at redshift $z$. $F^f_{\rm{obs}}$ is the observed flux in a given band $f$ and $\sigma^f_{\rm{obs}}$ the associated observational error. The index $f$ refers to the considered band and $N_f$ is the total number of filters.
+Each SED is convolved with the simulated LSST filter transmission curves (accounting for instrument efficiency).  The computed photo-$z$ is then the value that minimizes the merit function $\chi^2 (z,T,A)$ from \citet[]{Arnouts:99}, and given in Equation~\ref{eq_temp_chi}.
 
 In this paper we use \textsc{LePhare v 2.2}.
-The set of templates used for fitting the photo-$z$'s are the 100 discrete Buzzard SED templates as described in section~\ref{sec:buzztemplates}.
-%No correction for the photometric zero-points was applied for this work.
-The full $p(z)$ corresponds to the likelihoods calculated at each point on our $z$-grid.
+The set of templates used for fitting the photo-$z$'s are the 100 discrete Buzzard SED templates as described in section~\ref{sec:buzztemplates}, and the full $p(z)$ corresponds to the likelihoods calculated at each point on our $z$-grid.
 
 
 \subsection{Training-based Codes}
 \label{sec:trainingcodes}
+The training-based codes use a variety of algorithms in order to estimate $p(z)$. 
+Some aspects of data treatment were left to the individual code runners, for example, whether/how to split the available data with known redshifts into separate training and validation sets.  The treatment of objects not detected in one or more bands was also left to the code runners.  There are varying conventions among training-based codes, and no one prescription dominates in the photo-$z$ literature.  This and other details of the code implementations are described below.  
 
 \subsubsection{ANNz2}
 \label{sec:annz2}
 %(John Soo)
 
-\textsc{ANNz2}\footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{Sadeh:16} is a powerful package that has the ability to employ several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree (BDT) and k-nearest neighbour (KNN). Using the Toolkit for Multivariate Data Analysis (TMVA) with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, it can run multiple machine learning algorithms for a single training and outputs photo-$z$'s based on a weighted average of their performances.
+\textsc{ANNz2}\footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{Sadeh:16} is a software package that has the ability to employ several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree (BDT) and k-nearest neighbour (KNN). Using the Toolkit for Multivariate Data Analysis (TMVA) with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, it can run multiple machine learning algorithms for a single training and outputs photo-$z$'s based on a weighted average of their performances.
 
 \textsc{ANNz2} is capable of producing both photo-$z$ point estimates and redshift posterior probability distributions $p(z)$.  It can also perform classifications, and supports reweighting between samples. The PDFs are produced by propagating the intrinsic uncertainty on the input parameters and the uncertainty in the machine learning method to the expected photo-$z$ solution, averaged over multiple runs weighted based on the performance of each run. \textsc{ANNz2} presents its photo-$z$ uncertainty different from many codes by using the KNN method: it estimates the photo-$z$ bias between each object and a fixed number of nearest neighbours in parameter space, it then takes the $68$th percentile width of the distribution of the bias. This is based on the implication that objects with similar photometric properties would have similar uncertainties, and therefore the photometric errors of the inputs are not propagated into the code.
 
 In this study, \textsc{ANNz2 v. 2.0.4} was used. A set of $5$ ANNs with architecture $6:12:12:1$ ($6$ $ugrizy$ inputs, $2$ hidden layers with $12$ nodes each, and $1$ output) with different random seeds are used during each training. %Training was conducted on a subset of the given training sample which satisfies $i\le25.3$ as it would have improved the results compared to training on the entire sample.
-Half of the training set is used as a validation set to prevent overtraining. All training objects are set to have detected magnitudes, however the non-detections (mag$=-99$) in the testing set are replaced with the mean of that particular band.
+Half of the training set is used as a validation set to prevent overtraining. All training objects are set to have detected magnitudes, however the non-detections (mag$=99$) in the testing set are replaced with the mean of that particular band.
 
 
 \subsubsection{Color-Matched Nearest-Neighbours}
@@ -169,7 +169,7 @@ Although {\tt FlexCode} offers a {\em lossless compression} of the photo-$z$ est
 \label{sec:gpz}
 %(Ibrahim Almosallam)
 
-\textsc{GPz}\footnote{\url{https://github.com/OxfordML/GPz}} \citep{Almosallam:16a,Almosallam:15b} is a sparse Gaussian process based code, a fast and a scalable approximation of full Gaussian Processes \citep{Rasmussen:06}, with the added feature of being able to produce input-dependent variance estimations (heteroscedastic noise). The model assumes that the probability of the output $y$, the redshift, given the input $x$, the photometry, is $p(y|x)=\mathcal{N}\left(y|\mu(x),\sigma(x)^{2}\right)$. The mean function, $\mu(x)$, and the variance function $\sigma(x)^{2}$ are both linear combinations of basis functions that take the following form:
+\textsc{GPz}\footnote{\url{https://github.com/OxfordML/GPz}} \citep{Almosallam:16a,Almosallam:15b} is a sparse Gaussian process based code, a scalable approximation of full Gaussian Processes \citep{Rasmussen:06}, with the added feature of being able to produce input-dependent variance estimations (heteroscedastic noise). The model assumes that the probability of the output $y$, the redshift, given the input $x$, the photometry, is $p(y|x)=\mathcal{N}\left(y|\mu(x),\sigma(x)^{2}\right)$. The mean function, $\mu(x)$, and the variance function $\sigma(x)^{2}$ are both linear combinations of basis functions that take the following form:
 
 \begin{align}
 f(x)=\sum_{i=1}^{m}\phi_{i}(x)w_{i},
@@ -191,7 +191,9 @@ We use the Variable Covariance (VC) option in \textsc{GPz} with 200 basis functi
 \label{sec:metaphor}
 %(Stefano Cavuoti, Massimo Brescia, Giuseppe Longo)
 %\textcolor{brown}{general review done on this section}
-\textsc{METAPhoR} \citep[Machine-learning Estimation Tool for Accurate Photometric Redshifts,][]{Cavuoti:17} is a pipeline designed to provide photo-$z$ point estimates and a reliable PDF for machine learning (ML) based techniques. It includes pre- and post-processing phases, hosting a photo-$z$ prediction engine based on the Multi Layer Perceptron with Quasi Newton Algorithm (MLPQNA), already validated on photo-$z$'s in several cases \citep{de_Jong:17,Cavuoti:17b,Cavuoti:15,Brescia:14,Brescia:13,Biviano:13}. Due to its plug-in based modular nature, \textsc{METAPhoR} can be easily replaced by any other photo-$z$ prediction kernel, regardless of specific implementation, while still taking advantage of the overall code interface.
+\textsc{METAPhoR} \citep[Machine-learning Estimation Tool for Accurate Photometric Redshifts,][]{Cavuoti:17} is a pipeline designed to provide photo-$z$ point estimates and a reliable PDF for machine learning (ML) based techniques. It includes pre- and post-processing phases, hosting a photo-$z$ prediction engine based on the Multi Layer Perceptron with Quasi Newton Algorithm (MLPQNA).
+%, already validated on photo-$z$'s in several cases \citep{de_Jong:17,Cavuoti:17b,Cavuoti:15,Brescia:14,Brescia:13,Biviano:13}.
+Due to its plug-in based modular nature, \textsc{METAPhoR} can be easily replaced by any other photo-$z$ prediction kernel, regardless of specific implementation, while still taking advantage of the overall code interface.
 
 At a higher level, the pipeline mainly consists of three modules: (i) \textit{data pre-processing}, including a catalogue cross-matching sub-module \citep[based on the tool C3, ][]{Riccio:17}, a sub-module for photometric evaluation and error estimation of the multi-band catalogue used as Knowledge Base (KB), and a sub-module dedicated to the perturbation of the photometric KB, propaedeutic to the PDF estimation; (ii) \textit{photo-$z$ prediction}, which is the training/validation/test phase, producing the photo-$z$'s point estimates, based on a pre-selected ML method; (iii) \textit{PDF estimation}, specifically designed to calculate the PDF of the photo-$z$ estimation errors. The last module includes also a post-processing tool, providing some statistics on the produced point estimates and PDFs.
 
@@ -208,7 +210,7 @@ For the present work since it was required to produce a redshift (and a PDF) for
 \label{sec:skynet}
 %(J. Cohen-Tanugi and Hugo Tranin)
 
-\textsc{SkyNet}\footnote{\url{http://ccpforge.cse.rl.ac.uk/gf/project/skynet/}} \citep{Graff:14} is a publicly available neural network software, based on a 2nd order conjugate gradient optimization scheme \citep[see][for further details]{Graff:14}. It has been used efficiently for redshift PDF estimates \citep{Sanchez:14,Bonnett:15,Bonnett:16}.
+\textsc{SkyNet}\footnote{\url{http://ccpforge.cse.rl.ac.uk/gf/project/skynet/}} \citep{Graff:14} is a publicly available neural network software, based on a 2nd order conjugate gradient optimization scheme \citep[see][for further details]{Graff:14}. %It has been used efficiently for redshift PDF estimates \citep{Sanchez:14,Bonnett:15,Bonnett:16}.
 
 %In the present work, we use \textsc{SkyNet} both as a regressor (for redshift point estimates) and a classifier (for PDF estimates).
 The neural network is configured as a standard multilayer perceptron with three hidden layers and one input layer with $12$ nodes (the $6$ magnitudes and their errors).
@@ -230,10 +232,11 @@ The training data is examined before running TPZ. Since TPZ does not handle non-
 
 In the present work, the LSST magnitudes $u,~g,~r,~i$ and colors $u-g,~g-r,~r-i,~i-z,~z-y$ and their associated errors are used in the process of growing 100 trees with a minimum leaf size of 5 (the $z$ and $y$ magnitudes did not show significant correlation with the redshift in our cross-validation, so we did not use them when constructing our trees). We partitioned our redshift space into 200 bins and smoothed each individual PDF with a smoothing scale of twice the bin size.
 %there was a typo here that had 100 bins, I double checked, it is 200 in the final run.
+
 \subsection{Simple Ensemble Estimator}\label{sec:method:trainz}
-In addition to the main photo-$z$ algorithms described above we also include a very simple method.  For \trainz, as we will we call this simple estimator, we well define $p(z)$ as simply:
+In addition to the main photo-$z$ algorithms described above we also include a very simple method as a pathological example.  For \trainz, as we will we call this simple estimator, we well define $p(z)$ as simply:
 
 \begin{equation}
 p(z) = \frac{1}{N_{ \mathrm train}}\sum_{\mathrm i=1}^{N_{\mathrm train}}z_{\mathrm train}
 \end{equation}
-That is, we simply set the redshift PDF of every galaxy equal to the normalized $N(z)$ of the training sample.  As the training sample is drawn from the same underlying distribution as the test sample, modulo small deviations due to sample size, the quantiles of the training and test distributions should be identical.  This is a wildly unrealistic estimator, as it assigns all galaxies, no matter their apparent magnitude, colour, or true redshift, the same redshift PDF, and is thus uninformative at the level of individual object redshifts, but is designed to perform very well for the ensemble of all objects.  We will discuss this method and cautions relative to metrics in Section~\ref{sec:caution}.
+That is, we simply set the redshift PDF of every galaxy equal to the normalized $N(z)$ of the training sample.  As the training sample is drawn from the same underlying distribution as the test sample, modulo small deviations due to sample size, the quantiles of the training and test distributions should be identical.  This is a wildly unrealistic estimator, as it assigns all galaxies, no matter their apparent magnitude, colour, or true redshift, the same redshift PDF, and is thus uninformative at the level of individual object redshifts, but is designed to perform very well for the ensemble of all objects.  If the training set was not representative, this estimator would produce biased results, and any attempts to break up the sample into tomographic bins will fail, as every galaxy has an identical $p(z)$.  We will discuss this method and cautions relative to metrics in Section~\ref{sec:caution}.
