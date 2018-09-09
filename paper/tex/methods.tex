@@ -185,7 +185,8 @@ x_{u} = \mu_{u}+\Sigma_{uo}\Sigma_{oo}^{-1}(x_{o}-\mu_{o}),
 \end{equation}  %\]
 where the subscript $o$ in $x_{o}$ indexes the \emph{observed} part of the input $x$, whereas the subscript $u$ indexes the \emph{unobserved} set (similarly for $\mu$ and $\Sigma$). This is the optimal expected value of the unobserved variables given the observed ones if the distribution is jointly Gaussian, note that if the variables are independent, i.e. $\Sigma_{uo}=0$, this will reduce to a simple average predictor.
 
-We use the Variable Covariance (VC) option in \textsc{GPz} with 200 basis functions after we note that there is no significant increase in the performance on the validation set (using 80\%-20\% training-validation split) and with no cost-sensitive learning applied.  We do note that \textsc{GPz} is trained using a data set that includes galaxies fainter than those in the test set, which was truncated at $i<25.3$.  This mismatch in training vs.~test results in a slightly different distribution in galaxy photometry and redshift distribution between the training and test set, which most likely degraded results compared to a run where the training set more closely matched the test set.
+We use the Variable Covariance (VC) option in \textsc{GPz} with 200 basis functions after we note that there is no significant increase in the performance on the validation set (using 80\%-20\% training-validation split) and with no cost-sensitive learning applied.
+%We do note that \textsc{GPz} is trained using a data set that includes galaxies fainter than those in the test set, which was truncated at $i<25.3$.  This mismatch in training vs.~test results in a slightly different distribution in galaxy photometry and redshift distribution between the training and test set, which most likely degraded results compared to a run where the training set more closely matched the test set.
 
 \subsubsection{METAPhoR}
 \label{sec:metaphor}
