@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-import seaborn as sns
+#import seaborn as sns
 import scipy.ndimage.filters as scifilt
 
 def main(argv):
@@ -46,7 +46,7 @@ def main(argv):
         pzvals[i,:] = data[:,2]
         smooth_pzvals = scifilt.gaussian_filter1d(pzvals,smooth_sigma,
                                                   mode='constant')
-        print "read in data for %s"%xfile
+        print ("read in data for %s"%xfile)
         
 
     numrows = 3
@@ -55,19 +55,28 @@ def main(argv):
 
     fig,axes = plt.subplots(numcodes, sharex=True, sharey=True, figsize=(12,9))
     fig.subplots_adjust(hspace=0.025, wspace=0.055)
-    sns.set()
+#    sns.set()
     
     for i in range(numcodes):
         ax = plt.subplot(numrows,numcols,i+1)
-        plt.plot(z_array,szvals[i],c='b',linestyle='-',linewidth=2,
-                 label="zspec KDE sum", alpha=0.85)
-        tmplabel = "%s N(z) sum"%(labels[i])
+        if i == 0: #only include label for first entry
+            plt.plot(z_array,szvals[i],c='b',linestyle='-',linewidth=2,
+                     label="zspec", alpha=0.85)
+        else:
+            plt.plot(z_array,szvals[i],c='b',linestyle='-',linewidth=2,
+                     alpha=0.85)
+        tmplabel = "%s"%(labels[i])
         plt.plot(z_array,smooth_pzvals[i],color='r',linestyle='-',
                  linewidth=2,label=tmplabel, alpha=0.85)
 
         ax.set_xlim([0.0,1.99])
-        ax.set_ylim([0.0,1.99])
-        ax.legend(loc="upper left",fontsize=11)
+        ax.set_ylim([0.0,1.79])
+        ax.yaxis.set_ticks(np.arange(0.,1.55,0.5))
+        if i ==0: #include lines only for first entry
+            ax.legend(loc="upper left",fontsize=11)
+        else: 
+            ax.legend(loc="upper left",fontsize=11, handletextpad=0,
+                      handlelength=0)
         if (i<(numcodes-4)):
             ax.set_xticklabels([])
         else:
