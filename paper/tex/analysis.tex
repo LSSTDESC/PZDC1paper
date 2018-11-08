@@ -22,8 +22,8 @@ Thus, we are saying
 \end{equation}
 meaning that we assume comparisons of $\hat{p}_{i, H}(z)$ isolate the effect of the method used to obtain the estimator, which should make examination of differences caused by specifics of the method implementations easier to isolate.
 
-As mentioned previously, there are cosmology probes that require knowledge of individual galaxy $p(z)$ and others that require only knowledge of the ensemble redshift distribution, $N(z)$.
-Due to the paucity of principled techniques for using and validating photo-$z$ PDFs, there are few alternatives to the common practice of reducing photo-$z$ PDFs to point estimates.
+As mentioned previously, there are cosmology probes that require knowledge of individual galaxy $p(z)$, for example galaxy intrinsic alignment studies, strong lensing foreground shear prediction, and photometric supernova classification, and others that require only knowledge of the ensemble redshift distribution, $N(z)$.
+Due to the paucity of principled techniques for using and validating individual galaxy photo-$z$ PDFs, there have been few alternatives to the common practice of reducing photo-$z$ PDFs to point estimates when evaluating and comparing photo-$z$ code performance in the literature.
 Though this practice should not be encouraged, we also calculate traditional metrics based on the most common point estimators derived from photo-$z$ PDFs.
 Those seeking to establish a connection to traditional ways of thinking about redshift estimation may consult the Appendix for these results.
 
@@ -39,11 +39,11 @@ Though alternatives exist \citep{Malz:chippr}, stacking according to
 is the most widely accepted method for estimating the redshift distribution from photo-$z$ PDFs.
 If we assume that the response of estimators of $N(z)$ is uniform across all approaches $H$, then we may interpret metrics on the accuracy of $\hat{N}(z)$ obtained in this way.
 We must note, however, that this is a poor assumption in general.
-Under the setup of this paper, the true redshift distribution $N'(z) = p(z | I_{D})$ (i.e. because our training data is representative, the interim prior is the truth).  In this ideal case, the method that would give the best approximation to $N'(z)$ would be one that neglects all the information contained in the photometry $\{d_{i}\}_{N_{tot}}$ and gives every galaxy the same photo-$z$ PDF $\hat{p}_{i}(z) = N'(z)$ for all $i$.  This is the exact estimator, \trainz, that we have described in Section~\ref{sec:method:trainz}, and which will serve as a point of reference for the other codes.
+Under the setup of this paper, the true redshift distribution $N'(z) = p(z | I_{D})$ (i.e. because our training data is representative, the interim prior is the truth).  In this ideal case, with representative training data, the method that would give the best approximation to $N'(z)$ would be one that neglects all the information contained in the photometry $\{d_{i}\}_{N_{tot}}$ and gives every galaxy the same photo-$z$ PDF $\hat{p}_{i}(z) = N'(z)$ for all $i$.  This is the exact estimator, \trainz, that we have described in Section~\ref{sec:method:trainz}, and which will serve as a point of reference for the other codes.
 
 The exact implementation of the stacked estimator $\hat{N}^{H}(z)$ will depend on the parametrization of the photo-$z$ PDFs, which may differ across codes and can affect the precision of the estimator \citep{Malz:qp}; even considering a single method under the same parametrization, say a piecewise constant function over bins or a set of samples from the posterior, an estimator using $2N$ bins or samples will trivially be more precise than an estimator using $N$ bins or samples.
 %\red{Note: Let's address how the gridding (endpoints and spacing) affects the metrics, from the email correspondence Re: [LSST-DESC-MEMBERS] Summary of Nov 29 PZ Telecon. (AIM)}
-In order to minimize the effects of such choices, we asked those running all eleven codes to output $p(z)$ parameterized with a generous $\approx 200$ piecewise constant bins spanning $0<z<2$.
+In order to minimize the effects of such choices, we asked those running all eleven codes to output $p(z)$ parameterized with $\approx 200$ piecewise constant bins spanning $0<z<2$.
 The piecewise constant format is chosen because of its established presence in the literature, and the choice of 200 bins was motivated by the approximate number of columns expected to be available for storage of $p(z)$ for the final LSST Project tables.\footnote{See, e.~g.~the LSST Data Products Definition Document, available at: \url{https://ls.st/dpdd}}
 All $p(z)$ catalogues are processed using the \textsc{qp} software package \citep{Malz:qp}\footnote{available at: \url{http://github.com/aimalz/qp/}} for manipulating and calculating metrics of 1-dimensional PDFs.
 We will discuss the choice of $p(z)$ parameterization further in Section~\ref{sec:results}.
@@ -108,7 +108,7 @@ For each method we can estimate these expectations as empirical expectations on 
 \subsection{Metrics over estimated probability distributions}
 \label{sec:quantmet}
 
-In tandem with the QQ and PIT metrics introduced above, we additionally compute the following metrics comparing the empirical CDF of a distribution to the true or expected distribution.  These metrics give a more quantitative measure of the departure from ideal than the more visual PIT histogram and QQ plot.  We compute metrics comparing the CDF of PIT values to a the CDF of a Uniform distribution, and also compute the CDF of the true redshift distribution $N'(z)$ compared the $\hat{N}(z)$ distribution derived from summing the $p(z)$ as described in Eq.~\ref{eq:stacked}.
+In tandem with the QQ and PIT metrics introduced above, we additionally compute the following metrics comparing the empirical CDF of a distribution to the true or expected distribution.  These metrics give a more quantitative measure of the departure from ideal than the more visual PIT histogram and QQ plot.  We compute metrics comparing the CDF of PIT values to the CDF of a Uniform distribution, and also compute the CDF of the true redshift distribution $N'(z)$ compared the $\hat{N}(z)$ distribution derived from summing the $p(z)$ as described in Eq.~\ref{eq:stacked}.
 
 \subsubsection{Root-mean-square error (RMSE)}
 \label{sec:rmse}
