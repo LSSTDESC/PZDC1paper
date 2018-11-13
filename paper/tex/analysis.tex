@@ -57,7 +57,7 @@ We will discuss the choice of $p(z)$ parameterization further in Section~\ref{se
 \label{sec:pit}
 %(Alex Malz, Peter Freeman, Sam Schmidt)
 
-The probability integral transform (PIT) \citep{Polsterer:16} is defined for each individual galaxy as:%essentially the derivative of the QQ plot, a histogram of
+The probability integral transform (PIT) has been employed recently to evaluate fidelity of posterior distributions  \citep[e.~g.~][]{Bordoloi:10,Polsterer:16,Tanaka:17}.  The PIT value is defined for each individual galaxy as:%essentially the derivative of the QQ plot, a histogram of
 
 \begin{align}
 \label{eq:pit}
@@ -96,7 +96,7 @@ L(f, \widehat{f}) = \int \int (f(z \mid \x) - \widehat{f}(z \mid \x))^{2} dz dP(
 \end{equation}
 This loss is the CDE equivalent of the RMSE in regression. To estimate this loss we rewrite the loss as
 \begin{equation} \label{eq:estimated-cde-loss}
-\mathbb{E}_\X \left[\int \widehat{f}(z \mid \X)^{2} dz\right] - 2 \mathbb{E}_{\X,Z}\left[\widehat{f}(Z \mid \X)\right] + K_{f},
+L(f, \widehat{f}) = \mathbb{E}_\X \left[\int \widehat{f}(z \mid \X)^{2} dz\right] - 2 \mathbb{E}_{\X,Z}\left[\widehat{f}(Z \mid \X)\right] + K_{f},
 \end{equation}
 where the first expectation is with respect to the marginal distribution of the covariates $\X$, the second expectation is with respect to the joint distribution of $\X$ and $Z$, and $K_{f}$ is a constant depending only upon the true conditional densities $f(z\mid \x)$.
 For each method we can estimate these expectations as empirical expectations on the test or validation data \citep[Eq.~7 in][]{Izbicki:17b} without knowledge of the true densities.
@@ -108,7 +108,7 @@ For each method we can estimate these expectations as empirical expectations on 
 \subsection{Metrics over estimated probability distributions}
 \label{sec:quantmet}
 
-In tandem with the QQ and PIT metrics introduced above, we additionally compute the following metrics comparing the empirical CDF of a distribution to the true or expected distribution.  These metrics give a more quantitative measure of the departure from ideal than the more visual PIT histogram and QQ plot.  We compute metrics comparing the CDF of PIT values to a the CDF of a Uniform distribution, and also compute the CDF of the true redshift distribution $N'(z)$ compared the $\hat{N}(z)$ distribution derived from summing the $p(z)$ as described in Eq.~\ref{eq:stacked}.
+In tandem with the QQ and PIT metrics introduced above, we additionally compute the following metrics comparing the empirical CDF of a distribution to the true or expected distribution.  These metrics give a more quantitative measure of the departure from ideal than the more visual PIT histogram and QQ plot.  We compute metrics comparing the CDF of PIT values to the CDF of a Uniform distribution, and also compute the CDF of the true redshift distribution $N'(z)$ compared the $\hat{N}(z)$ distribution derived from summing the $p(z)$ as described in Eq.~\ref{eq:stacked}.
 
 \subsubsection{Root-mean-square error (RMSE)}
 \label{sec:rmse}
@@ -121,17 +121,17 @@ We employ the familiar root-mean-square error:
 \end{equation}
 %may be used for two purposes in this analysis.
 %We calculate it between the true redshift distribution $N'(z)$ and each estimator $\hat{N}(z)$ (derived by Eq.~\ref{eq:stacked}) as well as between the ideal QQ and PIT curves from each method studied and the ideal curves.
-Though this metric does not account for the fact that the redshift distribution function is, in fact, a probability distribution, it can still be interpreted as a measure of the integrated difference between the estimated distribution and the true distribution, and it can be used to quantify the otherwise qualitative metrics.
+Though this metric does not account for the fact that the redshift distribution function is, in fact, a probability distribution, it can still be interpreted as a measure of the integrated difference between the estimated distribution and the true distribution.%, and it can be used to quantify the otherwise qualitative metrics.
 
 
 \subsubsection{Kolmogorov-Smirnov (KS) and related statistics}
 \label{sec:ks}
 %(John Soo, Rongpu Zhou)
 
-The \textit{Kolmogorov-Smirnov statistic} $N_{\rm KS}$ is the maximum difference between $F_{\rm phot}(z)$ and $F_{\rm spec}(z)$, the CDFs of the photo-$z$ and spectroscopic redshift respectively:
+The \textit{Kolmogorov-Smirnov statistic} $N_{\rm KS}$ is the maximum difference between $F_{\rm phot}(z)$ and $F_{\rm true}(z)$, the CDFs of the photo-$z$ and true redshift distributions respectively:
 
 \begin{equation}
-N_{\rm KS} = \max_{z}\left( \left| F_{\rm phot}(z) - F_{\rm spec}(z) \right| \right).
+N_{\rm KS} = \max_{z}\left( \left| F_{\rm phot}(z) - F_{\rm true}(z) \right| \right).
 \end{equation}
 %The KS test quantifies whether the two redshift distributions are drawn from a similar distribution, independent of binning.
 The KS test quantifies the similarity between two distributions, independent of binning.
@@ -149,7 +149,7 @@ The CvM statistic is similar to the KS statistic as it is also computed from the
 \omega^2 = \int_{-\infty}^{+\infty}\big(F_{\mathrm{meas.}}(x) - F_{\mathrm{ideal}}(x)\big)^2\mathrm{d}F_{\mathrm{ideal}}
 \end{equation}
 % In this paper we use the CvM statistic to evaluate the performance of both $n(z)$ and $p(z)$.
-The AD statistic is a weighted version of the CvM statistic, making it more sensitive to the tails of the distribution:
+While the KS statistic is a good measure near the median of a distribution, the AD statistic, a weighted version of the CvM statistic, is much more sensitive to the tails of the distribution, providing complementary information:
 
 \begin{equation} \label{eq:ad}
 A^2 = n\int_{-\infty}^{+\infty} \frac{\big(F_{\mathrm{meas.}}(x) - F_{\mathrm{ideal}}(x)\big)^2} {F_{\mathrm{ideal}}(x) (1-F_{\mathrm{ideal}}(x))}\mathrm{d}F_{\mathrm{ideal}}
