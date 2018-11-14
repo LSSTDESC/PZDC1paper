@@ -169,7 +169,7 @@ Table~\ref{tab:moments} lists the first three moments of the stacked $\hat{N}(z)
 %Caution on metrics and photo-$z$ codes}\label{sec:caution}
 %(Alex Malz, Sam Schmidt)
 
-Samples from accurate photo-$z$ posteriors should reproduce the space of $p(z, data)$. However, it is difficult to test this reconstruction given our data set, as the galaxy distributions arise from mock objects pasted on to an underlying dark matter halo catalogue with properties designed to match empirical relations, rather than being drawn from statistical distributions in redshift.  In previous sections we have mentioned that optimizing for a specific metric does not guarantee good performance on other metrics, nor is there any guarantee that good performance by our metrics corresponds to \textit{accurate} photo-$z$ posteriors.
+Samples from accurate photo-$z$ posteriors should reproduce the space of $p(z,{\rm data})$. However, it is difficult to test this reconstruction given our data set, as the galaxy distributions arise from mock objects pasted on to an underlying dark matter halo catalogue with properties designed to match empirical relations, rather than being drawn from statistical distributions in redshift.  In previous sections we have mentioned that optimizing for a specific metric does not guarantee good performance on other metrics, nor is there any guarantee that good performance by our metrics corresponds to \textit{accurate} photo-$z$ posteriors, in the sense of predicting redshifts for individual galaxies.
 %\aim{Explain that samples from accurate photo-$z$ posteriors should reconstruct the space of $p(z, data)$, a test we can't check with our datasets.}
 In other words, we can construct photo-$z$ estimators that provide good coverage in many of our tests, but which have very little predictive power.
 
@@ -180,7 +180,7 @@ Because our training set is perfectly representative of the test set, $N(z)$ sho
 %\textit{Explain the connection between \trainz\ and these metrics.}
 
 The CDE loss and point estimate metrics, however, successfully identify problems with \trainz.
-As shown in Appendix~\ref{sec:pointmetrics}, \trainz has identical $ZPEAK$ and $ZWEIGHT$ values for every galaxy, and thus the photo-$z$s are constant as a function of spec-$z$s, i.e. a horizontal line at the mode and mean of the training set distribution respectively.  The explicit dependence on the \it{individual} posteriors in the calculation of the CDE loss, described in Section~\ref{sec:CDE_loss}, distinguishes this metric from the other $p(z)$ metrics that test the overall ensemble of $p(z)$ distributions.  With a representative training set, \trainz\ will score well on the ensemble metrics, but fails miserably for metrics tied to individual redshifts.  We note that many of the ensemble-based metrics are prominent in the photo-$z$ literature despite their inability to identify problems such as those exemplified by \trainz.
+As shown in Appendix~\ref{sec:pointmetrics}, \trainz ~has identical $ZPEAK$ and $ZWEIGHT$ values for every galaxy, and thus the photo-$z$s are constant as a function of spec-$z$s, i.e. a horizontal line at the mode and mean of the training set distribution respectively.  The explicit dependence on the {\it individual} posteriors in the calculation of the CDE loss, described in Section~\ref{sec:CDE_loss}, distinguishes this metric from the other $p(z)$ metrics that test the overall ensemble of $p(z)$ distributions.  With a representative training set, \trainz\ will score well on the ensemble metrics, but fails miserably for metrics tied to individual redshifts presented in this paper.  We note that many of the ensemble-based metrics are prominent in the photo-$z$ literature despite their inability to identify problems such as those exemplified by \trainz. 
 
 %\aim{Explain why CDE loss is different from other metrics (isn't fooled by \trainz) and note that the others have more of a presence in the literature despite their flaw of failing to identify this severe problem.}
 
@@ -188,7 +188,7 @@ As shown in Appendix~\ref{sec:pointmetrics}, \trainz has identical $ZPEAK$ and $
 %[more caution on over-reliance on metrics, and making sure that metrics test all of what you want] \red{this definitely still needs work}
 In summary, context is crucial to interpreting metrics and defending against the likes of \trainz.
 The best photo-$z$ method is the one that most effectively achieves our science goals, not the one that performs best on a metric that does not accurately reflect those goals.
-In the absence of clear goals or the information necessary for a principled metric definition, we must think carefully before choosing a single metric
+In the absence of clear goals or the information necessary for a principled metric definition, we must think carefully before choosing a single metric.
 
 %\begin{table*}  %%% DATA TABLE %%%
 %\caption{KS, CvM and AD statistics for each photo-$z$ code.} \label{tab:results}
