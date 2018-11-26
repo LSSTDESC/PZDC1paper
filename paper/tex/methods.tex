@@ -152,7 +152,7 @@ By the orthogonality property, the expansion coefficients are just conditional m
 \begin{equation}
 \beta_{i }(\x) =  \mathbb{E}\left[\phi_i(z)|\x\right] \equiv \int f(z|\x)   \phi_i(z) dz. \label{eq:FlexZBoost_coeffs}
 \end{equation}
-These coefficients can easily be estimated from data by regression.
+These coefficients can easily be estimated from data by regression since $\mathbb{E}\left[\phi_i(z)|\x\right]$ is the regression of $\phi_i(z)$ (a transformation of $Z$) on $X$.
 
 In this paper, we use \textsc{xgboost}~\citep{Chen:16} for the regression part; it should however be noted that \textsc{FlexCode-RF} (also on GitHub), based on Random Forests, generally performs better for smaller data sets. As our basis, we choose a standard Fourier basis. There are two tuning parameters in our $p(z)$ estimate: (i) the number of terms, $I$, in the series expansion in Eq.~\ref{eq::series_expansion}, and (ii) an exponent $\alpha$ that we use to sharpen the computed density estimates $\widehat{f}(z|\x)$, according to $\widetilde{f}(z|\x) \propto \widehat{f}(z|\x)^\alpha$.  We reserve 15\% of the training set data as a validation set, and choose both $I$ and $\alpha$ in an automated way by minimizing the weighted $L_2$-loss function \citep[Eq. 5 in][]{Izbicki:17} on the  validation set.  While the native storage format for \textsc{FlexCode} encodes the PDF using the coefficients shown in Equation~\ref{eq:FlexZBoost_coeffs}, to match the output format requested of other codes we discretize our final estimates into 200 bins linearly spaced in $0 < z < 2$.
 
