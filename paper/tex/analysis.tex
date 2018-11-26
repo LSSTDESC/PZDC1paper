@@ -94,11 +94,11 @@ The CDE loss is defined as:
 \begin{equation} \label{eq:cde-loss}
 L(f, \widehat{f}) = \int \int (f(z \mid \x) - \widehat{f}(z \mid \x))^{2} dz dP(\x)
 \end{equation}
-This loss is the CDE equivalent of the RMSE in regression. To estimate this loss we rewrite the loss as
+This loss is the CDE equivalent of the RMSE in regression. To estimate this loss we rewrite Eq.~\ref{eq:cde-loss} as
 \begin{equation} \label{eq:estimated-cde-loss}
 L(f, \widehat{f}) = \mathbb{E}_\X \left[\int \widehat{f}(z \mid \X)^{2} dz\right] - 2 \mathbb{E}_{\X,Z}\left[\widehat{f}(Z \mid \X)\right] + K_{f},
 \end{equation}
-where the first expectation is with respect to the marginal distribution of the covariates $\X$, the second expectation is with respect to the joint distribution of $\X$ and $Z$, and $K_{f}$ is a constant depending only upon the true conditional densities $f(z\mid \x)$.
+where upper-case letters denote random variables and lower-case the observed variables.  The first expectation is with respect to the marginal distribution of the covariates $\X$, the second expectation is with respect to the joint distribution of $\X$ and $Z$, and $K_{f}$ is a constant depending only upon the true conditional densities $f(z\mid \x)$.
 For each method we can estimate these expectations as empirical expectations on the test or validation data \citep[Eq.~7 in][]{Izbicki:17b} without knowledge of the true densities.
 
 %\subsubsection{Continuous Ranked Probability Score (CRPS)}
