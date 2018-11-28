@@ -29,7 +29,7 @@ There are a number of metrics that can be used to test the accuracy of a \pz\ po
 Even for simulated data, the true \pzpdf\ is in general not accessible unless the photometry is in fact drawn from the true \pz\ likelihoods, a mock catalogue generation procedure that has not yet appeared in the literature.
 Furthermore, only limited applications of \pzpdf s that could be used as the basis for a metric have been presented in the literature.
 
-The most popular application of \pspdf s by far is the estimation of the overall redshift distribution $N(z)$, the true value of which is known for the \textsc{Buzzard} simulation and will be denoted as $N'(z)$.
+The most popular application of \pzpdf s by far is the estimation of the overall redshift distribution $N(z)$, the true value of which is known for the \textsc{Buzzard} simulation and will be denoted as $N'(z)$.
 Though alternatives exist \citep{Malz:chippr}, ``stacking'' according to
 \begin{equation} \label{eq:stacked}
 \hat{N}^{H}(z) \equiv \frac{1}{N_{tot}}\ \sum_{i}^{N_{tot}}\ \hat{p}^{H}_{i}(z)
@@ -67,7 +67,7 @@ The probability integral transform (PIT) \citep{Polsterer:16} is defined for eac
 \label{eq:pit}
 \mathrm{PIT} &= \int_{-\infty}^{z_{\rm true}}p(z)\, dz \,.
 \end{align}
-The distribution of PIT values quantifies the behavior of the {\it ensemble} of \pzpdf s, enabling us to evaluate whether the population of \pdpdf s is, on average, accurate.
+The distribution of PIT values quantifies the behavior of the {\it ensemble} of \pzpdf s, enabling us to evaluate whether the population of \pzpdf s is, on average, accurate.
 The PIT value for each galaxy is the Cumulative Distribution Function (CDF) of its \pzpdf\ evaluated at its true redshift.
 A catalogue of \pzpdf s that are accurate should have a flat PIT histogram (i.e., the individual PIT values as samples from each CDF should match a Uniform(0,1) distribution if the CDFs are accurate).
 Specific deviations from flatness indicate inaccuracy: overly broad \pzpdf s would manifest as underrepresentation of the lowest and highest PIT values, whereas overly narrow \pzpdf s would manifest as over-representation of the lowest and highest PIT values.
