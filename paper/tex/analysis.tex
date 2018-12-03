@@ -45,8 +45,7 @@ This is the exact estimator, \trainz, that we have described in Section~\ref{sec
 
 The exact implementation of the stacked estimator $\hat{N}^{H}(z)$ should depend on the parametrization of the \pzpdf s, which may differ across codes and can affect the precision of the estimator \citep{Malz:qp}; even considering a single method under the same parametrization, say a piecewise constant function over bins or a set of samples from the posterior, an estimator using $2N$ bins or samples will trivially be more precise than an estimator using $N$ bins or samples.
 %\red{Note: Let's address how the gridding (endpoints and spacing) affects the metrics, from the email correspondence Re: [LSST-DESC-MEMBERS] Summary of Nov 29 PZ Telecon. (AIM)}
-
-In order to minimize the effects of the choice of parameterization, we asked those running all twelve codes to output \pzpdf s parameterized with $\approx 200$ piecewise constant bins spanning $0<z<2$.
+In order to minimize the effects of the choice of parameterization, we asked those running all twelve codes to output \pzpdf s parameterized with $200$ piecewise constant bins spanning $0<z<2$.
 The piecewise constant format is chosen because of its established presence in the literature, and the choice of 200 bins was motivated by the approximate number of columns expected to be available for storage of \pzpdf s for the final \lsst\ Project tables.\footnote{See, e.~g.~the \lsst\ Data Products Definition Document, available at: \url{https://ls.st/dpdd}}
 All the \pzpdf\ catalogs are processed using the \qp\ software package \citep{Malz:qp}\footnote{available at: \url{http://github.com/aimalz/qp/}} for manipulating and calculating metrics of univariate PDFs.
 We will discuss the choice of \pzpdf\ parameterization further in Section~\ref{sec:results}.
@@ -125,18 +124,18 @@ In tandem with the QQ and PIT metrics introduced above, we additionally compute 
 These metrics give a more quantitative measure of the departure from ideal than the more visual PIT histogram and QQ plot.
 We compute metrics comparing the CDF of PIT values to the CDF of a Uniform distribution, and also compute the CDF of the true redshift distribution $N'(z)$ compared the $\hat{N}(z)$ distribution derived from summing the \pzpdf s as described in Eq.~\ref{eq:stacked}.
 
-\subsubsection{Root-mean-square error (RMSE)}
-\label{sec:rmse}
-%(Alex Malz)
-
-We employ the familiar root-mean-square error
-\begin{equation}
-\mathrm{RMSE} \equiv \sqrt{\int_{-\infty}^{\infty}\left(\hat{f}(z)-f'(z)\right)^{2}\,dz} .
-\end{equation}
-%may be used for two purposes in this analysis.
-%We calculate it between the true redshift distribution $N'(z)$ and each estimator $\hat{N}(z)$ (derived by Eq.~\ref{eq:stacked}) as well as between the ideal QQ and PIT curves from each method studied and the ideal curves.
-Though this metric does not account for the fact that the redshift distribution function is, in fact, a probability distribution, it can still be interpreted as a measure of the integrated difference between the estimated distribution and the true distribution.%, and it can be used to quantify the otherwise qualitative metrics.
-
+%\subsubsection{Root-mean-square error (RMSE)}
+%\label{sec:rmse}
+%%(Alex Malz)%
+%
+%We employ the familiar root-mean-square error
+%\begin{equation}
+%\mathrm{RMSE} \equiv \sqrt{\int_{-\infty}^{\infty}\left(\hat{f}(z)-f'(z)\right)^{2}\,dz} .
+%\end{equation}
+%%may be used for two purposes in this analysis.
+%%We calculate it between the true redshift distribution $N'(z)$ and each estimator $\hat{N}(z)$ (derived by Eq.~\ref{eq:stacked}) as well as between the ideal QQ and PIT curves from each method studied and the ideal curves.
+%Though this metric does not account for the fact that the redshift distribution function is, in fact, a probability distribution, it can still be interpreted as a measure of the integrated difference between the estimated distribution and the true distribution.%, and it can be used to quantify the otherwise qualitative metrics.
+%
 
 \subsubsection{Kolmogorov-Smirnov (KS) and related statistics}
 \label{sec:ks}
@@ -191,4 +190,4 @@ The $m^{\mathrm{th}}$ moment of a distribution is defined as
 \langle z^{m}\rangle \equiv \int_{-\infty}^{\infty}z^{m}N(z)dz .
 \end{equation}
 Here, we use the moments of the stacked estimator of the redshift distribution function as the basis for a metric.
-The closer the moments of $\hat{N}(z)$ for a \pzpdf\ method are to the moments of the true redshift distribution function $N'(z)$, the better the \pzpdf\ method.
+The closer the moments of $\hat{N}(z)$ for a \pzpdf\ method are to the moments of the true redshift distribution function $N'(z)$, the better the \pzpdf\ method is a estimating the overall redshift distribution ``shape''.

@@ -27,17 +27,16 @@
 Fig.~\ref{fig:pz_examples} Shows the $p(z)$ produced by each of our twelve photo-$z$ codes for four example galaxies which exemplify some prominent cases that arise when estimating photo-$z$ PDFs: a narrow, unimodal redshift solution, a broader unimodal solution, a bimodal distribution, and a complex, multimodal distribution.
 The red vertical line represents the true redshift of the individual galaxy, and the blue curve represents the redshift probability.
 Several features are obvious even in these illustrative examples.
-\textsc{ANNz2, METAPhoR, NN,} and \textsc{SkyNet} all show an excess of small-scale features, which appear to be print-through of the underlying training set galaxies.  For example, in \textsc{CMNN} the $p(z)$ are a simply a weighted histogram of all spectroscopic training galaxies in nearby colour space with no smoothing applied, so the substructure is due to the finite number of neighbours, and is not unexpected.
+\textsc{ANNz2, METAPhoR, CMNN,} and \textsc{SkyNet} all show an excess of small-scale features, which appear to be print-through of the underlying training set galaxies.  For example, in \textsc{CMNN} the $p(z)$ are a simply a weighted histogram of all spectroscopic training galaxies in nearby colour space with no smoothing applied, so the substructure is due to the finite number of neighbours, and is not unexpected.
 \textsc{GPZ} (in its current implementation), on the other hand, always produces a single Gaussian, which broadens to cover the multi-modal redshift solutions seen in other codes.
 %Interestingly, while \textsc{ANNz2} shows an abundance of small scale structure in individual $p(z)$ measurements (see Fig.~\ref{fig:pz_examples}), the summed $\hat{N}(z)$ is rather smooth, where the small scale features average out.  This is not the case for the two other codes that show an abundance of substructure in their individual $p(z)$: both \textsc{CMNN} and \textsc{SkyNet} show small scale features both in $p(z)$ and $\hat{N}(z)$.
 
-As stated in Section~\ref{sec:metrics}, $p(z)$ is parameterized as $200$ piecewise constant bins covering $0<z<2$ for all twelve codes, giving a grid size of $\delta z = 0.01$ for each code.
-A piecewise constant grid was a natural choice for some photo-$z$ codes, for instance most template-based codes compute likelihoods on a fixed grid.  In contrast, FlexZBoost, for example, can return estimates on any grid without compression errors as it’s a basis expansion method where only the expansion coefficients need to be stored.
-Codes with a native output format other than the shared piecewise constant binning scheme (or one that can be losslessly converted to it) may suffer from loss of information when converting to it, which could artificially favor some codes over others in a limited number of cases, for example bright galaxies with very narrow $p(z)$ where the true peak falls between grid points.  We will discuss PDF storage in Section~\ref{sec:discussion}.
-
-Furthermore, the fidelity of photo-$z$ interim posteriors in this format varies with the quality of the photometry.
+As stated in Section~\ref{sec:metrics}, $p(z)$ is parameterized as $200$ piecewise constant bins covering $0<z<2$ for all twelve codes, giving a grid size of $\delta z = 0.01$ for each PDF.
+A piecewise constant grid was a natural choice for some photo-$z$ methods, for instance most template-based codes compute likelihoods on a fixed grid.  %In contrast, FlexZBoost, for example, can return estimates on any grid without compression errors as it’s a basis expansion method where only the expansion coefficients need to be stored.
+%Codes with a native output format other than the shared piecewise constant binning scheme (or one that can be losslessly converted to it) may suffer from loss of information when converting to it, which could artificially favor some codes over others in a limited number of cases, for example bright galaxies with very narrow $p(z)$ where the true peak falls between grid points.  We will discuss PDF storage in Section~\ref{sec:discussion}.
+%Furthermore, the fidelity of photo-$z$ interim posteriors in this format varies with the quality of the photometry.
 For faint galaxies, this redshift resolution is sufficient to capture the shape of $p(z)$ for the majority of the test sample, where photometric errors on the faint galaxies lead to somewhat broad peaks in the redshift posterior.
-However, as can be seen in e.~g.~the top left panel of Fig.~\ref{fig:pz_examples}, for bright galaxies with narrow $p(z)$ the grid spacing of $\delta z = 0.01$ is not sufficient to resolve the peak.
+However, as can be seen in e.~g.~the top left panel of Fig.~\ref{fig:pz_examples}, for bright galaxies with narrow $p(z)$ the grid spacing of $\delta z = 0.01$ is not always sufficient to resolve the peak.
 This is consistent with the results described in \citet[]{Malz:qp}, who find that quantiles (and, to a lesser degree, samples) often outperform gridded $p(z)$, particularly for bright objects and in the presence of harsher storage constraints.
 With a full 200 numbers to capture the information of each photo-$z$ PDF, any parametrization will perform adequately, but other storage parametrizations and limits on storage resources may be considered in future work.
 %Switching to a quantile based parameterization may be more costly computationally, for example template-based codes would need to test more grid point in order to resolve the quantiles for bright galaxies.  However, the computational time for template based codes scales roughly linearly with the number of grid points, so this may be a reasonable thing to implement.
@@ -148,11 +147,12 @@ It is unsurprising that \textsc{CMNN} scores well, as with a near perfectly repr
 %\textcolor{cyan}{Ann: }
 
 
-Table~\ref{tab:cdeloss} shows the CDE loss statistic for each photo-$z$ code.  Once again \textsc{FlexZBoost} and \textsc{CMNN} score very well for the stacked $\hat{N}(z)$ metrics, as do \textsc{GPz} and \textsc{TPZ}.  The CDE loss measures how well individual PDFs are estimated, and codes with a low CDE loss tend to have good $\hat{N}(z)$ estimates (though the reverse is not necessarily true). \textsc{FlexZBoost} is optimized to minimize CDE loss which may explain why the method has good ensemble metrics as well. Note from Table~\ref{tab:cdeloss} that both \textsc{FlexZBoost} and \textsc{CMNN} have low CDE losses.  Empirically, we have found that PIT RMSE is not as closely correlated to CDE loss as it is to the $N(z)$ statistics.  As CDE loss is a better measure of individual redshift performance, rather than ensemble distribution performance, this statistic is a better indicator of which codes will be most likely to perform well for science cases where single objects are employed.
+Table~\ref{tab:cdeloss} shows the CDE loss statistic for each photo-$z$ code.  Once again \textsc{FlexZBoost} and \textsc{CMNN} score very well for the stacked $\hat{N}(z)$ metrics, as do \textsc{GPz} and \textsc{TPZ}.  The CDE loss measures how well individual PDFs are estimated, and codes with a low CDE loss tend to have good $\hat{N}(z)$ estimates (though the reverse is not necessarily true). \textsc{FlexZBoost} is optimized to minimize CDE loss which may explain why the method has good ensemble metrics as well. Note from Table~\ref{tab:cdeloss} that both \textsc{FlexZBoost} and \textsc{CMNN} have low CDE losses.  %Empirically, we have found that PIT RMSE is not as closely correlated to CDE loss as it is to the $N(z)$ statistics.
+As CDE loss is a better measure of individual redshift performance, rather than ensemble distribution performance, this statistic is a better indicator of which codes will be most likely to perform well for science cases where single objects are employed.
 
-Table~\ref{tab:rmse} gives the root-mean-square-error (RMSE) statistics for both the PIT and N(z) estimators.  The PIT value calculates the RMSE between the quantiles shown in the QQ plot in Figure~\ref{fig:pitqq} and the diagonal, while the N(z) calculates the RMSE between the cumulative distribution of the stacked $\hat{N}(z)$ and the true redshift distribution $N'(z)$.  %\red{more about RMSE?  Or remove it? It's barely described in Section~\ref{sec:metrics} and wasn't even referred to in the text until I added this on June 29th--SJS.}
+%Table~\ref{tab:rmse} gives the root-mean-square-error (RMSE) statistics for both the PIT and N(z) estimators.  The PIT value calculates the RMSE between the quantiles shown in the QQ plot in Figure~\ref{fig:pitqq} and the diagonal, while the N(z) calculates the RMSE between the cumulative distribution of the stacked $\hat{N}(z)$ and the true redshift distribution $N'(z)$.  %\red{more about RMSE?  Or remove it? It's barely described in Section~\ref{sec:metrics} and wasn't even referred to in the text until I added this on June 29th--SJS.}
 
-Table~\ref{tab:moments} lists the first three moments of the stacked $\hat{N}(z)$ distribution, including the moments of the ``truth'' distribution for comparison.  Several codes are able to reproduce the mean and variance of the distribution to less than a per cent, while several codes do not, which may be a cause for concern, given that mean and variance of the redshift distribution are key properties in cosmological analyses.  We note that this stated goal of the study as defined for participants was to accurately reproduce $p(z)$, the ``stacking'' of the probability distributions to estimate $\hat{N}(z)$ was not the focus as stated to the participants.  This explains why some of the best-performing empirical codes in terms of $p(z)$ measures (e.~g.~\textsc{FlexZBoost}) do not do as well at reproducing $\hat{N}(z)$ moments.  Had we defined a different parameter to optimize, in this case overall accuracy of $\hat{N}(z)$ rather than individual $p(z)$, would result in improved performance in a particular metric.  That is, optimizing photo-$z$ performance for one metric does not automatically give optimal performance for other metrics.  As previously stated, there are a variety of scientific use cases for photo-$z$'s in large upcoming surveys, and care must be taken in how the metrics used to optimize catalog photometric redshifts are defined as well as in how they are used.  This implies that we may need multiple photo-z estimators, tuned to the particular metric, in order to maximize science returns in upcoming surveys.  In addition, very few scientific use cases will employ the overall $\hat{N}(z)$ with no cuts, as we explore in this paper.  We discuss more realistic tomographic bin selections that will be explored in a follow-up paper in Section~\ref{sec:futurework}.
+Table~\ref{tab:moments} lists the first three moments of the stacked $\hat{N}(z)$ distribution, including the moments of the ``truth'' distribution for comparison.  Several codes are able to reproduce the mean and variance of the distribution to less than a per cent, while several codes do not, which may be a cause for concern, given that mean and variance of the redshift distribution are key properties in cosmological analyses.  We note that this stated goal of the study as defined for participants was to accurately reproduce $p(z)$, the ``stacking'' of the probability distributions to estimate $\hat{N}(z)$ was not the focus as stated to the participants.  This explains why some of the best-performing empirical codes in terms of $p(z)$ measures (e.~g.~\textsc{FlexZBoost}) do not do as well at reproducing $\hat{N}(z)$ moments.  Had we defined a different parameter to optimize, in this case overall accuracy of $\hat{N}(z)$ rather than individual $p(z)$, would result in improved performance in a particular metric.  That is, optimizing photo-$z$ performance for one metric does not automatically give optimal performance for other metrics.  As previously stated, there are a variety of scientific use cases for photo-$z$'s in large upcoming surveys, and care must be taken in how the metrics used to optimize catalog photometric redshifts are defined as well as in how they are used.  This implies that we may need multiple photo-z estimators, tuned to the particular metric, in order to maximize returns over all science cases in upcoming surveys.  In addition, very few scientific use cases will employ the overall $\hat{N}(z)$ with no cuts, as we explore in this paper.  We discuss more realistic tomographic bin selections that will be explored in a follow-up paper in Section~\ref{sec:futurework}.
 %\red{[mention that we are calculating moments for the entire sample, will look at fiducial tomographic bins in a follow-up paper (unless group and reviewers realy think we should include in this paper.]}
 %\red{FlexZBoost has some of the best $n(z)$ statistics, but the moments are not good.  Why is this?  Is it the over/underprediction of the high redshift part of the distribution?  Discuss this after talking with Rafael.}
 
@@ -186,7 +186,7 @@ As shown in Appendix~\ref{sec:pointmetrics}, \trainz ~has identical $ZPEAK$ and 
 
 % While looking at one, or even most of our metrics would have given the impression that this estimator was nearly optimal, red flags in CDE loss and point estimates reveal the problems.
 %[more caution on over-reliance on metrics, and making sure that metrics test all of what you want] \red{this definitely still needs work}
-In summary, context is crucial to interpreting metrics and defending against the likes of \trainz.
+In summary, context is crucial to interpreting metrics and defending against deceptively well performing methods such as \trainz.
 The best photo-$z$ method is the one that most effectively achieves our science goals, not the one that performs best on a metric that does not accurately reflect those goals.
 In the absence of clear goals or the information necessary for a principled metric definition, we must think carefully before choosing a single metric.
 
@@ -274,34 +274,34 @@ In the absence of clear goals or the information necessary for a principled metr
 \end{tabular}
 \end{table}
 
-\begin{table}
-\setlength{\tabcolsep}{2pt}
-\begin{center}
-\caption{Root-Mean-Square-Error (RMSE) statistics for the twelve photo-z codes for both PIT and $\hat{N}(z)$ distributions.}\label{tab:rmse}
-\begin{tabular}{lcc}
-\hline
-\hline
-Root-Mean-Square-Error \\
-(RMSE) statistics \\
-\hline
-Photo-z Code & PIT RMSE & N(z) RMSE\\
-\hline
-\textsc{ANNz2}      & 0.019 & 0.0054\\
-\textsc{BPZ}        & 0.032 & 0.0050\\
-\textsc{Delight}    & 0.111 & 0.0056\\
-\textsc{EAZY}       & 0.054 & 0.0102\\
-\textsc{FlexZBoost} & 0.021 & 0.0022\\
-\textsc{GPz}        & 0.027 & 0.0042\\
-\textsc{LePhare}    & 0.028 & 0.0062\\
-\textsc{METAPhoR}   & 0.064 & 0.0081\\
-\textsc{CMNN}         & 0.108 & 0.0009\\
-\textsc{Skynet}     & 0.054 & 0.0144\\
-\textsc{TPZ}        & 0.082 & 0.0031\\
-\hline
-\trainz		& 0.0025 & 0.0013\\
-\end{tabular}
-\end{center}
-\end{table}
+%\begin{table}
+%\setlength{\tabcolsep}{2pt}
+%\begin{center}
+%\caption{Root-Mean-Square-Error (RMSE) statistics for the twelve photo-z codes for both PIT and $\hat{N}(z)$ distributions.}\label{tab:rmse}
+%\begin{tabular}{lcc}
+%\hline
+%\hline
+%Root-Mean-Square-Error \\
+%(RMSE) statistics \\
+%\hline
+%Photo-z Code & PIT RMSE & N(z) RMSE\\
+%\hline
+%\textsc{ANNz2}      & 0.019 & 0.0054\\
+%\textsc{BPZ}        & 0.032 & 0.0050\\
+%\textsc{Delight}    & 0.111 & 0.0056\\
+%\textsc{EAZY}       & 0.054 & 0.0102\\
+%\textsc{FlexZBoost} & 0.021 & 0.0022\\
+%\textsc{GPz}        & 0.027 & 0.0042\\
+%\textsc{LePhare}    & 0.028 & 0.0062\\
+%\textsc{METAPhoR}   & 0.064 & 0.0081\\
+%\textsc{CMNN}         & 0.108 & 0.0009\\
+%\textsc{Skynet}     & 0.054 & 0.0144\\
+%\textsc{TPZ}        & 0.082 & 0.0031\\
+%\hline
+%\trainz		& 0.0025 & 0.0013\\
+%\end{tabular}
+%\end{center}
+%\end{table}
 
 %\begin{table}
 %\begin{center}
