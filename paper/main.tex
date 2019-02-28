@@ -52,6 +52,7 @@ mathlines]{lineno}
 \newcommand{\lsstdesc}{\lsst\textsc{-DESC}}
 \newcommand{\pz}{photo-$z$}
 \newcommand{\pzpdf}{\pz\ PDF}% can easily change this to specify posterior throughout
+\newcommand{\qp}{\texttt{qp}}
 
 \newcommand{\trainz}{\textsc{trainZ}}
 
@@ -77,21 +78,19 @@ mathlines]{lineno}
 \begin{document}
 \linenumbers
 
-\title{An assessment of photometric redshift PDF performance in the context of LSST}
+\title{Implicit assumptions and their impact on photometric redshift PDF performance for LSST}
 % \title{Photometric redshift uncertainties for LSST \romannumeral{1}: A unified methodology for assessing photo-$z$ PDF performance}
 
 \maketitlepre
 
 \begin{abstract}
 
-  Photometric redshift (photo-$z$) probability distribution functions (PDFs) are a key data product of nearly all upcoming galaxy imaging surveys.
-  However, the photo-$z$ PDFs resulting from different techniques are not in general consistent with one another, and an optimal method for obtaining an accurate PDF remains unclear.
-  We present the results of an initial study of the Large Synoptic Survey Telescope Dark Energy Science Collaboration (\textsc{LSST-DESC}), the first in a planned series of papers testing multiple photo-$z$ codes on simulations of upcoming LSST galaxy photometry catalogues.
-  This initial test evaluates photo-$z$ algorithms in the presence of representative training data and in the absence of several common sources of systematic errors that affect the procedures by which photo-$z$ PDFs are derived.
-  The photo-$z$ PDFs are evaluated using multiple metrics including the Kolmogorov-Smirnoff statistic, Cramer-von Mises statistic, Anderson-Darling statistic, Kullback-Leibler divergence, $N(z)$ moments, quantile-quantile plots and probability integral transform.
-  We observe several trends, including an overall over/under-prediction in the broadness of the PDFs for several of the codes.
-  A careful accounting of all systematics discovered will be necessary for the codes employed in upcoming analyses in order to achieve unbiased cosmological measurements.
-  % Photometric redshift (photo-$z$) probability distribution functions (PDFs) more completely capture the complex nature of photo-$z$ uncertainties and are thus a key data product of nearly all upcoming galaxy imaging surveys, including the Large Synoptic Survey Telescope (LSST).
+In order to maximize scientific returns of current and upcoming galaxy surveys, the photometric redshift (photo-$z$) posterior distributions produced by redshift estimation codes must be accurate probability distribution functions (PDFs).  However, the posteriors resulting from a number of current techniques are not, in general, consistent with each other, affected by implicit assumptions made by each code, and an optimal method for obtaining an accurate PDF estimate remains unclear.   We present the results of an initial study by the Large Synoptic Survey Telescope Dark Energy Science Collaboration (\textsc{LSST-DESC}) testing twelve photo-$z$ algorithms using complete and representative training data and evaluate multiple metrics to test how accurately the posteriors represent probability distributions.  We observe several trends, including systematic biases and an overall over/under-prediction in the broadness of the PDFs in many of the codes which may be symptomatic of implementation problems or problems in underlying algorithm design.  A careful accounting of all photo-$z$ systematics will be necessary for the codes employed in upcoming analyses in order to achieve unbiased cosmological measurements.
+  
+%  Photometric redshift (photo-$z$) probability distribution functions (PDFs) are a key data product of nearly all upcoming galaxy imaging surveys.  However, the photo-$z$ PDFs resulting from different techniques are not in general consistent with one another, and an optimal method for obtaining an accurate PDF remains unclear.  We present the results of an initial study of the Large Synoptic Survey Telescope Dark Energy Science Collaboration (\textsc{LSST-DESC}), the first in a planned series of papers testing multiple photo-$z$ codes on simulations of upcoming LSST galaxy photometry catalogues.  This initial test evaluates photo-$z$ algorithms in the presence of representative training data and in the absence of several common sources of systematic errors that affect the procedures by which photo-$z$ PDFs are derived.
+%%  The photo-$z$ PDFs are evaluated using multiple metrics including the Kolmogorov-Smirnoff statistic, Cramer-von Mises statistic, Anderson-Darling statistic, Kullback-Leibler divergence, $N(z)$ moments, quantile-quantile plots and probability integral transform.
+%  The photo-$z$ PDFs are evaluated using multiple metrics and we observe several trends, including an overall over/under-prediction in the broadness of the PDFs for several of the codes.  A careful accounting of all systematics discovered will be necessary for the codes employed in upcoming analyses in order to achieve unbiased cosmological measurements.
+ %% Photometric redshift (photo-$z$) probability distribution functions (PDFs) more completely capture the complex nature of photo-$z$ uncertainties and are thus a key data product of nearly all upcoming galaxy imaging surveys, including the Large Synoptic Survey Telescope (LSST).
   % Photo-$z$ PDFs produced by different algorithms do not in general agree with one another, and no one technique has yet been identified as optimal, leading to a proliferation of photo-$z$ PDF estimation codes.
   % We present a unified comparison of twelve such codes using simulated LSST photometry, the first in a series of papers on photo-$z$ PDF performance for the LSST Dark Energy Science Collaboration (DESC).
   % In this initial study, we isolate the effects of the estimation procedure by running each code using perfectly representative training data (for machine learning methods) or the true SED template library (for template-fitting methods) and confirm the mutual inconsistency of the resulting photo-$z$ PDF estimates.
@@ -121,7 +120,7 @@ mathlines]{lineno}
 
 \input{./tex/discussion}
 
-\input{./tex/conclusion}
+%\input{./tex/conclusion}
 
 % ----------------------------------------------------------------------
 
@@ -137,9 +136,12 @@ mathlines]{lineno}
 
 % Standard papers only: A.B.C. acknowledges support from grant 1234 from ...
 
-The authors would like to thank their LSST-DESC publication review committee.
+The authors would like to thank their LSST-DESC publication review committee for comments that improved the paper draft.
 
-AIM is advised by David W. Hogg and was supported by National Science Foundation grant AST-1517237.
+{ \red{personal funding sources}}
+S.~Schmidt acknowledges support from DOE grant DE-SC0009999 and NSF/AURA grant N56981C.  AIM is advised by David W. Hogg and was supported by National Science Foundation grant AST-1517237.
+
+In addition to packages cited in the text, analyses performed in this paper used the following software packages: \textsc{Numpy} and \textsc{Scipy} \citep{numpyscipy}, \textsc{Matplotlib} \citep{matplotlib}, \textsc{Seaborn} \citep{seaborn}, \textsc{minFunc} \citep{minfunc}, \textsc{pySkyNet} \citep{pyskynet}, and {\textsc photUtils} from the LSST simulations package \citep{lsstphotutils}.
 
 \input{desc-tex/ack/standard} % also available: key standard_short
 
