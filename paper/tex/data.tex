@@ -8,13 +8,13 @@ Finally, in Section~\ref{sec:limitations}, we elaborate on the scope of the expe
 \subsection{Buzzard-v1.0 simulation}
 \label{sec:buzzard}
 
-Our mock catalogue is derived from the \textsc{Buzzard-highres-v1.0}  of De Rose et al., in prep, Wechsler et al., in prep) catalogue.
+Our mock catalogue is derived from the \textsc{Buzzard}-highres-v1.0  of De Rose et al., in prep, Wechsler et al., in prep) catalogue.
 % UPDATE THIS CITATION NOW THAT THE PAPER IS OUT
 \textsc{Buzzard} is built on a dark matter-only N-body simulation of $2048^{3}$ particles in a $400$ Mpc h$^{-1}$ box.
 The lightcone was constructed from smoothing and interpolation between a set of time snapshots.
-Dark matter halos were identified using the \textsc{Rockstar} software package \citep{Behroozi:13} and then populated with galaxies with a stellar mass and absolute $r$-band magnitude in the \sdss\ system determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep{Reddick:13}.
+Dark matter halos were identified using the \texttt{Rockstar} software package \citep{Behroozi:13} and then populated with galaxies with a stellar mass and absolute $r$-band magnitude in the \sdss\ system determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep{Reddick:13}.
 
-To assign an SED to each galaxy, the {\it Adding Density Dependent Spectral Energy Distributions} (\texttt{ADDSEDS}, deRose in prep.)\footnote{\url{https://github.com/vipasu/addseds}} procedure was used.
+To assign an SED to each galaxy, the Adding Density Dependent Spectral Energy Distributions (\texttt{ADDSEDS}, deRose in prep.)\footnote{\url{https://github.com/vipasu/addseds}} procedure was used.
 \texttt{ADDSEDS} uses a sample of $\sim 5\times 10^{5}$ galaxies from the magnitude-limited \sdss\ Data Release 6 Value Added Galaxy Catalogue \citep{Blanton:05} to train an empirical relation between absolute $r$-band magnitude, local galaxy density, and SED.
 Each \sdss\ spectrum is parameterized by five weights corresponding to a weighted sum of five basis SED components using the \texttt{k-correct \red{v4\_3?}} software package\footnote{\url{http://kcorrect.org}} \citep{Blanton:07}.
 
@@ -29,39 +29,36 @@ We assigned magnitude errors in the six bands using the simple model of \citet{I
 As a consequence of adding Gaussian-distributed photometric errors, 2.0\% of our galaxies exhibit a negative flux in one or more bands, the vast majority of which are in the $u$-band.
 We deem such negative fluxes \textit{non-detections} and assign a placholder magnitude of 99.0 in the catalogue to indicate to the \pzpdf\ codes that such galaxies would be ``looked at but not seen'' in multi-band forced photometry.
 
+The full \textsc{Buzzard} dataset thus covers $400$ square degrees and contains $238$ million galaxies of redshift $0 < z \leq 8.7$ down to $r = 29$.
+Systematic inconsistencies with galaxy colors at $z > 2$ were observed, so the catalogue was limited to $0 < z \leq 2.0$.
+To obtain a catalogue matching the \lsst\ Gold Sample, we imposed an cut of $i < 25.3$, which gives a signal-to-noise ratio $\sim 30$ for most galaxies.
+In order for statistical errors to be subdominant to the systematic errors we aim to probe, we further reduced the sample size to $<10^{7}$ galaxies by isolating $\sim 16.8$ square degrees selected from five separate spatial regions of the simulation.
+
 \subsection{Experimental Conditions}
 \label{sec:controlled}
 
 % NOW MOTIVATE THE SHARED PRIOR INFORMATION
+For the purpose of performing a controlled experiment that compares \pzpdf\ codes on equal footing as a baseline for a future sensitivity analysis, we take care to provide each with maximally optimistic prior information.
+Redshift estimation approaches built upon physical modeling and machine learning alike have a notion of prior information considered beyond the photometry of the data for which redshift is to be constrained: that information is derived from a template library for a model-based code and a training set for a data-driven code.
+In this initial study, we seek to set a baseline for a later comparison of the performance of \pzpdf\ codes under incomplete and non-representative prior information that will propagate differently in the space of data-driven and model-based algorithms.
+However, for the baseline case of perfect prior information, physical modeling and machine learning codes can indeed be put on truly equal footing.
+We outline the equivalent ways of providing all codes perfect prior information below.
 
-\subsubsection{Training set selection}
+\subsubsection{Training and test set division}
 \label{sec:buzztraining}
 
-The total initial catalogue covered $400$ square degrees and contained $238$ million galaxies to an apparent magnitude limit of $r\!=\!29$ and spanning the redshift range $0\!<\!z\!\leq\!8.7$.  In order for statistical errors not to dominate, we need less than one million galaxies in our sample.
-Several studies claim that only a few tens of thousands of spectra are necessary to calibrate photo-z surveys to Stage IV requirements (e.~g.~\citet{Bernstein:10}, \citet{Masters:2017}).
-Therefore, we aim for a final number of training galaxies between $3\times 10^{4}$ and $5\times 10^{4}$ in our sample.
-%This catalogue contained two orders of magnitude more galaxies than were necessary to determine statistics for this study,
-In order to reduce our sample to a reasonable size, we limit our dataset to a subset of $\sim\!16.8$ square degrees selected from five separate spatial regions of the simulation.
-Systematic problems with galaxy colors above $z\!>\!2$ were observed, so the catalogue was limited to include only galaxies in the redshift range $0\!<\!z\!\leq\!2.0$.
-A random subset of the the remaining galaxies was chosen, and placed at random into either a ``training'' set ($10$ per cent of the sample), for which the galaxies true redshifts will be supplied, or a ``test'' set (the remaining $90$ per cent of the sample), for which each code will need to predict a redshift PDF for each galaxy.
+Following the findings of \citet{Bernstein:10}, \citet{Masters:2017} that only $~10^{4}$ spectra are necessary to calibrate \pz s to Stage IV requirements, we aimed to set aside a randomly selected training set of $3-5\times 10^{4}$ galaxies, $\sim 10\%$ of the full sample.
+After all cuts described above, we designated a training set of $44\,404$ galaxies for which both photometry and redshifts would be provided to data-driven codes and a blinded test set of $399\,356$ galaxies for which photometry alone would be provided to all codes and \pzpdf s would be requested.
 %The resulting catalogues contain $111\,171$ training galaxies and $1\,000\,883$ test galaxies.
-Finally, we restrict our analysis to a sample with an apparent i-band magnitude limit $i<25.3$, which give a signal-to-noise $\sim\,30$ for most galaxies, a cut often referred to as the expected ``LSST Gold Sample''.
-This magnitude cut results in a training set with $44\,404$ galaxies and a test set containing $399\,356$ galaxies.  All subsequent results will evaluate this ``gold sample'' test set.
-In order to blind results, initially redshifts were not revealed for the ``test'' set, and were only supplied for the training sample galaxies.
-This prevented code runners from tweaking results and fitting to the specific test set.
 
 \subsubsection{Template library construction}
 \label{sec:buzztemplates}
 
-As mentioned in Section~\ref{sec:buzzard}, the SEDs in the Buzzard simulation are drawn from an empirical set of SEDs taken from the SDSS DR6 NYU-VAGC, a sample of roughly $\sim5\times 10^{5}$ galaxies with spectra in SDSS.
-To determine a finite set of templates to use with template fitting codes we take the five SED weight coefficients for each of the galaxies in the SDSS sample and run a simple K-means clustering algorithm on this five dimensional space.
-Each dimension was normalized such that it spanned an interval $[0,1]$.
-The K-means clusters partition the five-dimensional space of coefficients into Voronoi cells, spanning the space of coefficients in a way that properly reflects the underlying density in the coefficients.
-Thus, the resultant SEDs constructed using the cell centers as weight coefficients will provide a reasonable spanning SED set.
-An ad-hoc number of $K=100$ was chosen and the $100$ K-means centre positions are taken as the weights for the \textsc{k-correct} SED components to construct one hundred template SEDs. These $100$ templates were provided,
-%\red{(JS: if I remembered correctly, weren't there 150 templates given? Answer: no, initially I supplied a list of 150 that were drawn with a different algorithm, but once we switched to the final k-means set I only supplied 100 (the initial algorithm over-weighted outlier SEDs, which is why we needed the extra 50)--SJS)}
-and the templates were used by both \textsc{BPZ} and \textsc{LePhare}; however, because EAZY was designed and written to use the same five basis templates employed by \textsc{k-correct} when constructing our mock galaxies, EAZY was run using linear combinations of these five templates rather than using the 100 discrete templates.
-The ability to fit for linear combinations of templates highlights an important implementation difference between similar photo-z codes.
+We aimed to provide template-fitting codes with complete yet manageable library of templates spanning the space of SEDs of the \textsc{Buzzard} galaxies.
+We constructed $K=100$ representative templates from the $\sim 5 \times 10^{5}$ SEDs of the \sdss\ DR6 NYU-VAGC by using the five-dimensional vectors of SED weight coefficients described above.
+After regularizing the SED weight coefficients $\in [0, 1]$, we ran a simple K-means clustering algorithm on the five-dimensional space of regularized SED weight coefficients of the \sdss\ galaxy sample.
+The resulting clusters were used to define Voronoi cells in the space of weight coefficients, with centre positions corresponding to weights for the \texttt{k-correct} SED components, yielding 100 templates to be provided to all template-based codes.
+We did not, however, exclude from consideration template-based codes that made modifications in their use of these templates due to architecture limitations (as opposed to knowledge of the experimental conditions that could artificially boost the code's apparent performance), with deviations noted in Section~\ref{sec:pzcodes}.
 
 \subsection{Limitations}
 \label{sec:buzzlimitations}
