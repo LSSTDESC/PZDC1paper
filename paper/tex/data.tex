@@ -1,31 +1,33 @@
 \section{Data}
 \label{sec:sims}
 
-In order to test the current generation of \pzpdf\ codes, we employ an existing simulated galaxy catalog, described in detail in Section~\ref{sec:buzzard}.
+In order to test the current generation of \pzpdf\ codes, we employ an existing simulated galaxy catalogue, described in detail in Section~\ref{sec:buzzard}.
 The experimental conditions shared among all codes are motivated by the \lsst\ SRD requirements and implemented for machine learning and template-based \pzpdf\ codes according to the procedures of Sections~\ref{sec:buzztraining} and \ref{sec:buzztemplates} respectively.
 Finally, in Section~\ref{sec:limitations}, we elaborate on the scope of the experimental conditions considered as a result of the sophistication of the mock data.
 
 \subsection{Buzzard-v1.0 simulation}
 \label{sec:buzzard}
 
-The \textsc{Buzzard-highres-v1.0} (De Rose et al., in prep; Wechsler et al., in prep) catalog construction started with a dark matter only simulation.
-This N-body simulation contained $2048^3$ particles in a $400$ Mpc h$^{-1}$ box.
-A set of time snapshots (with smoothing and interpolation between snapshots) were saved in order to construct a lightcone.
-Dark matter halos were identified using the \textsc{Rockstar} software package \citep{Behroozi:13}.
-These dark matter halos were populated with galaxies with a stellar mass and absolute $r$-band magnitude in the \textsc{SDSS} system determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep{Reddick:13}.
+Our mock catalogue is derived from the \textsc{Buzzard-highres-v1.0}  of De Rose et al., in prep, Wechsler et al., in prep) catalogue.
+% UPDATE THIS CITATION NOW THAT THE PAPER IS OUT
+\textsc{Buzzard} is built on a dark matter-only N-body simulation of $2048^{3}$ particles in a $400$ Mpc h$^{-1}$ box.
+The lightcone was constructed from smoothing and interpolation between a set of time snapshots.
+Dark matter halos were identified using the \textsc{Rockstar} software package \citep{Behroozi:13} and then populated with galaxies with a stellar mass and absolute $r$-band magnitude in the \sdss\ system determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep{Reddick:13}.
 
-To assign an SED to each galaxy, the {\it Adding Density Dependent Spectral Energy Distributions} (\textsc{ADDSEDS}, deRose in prep.)\footnote{\url{https://github.com/vipasu/addseds}} procedure was used.
-This consisted of training an empirical relation between absolute $r$-band magnitude, local galaxy density, and SED using a sample of $\sim 5\times 10^{5}$ galaxies from the magnitude-limited Sloan Digital Sky Survey Data Release 6 Value Added Galaxy Catalog \citep{Blanton:05}.
-Each SDSS spectrum is fit with a sum of five SED components using the \textsc{k-correct \red{v4\_3?}} software package\footnote{\url{http://kcorrect.org}} \citep{Blanton:07}, thus each galaxy SED is parameterized as five weights for the basis SEDs.
-The distance to the spatial projected fifth-nearest neighbour was used as a proxy for local density in the SDSS training sample.
+To assign an SED to each galaxy, the {\it Adding Density Dependent Spectral Energy Distributions} (\texttt{ADDSEDS}, deRose in prep.)\footnote{\url{https://github.com/vipasu/addseds}} procedure was used.
+\texttt{ADDSEDS} uses a sample of $\sim 5\times 10^{5}$ galaxies from the magnitude-limited \sdss\ Data Release 6 Value Added Galaxy Catalogue \citep{Blanton:05} to train an empirical relation between absolute $r$-band magnitude, local galaxy density, and SED.
+Each \sdss\ spectrum is parameterized by five weights corresponding to a weighted sum of five basis SED components using the \texttt{k-correct \red{v4\_3?}} software package\footnote{\url{http://kcorrect.org}} \citep{Blanton:07}.
+
+Correlations between SED and galaxy environment were included so as to preserve the colour-density relation of galaxy environment.
+The distance to the spatially projected fifth-nearest neighbour was used as a proxy for local density in the \sdss\ training sample.
 For each simulated galaxy, a galaxy with similar absolute $r$-band magnitude and local galaxy density was chosen from the training set, and that training galaxy's SED was assigned to the simulated galaxy.
-This process is done in such a way as to preserve the colour-density relation of galaxy environment.
-Given the SED, absolute $r$-band magnitude and redshift, we computed apparent magnitudes in the six LSST filter passbands, $ugrizy$.
-We assigned magnitude errors in the six bands using the simple model described in \citet{Ivezic:08}, assuming full 10-year depth observations had been completed.
+
+Given the SED, absolute $r$-band magnitude, and redshift, we computed apparent magnitudes in the six \lsst\ filter passbands, $ugrizy$.
+We assigned magnitude errors in the six bands using the simple model of \citet{Ivezic:08}, assuming achievement of the full 10-year depth.
 The number of total 30-second visits assumed when generating the photometric errors differs slightly from the fiducial numbers assumed for LSST: we assume 60 visits in u-band, 80 visits in g-band, 180 visits in r-band, 180 visits in i-band, 160 visits in z-band, and 160 visits in y-band.
 %numbers taken from Alex Abate's photErrorModel.py script in PhotoZDC1 repository, which was used with nYrObs=10.
 In the course of simulating Gaussian photometric errors, we add noise to objects fluxes, and some of these noisy fluxes will become negative in one or more bands.
-We call such negative fluxes ``non-detections'' and signify them with a placholder magnitude of 99.0 in the catalog.
+We call such negative fluxes ``non-detections'' and signify them with a placholder magnitude of 99.0 in the catalogue.
 Thus, further mentions of ``non-detections'' refer to objects that would be ``looked at but not seen'' in multi-band forced photometry, and the photo-z codes will treat them as such.
 Only 2.0 per cent of our sample galaxies contain a photometric band with a non-detection, the vast majority of which are in the $u$-band.
 
