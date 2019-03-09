@@ -47,16 +47,38 @@ mathlines]{lineno}
 \bibliographystyle{mnras}%mn2e
 
 % Add your own macros here:
-
-\newcommand{\lsst}{\textsc{LSST}}
-\newcommand{\lsstdesc}{\lsst\textsc{-DESC}}
-\newcommand{\pz}{photo-$z$}
-\newcommand{\pzpdf}{\pz\ PDF}% can easily change this to specify posterior throughout
-\newcommand{\qp}{\texttt{qp}}
-
-\newcommand{\trainz}{\textsc{trainZ}}
-
 \newcommand{\textul}{\underline}
+
+% projects
+\newcommand{\proj}[1]{}{\textsc{#1}}
+\newcommand{\lsst}{\proj{LSST}}
+\newcommand{\lsstdesc}{\lsst-\proj{DESC}}
+\newcommand{\sdss}{\proj{SDSS}}
+\newcommand{\buzz}{\proj{Buzzard}}
+
+% can easily change these to specify posterior throughout, etc
+\newcommand{\pz}{photo-$z$}
+\newcommand{\pzpdf}{\pz\ PDF}
+\newcommand{\Pz}{Photo-$z$}
+\newcommand{\Pzpdf}{\Pz\ PDF}
+\newcommand{\nz}{$N(z)$}
+
+% codes
+\newcommand{\code}[1]{}{\texttt{#1}}
+\newcommand{\qp}{\code{qp}}
+\newcommand{\annz2}{\code{ANNz2}}
+\newcommand{\bpz}{\code{BPz}}
+\newcommand{\cmnn}{\code{CMNN}}
+\newcommand{\delight}{\code{Delight}}
+\newcommand{\eazy}{\code{EAZY}}
+\newcommand{\flexzboost}{\code{FlexZBoost}}
+\newcommand{\gpz}{\code{GPz}}
+\newcommand{\lephare}{\code{LePhare}}
+\newcommand{\metaphor}{\code{METAPhoR}}
+\newcommand{\skynet}{\code{SkyNet}}
+\newcommand{\tpz}{\code{TPZ}}
+\newcommand{\trainz}{\code{trainZ}}
+
 \newcommand*\mathinhead[2]{\texorpdfstring{$\boldsymbol{#1}$}{#2}}
 
 \newcommand{\red}[1]{\textcolor{red}{#1}}
