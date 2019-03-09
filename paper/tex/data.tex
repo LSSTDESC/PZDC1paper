@@ -23,13 +23,11 @@ The distance to the spatially projected fifth-nearest neighbour was used as a pr
 For each simulated galaxy, a galaxy with similar absolute $r$-band magnitude and local galaxy density was chosen from the training set, and that training galaxy's SED was assigned to the simulated galaxy.
 
 Given the SED, absolute $r$-band magnitude, and redshift, we computed apparent magnitudes in the six \lsst\ filter passbands, $ugrizy$.
-We assigned magnitude errors in the six bands using the simple model of \citet{Ivezic:08}, assuming achievement of the full 10-year depth.
-The number of total 30-second visits assumed when generating the photometric errors differs slightly from the fiducial numbers assumed for LSST: we assume 60 visits in u-band, 80 visits in g-band, 180 visits in r-band, 180 visits in i-band, 160 visits in z-band, and 160 visits in y-band.
+We assigned magnitude errors in the six bands using the simple model of \citet{Ivezic:08}, assuming achievement of the full 10-year depth, with a modification of fiducial \lsst\ total numbers of 30-second visits for photometric error generation: we assume 60 visits in $u$-band, 80 visits in $g$-band, 180 visits in $r$-band, 180 visits in $i$-band, 160 visits in $z$-band, and 160 visits in $y$-band.
 %numbers taken from Alex Abate's photErrorModel.py script in PhotoZDC1 repository, which was used with nYrObs=10.
-In the course of simulating Gaussian photometric errors, we add noise to objects fluxes, and some of these noisy fluxes will become negative in one or more bands.
-We call such negative fluxes ``non-detections'' and signify them with a placholder magnitude of 99.0 in the catalogue.
-Thus, further mentions of ``non-detections'' refer to objects that would be ``looked at but not seen'' in multi-band forced photometry, and the photo-z codes will treat them as such.
-Only 2.0 per cent of our sample galaxies contain a photometric band with a non-detection, the vast majority of which are in the $u$-band.
+
+As a consequence of adding Gaussian-distributed photometric errors, 2.0\% of our galaxies exhibit a negative flux in one or more bands, the vast majority of which are in the $u$-band.
+We deem such negative fluxes \textit{non-detections} and assign a placholder magnitude of 99.0 in the catalogue to indicate to the \pzpdf\ codes that such galaxies would be ``looked at but not seen'' in multi-band forced photometry.
 
 \subsection{Experimental Conditions}
 \label{sec:controlled}
