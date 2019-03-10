@@ -10,11 +10,10 @@ Though not exhaustive, this sample represents codes for which there was sufficie
 \hline
 \bf Published code & \bf Type & \bf Public source code \\
 \hline
+\lephare~\citep{Arnouts:99}	   & template fitting	& \url{http://www.cfht.hawaii.edu/~arnouts/lephare.html} \\
 \bpz~\citep{Benitez:00} 		   & template fitting	& \url{http://www.stsci.edu/~dcoe/BPZ/} \\
 \eazy~\citep{Brammer:08}		   & template fitting & \url{https://github.com/gbrammer/eazy-photoz} \\
-\lephare~\citep{Arnouts:99}	   & template fitting	& \url{http://www.cfht.hawaii.edu/~arnouts/lephare.html} \\
 \annz~\citep{Sadeh:16}		     & machine learning	& \url{https://github.com/IftachSadeh/ANNZ} \\
-\delight~\citep{Leistedt:17}   & machine learning & \url{https://github.com/ixkael/Delight} \\
 \flexzboost~\citep{Izbicki:17} & machine learning & \url{https://github.com/tpospisi/flexcode}; \url{https://github.com/rizbicki/FlexCoDE}\\
 %\textsc{Frankenz} 	& ML 	& \citet{Speagle:frankenz}	& \url{https://github.com/joshspeagle/frankenz} \\
 \gpz~\citep{Almosallam:15b}	   & machine learning	& \url{https://github.com/OxfordML/GPz} \\
@@ -22,6 +21,7 @@ Though not exhaustive, this sample represents codes for which there was sufficie
 \cmnn~\citep{Graham:17}        & machine learning & N/A \\
 \skynet~\citep{Graff:14}       & machine learning & \url{http://ccpforge.cse.rl.ac.uk/gf/project/skynet/} \\
 \tpz~\citep{Carrasco_Kind:13}	 & machine learning	& \url{https://github.com/mgckind/MLZ} \\
+\delight~\citep{Leistedt:17}   & hybrid           & \url{https://github.com/ixkael/Delight} \\
 \hline
 \trainz 	                             & machine learning	& See Section~\ref{sec:method:trainz} \\
 \end{tabular}}
@@ -50,14 +50,14 @@ Here we use \lephare-v 2.2 with the DC1 template set of Section~\ref{sec:buzztem
 \label{sec:BPZ}
 %(Sam Schmidt)
 
-\bpz \footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}} \citep[Bayesian Photometric Redshift,][]{Benitez:00} determines the likelihood $p(C \mid z, T)$ of a galaxy's observed colours $C$ for a set of SED templates $T$ at redshifts $z$.
-The \bpz\ likelihood is related to Equation~\ref{eq_temp_chi} by $p(C \mid z, T) \propto \exp[- \chi^{2} / 2]$.
-Given a Bayesian prior $p(z, T \mid m_{0})$ over apparent magnitude $m_0$ and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \mid C, m_0)$ by marginalizing over all SED templates as in \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
-The \bpz\ prior is the product of an SED template proportion that varies with apparent magnitude $p(T \mid m_{0})$ and a prior $p(z \mid T, m_{0})$ over the expected redshift as a function of apparent magnitude and SED template.
+\bpz \footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}} \citep[Bayesian Photometric Redshift,][]{Benitez:00} determines the likelihood $p(C \vert z, T)$ of a galaxy's observed colours $C$ for a set of SED templates $T$ at redshifts $z$.
+The \bpz\ likelihood is related to the \chisq\ likelihood by $p(C \vert z, T) \propto Equation~\ref{eq_temp_chi} \exp[- \chi^{2} / 2]$.
+Given a Bayesian prior $p(z, T \vert m_{0})$ over apparent magnitude $m_0$ and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \vert C, m_0)$ by marginalizing over all SED templates as in \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
+The \bpz\ prior is the product of an SED template proportion that varies with apparent magnitude $p(T \vert m_{0})$ and a prior $p(z \vert T, m_{0})$ over the expected redshift as a function of apparent magnitude and SED template.
 
 Here we test \bpz-v 1.99.3 with the DC1 template set of Section~\ref{sec:buzztemplates}.
 To keep the number of free parameters manageable, the DC1 template set is pre-sorted by the rest-frame $u$-$g$ colour and split into three broad classes of SED template, equivalent to the E, Sp and Im/SB types in .
-The Bayesian prior term $p(T \mid m_{0})$ was derived directly from the DC1 training set, and the other term $p(z \mid T, m_{0})$ was chosen to be the best fit for the eleven free parameters of the functional form of \citet{Benitez:00}.
+The Bayesian prior term $p(T \vert m_{0})$ was derived directly from the DC1 training set, and the other term $p(z \vert T, m_{0})$ was chosen to be the best fit for the eleven free parameters of the functional form of \citet{Benitez:00}.
 %For photo-$z$ point estimates we use the \texttt{Z\_B} output parameter.
 Prior to running the code, the non-detection placeholder magnitude was replaced with an estimate of the one-$\sigma$ detection limit for the undetected band as a proxy for a value close to the estimated sky noise threshold.
 
@@ -113,13 +113,7 @@ Undetected galaxies were excluded from the training set, and per-band non-detect
 %(Melissa Graham)
 
 The nearest-neighbours colour-matching photometric redshift estimator \citep[\cmnn,][]{Graham:17} uses a training set of galaxies with known redshifts that has equivalent or better photometry than the test set in terms of quality and filter coverage.
-For each galaxy in the test set, \cmnn\ identifies a colour-matched subset of training galaxies using a threshold in the Mahalanobis distance $D_M$ in the space of available colours for the test set galaxy
-% between the test galaxy and all training set galaxies:
-% \begin{equation}
-% D_{\rm M} = \sum^{N_{\rm colours}}\frac{(c_{\rm train}-c_{\rm test})^2}{(\delta c_{\rm test})^2}
-% \end{equation}
-% where c colour, $\delta c_{\rm test}$ is the measurement error on the colour, and $N_{\rm colours}$ is the total number of colors (i.e., in our case $u$-$g$, $g$-$r$, $r$-$i$, $i$-$z$, and $z$-$y$).
-that defines the colour match set based on a value of the percent point function (PPF).
+For each galaxy in the test set, \cmnn\ identifies a colour-matched subset of training galaxies using a threshold in the Mahalanobis distance $D_M = \sum_{j}^{N_{\rm colours}} (c^{\rm train}_{j} - c^{\rm test}_{j})^{2} / \delta c_{\rm test}^2$ in the space of available colours $c$, with colour measurement errors $\delta c_{\rm test}$ and $N_{\rm colours} = 5$ colors $j$ defined by the $ugrizy$ filters, which defines the set of colour-matched neighbours based on a value of the percent point function (PPF).
 As an example, for $N_{\rm{filt}}=5$ with PPF$=0.95$, $95\%$ of all training galaxies consistent with the test galaxy will have $D_M < 11.07$.
 Undetected bands are dropped, thereby reducing the effective $N_{\rm{filt}}$ for that galaxy.
 The \pzpdf\ of a given test set galaxy is the normalized distribution of redshifts of its colour-matched subset of training set galaxies.
@@ -132,65 +126,21 @@ We make an additional adaptation to enable the \cmnn\ algorithm to yield accurat
 We use PPF$=0.95$ rather than PPF$=0.68$ to generate the subset of colour-matched training galaxies, whose redshifts are weighted by their inverse Mahalanobis distances of the when composing the \pzpdf\ rather than weighting all colour-matched training galaxies equally.
 Additionally, when the number of colour-matched training set galaxies is less than 20, the nearest 20 neighbours in color-space are used instead, and the output \pzpdf\ is convolved with a Gaussian kernel of variance $\sigma_{\rm train}^{2}({\rm PPF}_{20}/0.95)^2 -1$ to account foe the corresponding growth of the effective PPF to include 20 neighbors.
 
-\subsubsection{Delight}
-\label{sec:delight}
-%(John Soo)
-
-\textsc{Delight}\footnote{\url{https://github.com/ixkael/Delight}} \citep{Leistedt:17} infers photo-$z$'s by using a data-driven model of latent SEDs and a physical model of photometric fluxes as a function of redshift.
-Delight models the underlying latent SEDs as a linear combination of a set of pre-defined template SEDs, plus zero mean Gaussian processes with factorized kernels.
-Generally, machine learning methods rely on representative training data with similar band passes, while template based methods rely on a complete library of templates based on physical models constructed.
-\textsc{Delight} is constructed in attempt to combine the advantages and eliminate the disadvantages of both template-based and machine learning algorithms: it constructs a large collection of latent SED templates (or physical flux-redshift models) from training data, with a template SED library as a guide to the learning of the model.
-The advantage of \textsc{Delight} is that it neither needs representative training data in the same photometric bands, nor does it need detailed galaxy SED models to work.
-
-This conceptually novel approach is done by using Gaussian processes operating in flux-redshift space.
-The posterior distribution on the redshift of a target galaxy is obtained via a pairwise comparison with training galaxies,
-
-\begin{equation}
-p(z|\mathbf{\hat{F}}) \approx \sum_i p(\mathbf{\hat{F}}|z,t_i)\, p(z|t_i)p(t_i),
-\end{equation}
-\noindent where $p(z|t_i)p(t_i)$ captures prior information about the redshift distributions and abundances of the galaxies, with $t_i$ denoting the galaxy template; while $p(\mathbf{\hat{F}}|z,t_i)$ is the posterior of noisy flux $\mathbf{\hat{F}}$ at redshift $z$.
-For each training-target pair, $p(\mathbf{\hat{F}}|z,t_i)$ is evaluated as follows:
-\begin{equation} \label{eq:delight_noisy}
-p(\mathbf{\hat{F}}|z,t_i) = \int p(\mathbf{\hat{F}}|\mathbf{F})\, p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)\, d\mathbf{F},
-\end{equation}
-where $p(\mathbf{\hat{F}}|\mathbf{F})$ is the likelihood function, it compares the noisy real flux $\mathbf{\hat{F}}$ with the noiseless flux $\mathbf{F}$ obtained from the linear combination of template models, carefully constructed to account for model uncertainties and different normalization of the same SED; while $p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)$ is the prediction of flux at a different redshift $z$ with respect to the training object with redshift $z_i$ and flux $\mathbf{\hat{F}}_i$. Eq.~\ref{eq:delight_noisy} is essentially the probability that the training and the target galaxies having the same SED but at a different redshift.
-The flux prediction $p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)$ of the training galaxy at redshift $z$ is modeled via a Gaussian process,
-
-\begin{equation} \label{eq:delight_gp}
-F_b \sim \mathcal{GP}\left( \mu^F,k^F \right),
-\end{equation}
-\noindent with mean function $\mu^F$ and kernel $k^F$, both imposed to capture expected correlations resulting from the known underlying physics (i.e., fluxes resulting from observing SEDs through filter response, and the SEDs being redshifted).
-The reader should refer to \citet{Leistedt:17} for further details.
-
-In this study, all $100$ ordered Buzzard templates, as described in Section~\ref{sec:buzztemplates}, were used in \textsc{Delight}, and the Gaussian process was trained using the provided training sample.
-Photometric uncertainties from the inputs are propagated into the code, while non-detections for each band are set to the mean of the respective bands.
-The default settings of \textsc{Delight} were used, with the exception that the PDF bins were set to be linearly-spaced rather than logarithmic. In this study a flat prior in magnitude/type is assumed.
-
 \subsubsection{FlexZBoost}
 \label{sec:flexzboost}
 %(Ann Lee, Rafael Izbicki, Taylor Pospisil, Peter Freeman)
 
-\textsc{FlexZBoost}\footnote{\url{https://github.com/tpospisi/flexcode};\\ \url{https://github.com/rizbicki/FlexCoDE}} \citep{Izbicki:17} is a particular realization of \texttt{FlexCode}, which is a general-purpose methodology for converting any conditional mean point estimator of $z$ to a conditional {\em density} estimator $f(z \vert \x)$, where $\x$ here represents our photometric covariates and errors.\footnote{Instead of $p(z)$, we use the notation $f(z \vert \x)$ to explicitly show the dependence on $\x$.}
-The key idea is to expand the unknown function $f(z \vert \x)$ in an orthonormal basis $\{\phi_i(z)\}_{i}$:
-\begin{equation}
-f(z|\x)=\sum_{i}\beta_{i }(\x)\phi_i(z). \label{eq::series_expansion}
-\end{equation}
-By the orthogonality property, the expansion coefficients are just conditional means
-\begin{equation}
-\beta_{i }(\x) =  \mathbb{E}\left[\phi_i(z)|\x\right] \equiv \int f(z|\x)   \phi_i(z) dz. \label{eq:FlexZBoost_coeffs}
-\end{equation}
-These coefficients can easily be estimated from data by regression since $\mathbb{E}\left[\phi_i(z)|\x\right]$ is the regression of $\phi_i(z)$ (a transformation of $Z$) on $X$.
+\flexzboost \footnote{\url{https://github.com/tpospisi/flexcode};  \url{https://github.com/rizbicki/FlexCoDE} \label{flexzboost_github}} \citep{Izbicki:17} is built on \texttt{FlexCode}, a general-purpose methodology for converting any conditional mean point estimator of $z$ to a conditional density estimator $p(z \vert \x) \equiv f(z \vert \x)$, where $\x$ here represents our photometric covariates and errors.
+\flexzboost\ expands the unknown function $f(z \vert \x) = \sum_{i}\beta_{i}(\x)\phi_{i}(z)$ using an orthonormal basis $\{\phi_{i}(z)\}_{i}$.
+By the orthogonality property, the expansion coefficients $\beta_{i}(\x) =  \mathbb{E}\left[\phi_i(z)|\x\right] \equiv \int f(z \vert \x) \phi_{i}(z) dz$ are thus conditional means.
+The expectation value $\mathbb{E}\left[\phi_i(z) \vert \x\right]$ of the expansion coefficients conditioned on the data is equivalent to the regression of the space of possible redshifts on the space of possible photometry.
+Thus the expansion coefficients $\beta_{i}(\x)$ can be estimated from the data via regression to yield the conditional density estimate $\widehat{f}(z \vert \x)$.
 
-In this paper, we use \textsc{xgboost}~\citep{Chen:16} for the regression part; it should however be noted that \textsc{FlexCode-RF} (also on GitHub), based on Random Forests, generally performs better for smaller data sets.
-As our basis, we choose a standard Fourier basis.
-There are two tuning parameters in our $p(z)$ estimate: (i) the number of terms, $I$, in the series expansion in Eq.~\ref{eq::series_expansion}, and (ii) an exponent $\alpha$ that we use to sharpen the computed density estimates $\widehat{f}(z|\x)$, according to $\widetilde{f}(z|\x) \propto \widehat{f}(z|\x)^\alpha$.
-We reserve 15\% of the training set data as a validation set, and choose both $I$ and $\alpha$ in an automated way by minimizing the weighted $L_2$-loss function \citep[Eq. 5 in][]{Izbicki:17} on the  validation set.
-While the native storage format for \textsc{FlexCode} encodes the PDF using the coefficients shown in Equation~\ref{eq:FlexZBoost_coeffs}, to match the output format requested of other codes we discretize our final estimates into 200 bins linearly spaced in $0 < z < 2$.
-
-
-%Although {\tt FlexCode} offers a lossless compression of the photo-$z$ estimates (in this study, one can reconstruct $\widetilde{f}(z|\x)$ exactly at any resolution from estimates of the first 35 coefficients, Eq.~\ref{eq:FlexZBoost_coeffs}, for a Fourier basis $\{\phi_i(z)\}_{i}$), we discretize our final estimates into 200 bins linearly spaced in $0 < z < 2$ for easy comparison with other algorithms. Using a higher resolution may yield better results (with no added cost in storage).
-
-
+In this paper, we used \texttt{xgboost} \citep{Chen:16} for the regression; it should however be noted that \texttt{FlexCode-RF}\footref{flexzboost_github}, based on Random Forests, generally performs better for smaller datasets.
+As our basis $\phi_{i}(z)$, we choose a standard Fourier basis.
+The two tuning parameters in our \pzpdf\ estimate are the number $I$ of terms in the series expansion and an exponent $\alpha$ that we use to sharpen the computed density estimates $\widetilde{f}(z \vert \x) \propto \widehat{f}(z \vert \x)^{\alpha}$.
+Both $I$ and $\alpha$ were chosen in an automated way by minimizing the weighted $L_2$-loss function \citep[Eq. 5 in][]{Izbicki:17} on a validation set comprised of a randomly selected 15\% of the DC1 training set.
+While \texttt{FlexCode}'s lossless native encoding stores each \pzpdf\ using the basis coefficients $\beta_{i}(\x)$, we discretized the final estimates into 200 linearly-spaced redshift bins $0 < z < 2$ to match the consistent output format of the experimental conditions.
 
 %\subsubsection{Frankenz}
 %\label{sec:frankenz}
@@ -203,12 +153,9 @@ While the native storage format for \textsc{FlexCode} encodes the PDF using the 
 \label{sec:gpz}
 %(Ibrahim Almosallam)
 
-\textsc{GPz}\footnote{\url{https://github.com/OxfordML/GPz}} \citep{Almosallam:16a,Almosallam:15b} is a sparse Gaussian process based code, a scalable approximation of full Gaussian Processes \citep{Rasmussen:06}, with the added feature of being able to produce input-dependent variance estimations (heteroscedastic noise).
-The model assumes that the probability of the output $y$, the redshift, given the input $x$, the photometry, is $p(z|x)=\mathcal{N}\left(z|\mu(x),\sigma(x)^{2}\right)$. The mean function, $\mu(x)$, and the variance function $\sigma(x)^{2}$ are both linear combinations of basis functions that take the following form:
-\begin{equation}
-f(x)=\sum_{i=1}^{m}\phi_{i}(x)w_{i},
-\end{equation}
-where $\left\{\phi_{i}(x)\right\}_{i=1}^{m}$ and $\left\{w_{i}\right\}_{i=1}^{m}$ are sets of $m$ basis functions and their associated weights respectively.
+\gpz \footnote{\url{https://github.com/OxfordML/GPz}} \citep{Almosallam:16a,Almosallam:15b} is a sparse Gaussian process based code, a scalable approximation of full Gaussian Processes \citep{Rasmussen:06}, that produces input-dependent variance estimates corresponding to heteroscedastic noise.
+The model assumes a Gaussian posterior probability $p(z \vert \x) = \mathcal{N}\left(z \vert \mu(\x), \sigma(\x)^{2}\right)$ of the output redshift $z$ given the input photometry $\x$.
+The mean $\mu(\x)$ and the variance $\sigma(\x)^{2}$ are modeled as functions $f(\x) = \sum_{i=1}^{m}w_{i}\phi_{i}(\x)$ linear combinations of basis functions $\left\{\phi_{i}(x)\right\}_{i=1}^{m}$ with coefficients $\left\{w_{i}\right\}_{i=1}^{m}$ are sets of $m$ basis functions and their associated weights respectively.
 Basis function models (BFM), for specific classes of basis functions such as the sigmoid or the squared exponential, have the advantage of being universal approximators, i.e. there exist a function of that form that can approximate any function, with mild assumptions, to any desired degree of accuracy.
 The details on how to learn the parameters of the model and the hyper-parameters of the basis functions are described in \citet{Almosallam:15b}.
 
@@ -289,7 +236,41 @@ In the present work, the LSST magnitudes $u,~g,~r,~i$ and colours $u-g,~g-r,~r-i
 We partitioned our redshift space into 200 bins and smoothed each individual PDF with a smoothing scale of twice the bin size.
 %there was a typo here that had 100 bins, I double checked, it is 200 in the final run.
 
-\subsection{Simple Ensemble Estimator}
+\subsubsection{Delight}
+\label{sec:delight}
+%(John Soo)
+
+\delight \footnote{\url{https://github.com/ixkael/Delight}} \citep{Leistedt:17} infers \pz s with a data-driven model of latent SEDs and a physical model of photometric fluxes as a function of redshift.
+Delight models the underlying latent SEDs as a linear combination of a set of pre-defined template SEDs, plus zero mean Gaussian processes with factorized kernels.
+Generally, machine learning methods rely on representative training data with similar band passes, while template based methods rely on a complete library of templates based on physical models constructed.
+\textsc{Delight} is constructed in attempt to combine the advantages and eliminate the disadvantages of both template-based and machine learning algorithms: it constructs a large collection of latent SED templates (or physical flux-redshift models) from training data, with a template SED library as a guide to the learning of the model.
+The advantage of \textsc{Delight} is that it neither needs representative training data in the same photometric bands, nor does it need detailed galaxy SED models to work.
+
+This conceptually novel approach is done by using Gaussian processes operating in flux-redshift space.
+The posterior distribution on the redshift of a target galaxy is obtained via a pairwise comparison with training galaxies,
+
+\begin{equation}
+p(z|\mathbf{\hat{F}}) \approx \sum_i p(\mathbf{\hat{F}}|z,t_i)\, p(z|t_i)p(t_i),
+\end{equation}
+\noindent where $p(z|t_i)p(t_i)$ captures prior information about the redshift distributions and abundances of the galaxies, with $t_i$ denoting the galaxy template; while $p(\mathbf{\hat{F}}|z,t_i)$ is the posterior of noisy flux $\mathbf{\hat{F}}$ at redshift $z$.
+For each training-target pair, $p(\mathbf{\hat{F}}|z,t_i)$ is evaluated as follows:
+\begin{equation} \label{eq:delight_noisy}
+p(\mathbf{\hat{F}}|z,t_i) = \int p(\mathbf{\hat{F}}|\mathbf{F})\, p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)\, d\mathbf{F},
+\end{equation}
+where $p(\mathbf{\hat{F}}|\mathbf{F})$ is the likelihood function, it compares the noisy real flux $\mathbf{\hat{F}}$ with the noiseless flux $\mathbf{F}$ obtained from the linear combination of template models, carefully constructed to account for model uncertainties and different normalization of the same SED; while $p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)$ is the prediction of flux at a different redshift $z$ with respect to the training object with redshift $z_i$ and flux $\mathbf{\hat{F}}_i$. Eq.~\ref{eq:delight_noisy} is essentially the probability that the training and the target galaxies having the same SED but at a different redshift.
+The flux prediction $p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)$ of the training galaxy at redshift $z$ is modeled via a Gaussian process,
+
+\begin{equation} \label{eq:delight_gp}
+F_b \sim \mathcal{GP}\left( \mu^F,k^F \right),
+\end{equation}
+\noindent with mean function $\mu^F$ and kernel $k^F$, both imposed to capture expected correlations resulting from the known underlying physics (i.e., fluxes resulting from observing SEDs through filter response, and the SEDs being redshifted).
+The reader should refer to \citet{Leistedt:17} for further details.
+
+In this study, all $100$ ordered Buzzard templates, as described in Section~\ref{sec:buzztemplates}, were used in \textsc{Delight}, and the Gaussian process was trained using the provided training sample.
+Photometric uncertainties from the inputs are propagated into the code, while non-detections for each band are set to the mean of the respective bands.
+The default settings of \textsc{Delight} were used, with the exception that the PDF bins were set to be linearly-spaced rather than logarithmic. In this study a flat prior in magnitude/type is assumed.
+
+\subsection{trainZ: a straw-person \pz\ estimator}
 \label{sec:method:trainz}
 
 In addition to the main photo-$z$ algorithms described above we also include a very simple method as a pathological example.
