@@ -33,7 +33,7 @@ We describe the algorithms and implementations of the model-based and data-drive
 \subsection{Template-based Approaches}
 \label{sec:templatecodes}
 
-We test three publicly available and commonly used template-based codes, \lephare, \bpz, and \eazy, that share the standard physically motivated approach of calculating model fluxes for a set of template SEDs on a grid of redshift values and evaluating a merit function using the observed and model fluxes.
+We test three publicly available and commonly used template-based codes that share the standard physically motivated approach of calculating model fluxes for a set of template SEDs on a grid of redshift values and evaluating a merit function using the observed and model fluxes.
 These three also share the \chisq\ merit function
 \begin{equation}
 	\label{eq_temp_chi}
@@ -81,22 +81,25 @@ The \eazy\ architecture cannot accept a template set other than the same five ba
 However, \eazy\ does feature a flexible \texttt{all-templates} mode, which fits the photometric data with a linear combination of the five basis templates.
 We set the template error to zero since the same templates were in fact used to produce the DC1 photometry.
 
-\subsection{Training-based Codes}
+\subsection{Training-based Approaches}
 \label{sec:trainingcodes}
 
-The training-based codes use a variety of algorithms in order to estimate $p(z)$, specifics of each implementation are described in the subsections.
-Some aspects of data treatment were left to the individual code runners, for example, whether/how to split the available data with known redshifts into separate training and validation sets.
-Another key difference is the treatment of non-detections in one or more bands.
-Some codes choose to ignore a band, others replace the value with either an estimate for the detection limit, the mean of other values in the training set, or another default value.
-There are varying conventions among training-based codes for treatment of non-detections, and no one prescription dominates in the photo-$z$ literature.
-The specific choices for each code affect the results, and contribute to the implicit prior influencing their output.
-However, we remind the reader that only 2.0 per cent of our sample has non-detections, almost exclusively in the u-band, and thus should not dominate the code performance differences.
+We compared nine data-driven \pz\ estimation approaches, eight of which are described in this section and one of which is discussed in Section~\ref{sec:trainz}.
+Because the algorithms differ more from one another and the techniques are relative newcomers to the astronomical literature, we provide somewhat more detail about the implementations below.
+%
+% Some aspects of data treatment were left to the individual code runners, for example, whether and how to split the DC1 training set for validation.
+% The codes considered treated
+% Another key difference is the treatment of non-detections in one or more bands.
+% Some codes choose to ignore a band, others replace the value with either an estimate for the detection limit, the mean of other values in the training set, or another default value.
+% There are varying conventions among training-based codes for treatment of non-detections, and no one prescription dominates in the photo-$z$ literature.
+% The specific choices for each code affect the results, and contribute to the implicit prior influencing their output.
+% However, we remind the reader that only 2.0 per cent of our sample has non-detections, almost exclusively in the u-band, and thus should not dominate the code performance differences.
 
 \subsubsection{ANNz2}
 \label{sec:annz2}
 %(John Soo)
 
-\textsc{ANNz2}\footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{Sadeh:16} is a software package that has the ability to employ several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree (BDT) and k-nearest neighbour (KNN).
+\annz \footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{Sadeh:16} employs several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree (BDT) and k-nearest neighbour (KNN).
 Using the Toolkit for Multivariate Data Analysis (TMVA) with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, it can either run a single machine learning algorithm and return results, or it can run multiple algorithms simultaneously and output photo-$z$'s as a weighted combination of the different algorithms.
 In this study, only ANNs were employed.
 The redshift PDFs are produced by running an ensemble set of ANNs, each with different random seeds used in initialization of input parameters for training.
@@ -303,7 +306,8 @@ In the present work, the LSST magnitudes $u,~g,~r,~i$ and colours $u-g,~g-r,~r-i
 We partitioned our redshift space into 200 bins and smoothed each individual PDF with a smoothing scale of twice the bin size.
 %there was a typo here that had 100 bins, I double checked, it is 200 in the final run.
 
-\subsection{Simple Ensemble Estimator}\label{sec:method:trainz}
+\subsection{Simple Ensemble Estimator}
+\label{sec:method:trainz}
 
 In addition to the main photo-$z$ algorithms described above we also include a very simple method as a pathological example.
 For \trainz, as we will we call this simple estimator, we well define $p(z)$ as simply:
