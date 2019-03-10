@@ -99,18 +99,18 @@ Because the algorithms differ more from one another and the techniques are relat
 \label{sec:annz2}
 %(John Soo)
 
-\annz \footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{Sadeh:16} employs several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree (BDT) and k-nearest neighbour (KNN).
-Using the Toolkit for Multivariate Data Analysis (TMVA) with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, it can either run a single machine learning algorithm and return results, or it can run multiple algorithms simultaneously and output photo-$z$'s as a weighted combination of the different algorithms.
-In this study, only ANNs were employed.
-The redshift PDFs are produced by running an ensemble set of ANNs, each with different random seeds used in initialization of input parameters for training.
-Uncertainties for each method are estimated from a KNN-uncertainty estimator \citep{Oyaizu:08}.
-The final PDF can either be the ``best'' of the candidate PDFs, or a weighted average of the PDFs based on their error estimates for each of the ensemble members.
-%\textsc{ANNz2} is capable of producing both photo-$z$ point estimates and redshift posterior probability distributions $p(z)$.  It can also perform classifications, and supports reweighting between samples.  The PDFs are produced by propagating the intrinsic uncertainty on the input parameters and the uncertainty in the machine learning method to the expected photo-$z$ solution, averaged over multiple runs weighted based on the performance of each run.
+\annz \footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{Sadeh:16} employs several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree (BDT), and k-nearest neighbour (KNN) regression.
+In addition to accounting for errors on the input photometry, \annz\ uses the KNN-uncertainty estimate of \citet{Oyaizu:08} to quantify uncertainty in the choice of method over multiple runs.
+Using the Toolkit for Multivariate Data Analysis (TMVA) with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, it can return the results of running a single machine learning algorithm, a ``best'' choice of the results from simultaneously running multiple algorithms, or a combination of the results of multiple algorithms weighted by their method uncertainties averaged over multiple runs.
+%\textsc{ANNz2} is capable of producing both photo-$z$ point estimates and redshift posterior probability distributions $p(z)$.
+% It can also perform classifications, and supports reweighting between samples.
+% \annz\ propagates the intrinsic uncertainty on the input parameters and the uncertainty in the machine learning method to the expected photo-$z$ solution, averaged over multiple runs weighted based on the performance of each run.
 
-In this study, \textsc{ANNz2 v. 2.0.4} was used.
-A set of $5$ ANNs with architecture $6:12:12:1$ ($6$ $ugrizy$ inputs, $2$ hidden layers with $12$ nodes each, and $1$ output) with different random seeds are used during each training. %Training was conducted on a subset of the given training sample which satisfies $i\le25.3$ as it would have improved the results compared to training on the entire sample.
-Half of the training set is used as a validation set to prevent overtraining.
-All training objects are set to have detected magnitudes, however the non-detections (mag$=99$) in the testing set are replaced with the mean of that particular band.
+In this study, we used \annz-v.2.0.4 to output only the result of the ANN algorithm.
+\Pzpdf s were produced by running an ensemble of 5 ANNs with architecture $6:12:12:1$ (6 $ugrizy$ inputs, 2 hidden layers with 12 nodes each, and 1 output), each trained with different random seeds for the initialization of input parameters.
+%Training was conducted on a subset of the given training sample which satisfies $i\le25.3$ as it would have improved the results compared to training on the entire sample.
+To prevent overtraining, half of the training set was set aside for validation.
+Undetected galaxies were excluded from the training set, and per-band non-detections in the test set were replaced with the mean magnitude in that band within the entire test set.
 
 \subsubsection{Colour-Matched Nearest-Neighbours}
 \label{sec:cmnn}
