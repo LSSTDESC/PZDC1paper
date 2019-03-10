@@ -27,8 +27,26 @@ Though not exhaustive, this sample represents codes for which there was sufficie
 \end{tabular}}
 \end{table*}
 
-We describe the algorithms and implementations of the model-based and data-driven codes in Sections~\ref{sec:templatecodes} and \ref{sec:trainingcodes} respectively.
+We describe the algorithms and implementations of the model-based and data-driven codes in Sections~\ref{sec:templatecodes} and \ref{sec:trainingcodes} respectively, with a straw-person approach included in Section~\ref{sec:trainz}.
 % For each approach, we note how it accounts for photometric uncertainties, how it interprets negative fluxes, what its native output format of \pzpdf s is, and what, if any, preprocessing, including validation, of the prior information it performs.
+% In the following sections, we use a consistent notation defined in Table~\ref{tab:variables}.
+%
+% \begin{table}
+% 	\label{tab:variables}
+% 	\caption{Definitions of variables used in outlining \pzpdf\ codes}
+% 	\begin{tabular}{ll}
+% 		\hline
+% 		\bf Symbol & \bf Definition \\
+% 		\hline
+% 		\multirow{ 2}{*}{$b = 1,\dots,B$	& \multirow{ 2}{*}{number $B$ of photometric filters $b$;} \\
+% 														& \lsst's $ugrizy$ filters used here correspond to $B=6$ \\
+% 		\multirow{ 2}{*}{$m_{b} = 1,\dots,B$	& \multirow{ 2}{*}{number $B$ of photometric filters $b$;} \\
+% 																										& \lsst's $ugrizy$ filters used here correspond to $B=6$ \\
+% 		$z$											& redshift \\
+% 		$T$											& galaxy SED \\
+%
+% 	\end{tabular}
+% \end{table}
 
 \subsection{Template-based Approaches}
 \label{sec:templatecodes}
@@ -51,12 +69,12 @@ Here we use \lephare-v 2.2 with the DC1 template set of Section~\ref{sec:buzztem
 %(Sam Schmidt)
 
 \bpz \footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}} \citep[Bayesian Photometric Redshift,][]{Benitez:00} determines the likelihood $p(C \vert z, T)$ of a galaxy's observed colours $C$ for a set of SED templates $T$ at redshifts $z$.
-The \bpz\ likelihood is related to the \chisq\ likelihood by $p(C \vert z, T) \propto Equation~\ref{eq_temp_chi} \exp[- \chi^{2} / 2]$.
+The \bpz\ likelihood is related to the \chisq\ likelihood by $p(C \vert z, T) \propto \exp[- \chi^{2} / 2]$.
 Given a Bayesian prior $p(z, T \vert m_{0})$ over apparent magnitude $m_0$ and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \vert C, m_0)$ by marginalizing over all SED templates as in \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
 The \bpz\ prior is the product of an SED template proportion that varies with apparent magnitude $p(T \vert m_{0})$ and a prior $p(z \vert T, m_{0})$ over the expected redshift as a function of apparent magnitude and SED template.
 
 Here we test \bpz-v 1.99.3 with the DC1 template set of Section~\ref{sec:buzztemplates}.
-To keep the number of free parameters manageable, the DC1 template set is pre-sorted by the rest-frame $u$-$g$ colour and split into three broad classes of SED template, equivalent to the E, Sp and Im/SB types in .
+To keep the number of free parameters manageable, the DC1 template set is pre-sorted by the rest-frame $u-g$ colour and split into three broad classes of SED template, equivalent to the E, Sp and Im/SB types in .
 The Bayesian prior term $p(T \vert m_{0})$ was derived directly from the DC1 training set, and the other term $p(z \vert T, m_{0})$ was chosen to be the best fit for the eleven free parameters of the functional form of \citet{Benitez:00}.
 %For photo-$z$ point estimates we use the \texttt{Z\_B} output parameter.
 Prior to running the code, the non-detection placeholder magnitude was replaced with an estimate of the one-$\sigma$ detection limit for the undetected band as a proxy for a value close to the estimated sky noise threshold.
@@ -132,7 +150,7 @@ Additionally, when the number of colour-matched training set galaxies is less th
 
 \flexzboost \footnote{\url{https://github.com/tpospisi/flexcode};  \url{https://github.com/rizbicki/FlexCoDE} \label{flexzboost_github}} \citep{Izbicki:17} is built on \texttt{FlexCode}, a general-purpose methodology for converting any conditional mean point estimator of $z$ to a conditional density estimator $p(z \vert \x) \equiv f(z \vert \x)$, where $\x$ here represents our photometric covariates and errors.
 \flexzboost\ expands the unknown function $f(z \vert \x) = \sum_{i}\beta_{i}(\x)\phi_{i}(z)$ using an orthonormal basis $\{\phi_{i}(z)\}_{i}$.
-By the orthogonality property, the expansion coefficients $\beta_{i}(\x) =  \mathbb{E}\left[\phi_i(z)|\x\right] \equiv \int f(z \vert \x) \phi_{i}(z) dz$ are thus conditional means.
+By the orthogonality property, the expansion coefficients $\beta_{i}(\x) = \mathbb{E}\left[\phi_i(z)|\x\right] \equiv \int f(z \vert \x) \phi_{i}(z) dz$ are thus conditional means.
 The expectation value $\mathbb{E}\left[\phi_i(z) \vert \x\right]$ of the expansion coefficients conditioned on the data is equivalent to the regression of the space of possible redshifts on the space of possible photometry.
 Thus the expansion coefficients $\beta_{i}(\x)$ can be estimated from the data via regression to yield the conditional density estimate $\widehat{f}(z \vert \x)$.
 
@@ -155,25 +173,18 @@ While \texttt{FlexCode}'s lossless native encoding stores each \pzpdf\ using the
 
 \gpz \footnote{\url{https://github.com/OxfordML/GPz}} \citep{Almosallam:16a,Almosallam:15b} is a sparse Gaussian process based code, a scalable approximation of full Gaussian Processes \citep{Rasmussen:06}, that produces input-dependent variance estimates corresponding to heteroscedastic noise.
 The model assumes a Gaussian posterior probability $p(z \vert \x) = \mathcal{N}\left(z \vert \mu(\x), \sigma(\x)^{2}\right)$ of the output redshift $z$ given the input photometry $\x$.
-The mean $\mu(\x)$ and the variance $\sigma(\x)^{2}$ are modeled as functions $f(\x) = \sum_{i=1}^{m}w_{i}\phi_{i}(\x)$ linear combinations of basis functions $\left\{\phi_{i}(x)\right\}_{i=1}^{m}$ with coefficients $\left\{w_{i}\right\}_{i=1}^{m}$ are sets of $m$ basis functions and their associated weights respectively.
-Basis function models (BFM), for specific classes of basis functions such as the sigmoid or the squared exponential, have the advantage of being universal approximators, i.e. there exist a function of that form that can approximate any function, with mild assumptions, to any desired degree of accuracy.
+The mean $\mu(\x)$ and the variance $\sigma(\x)^{2}$ are modeled as functions $f(\x) = \sum_{i=1}^{m}w_{i}\phi_{i}(\x)$ linear combinations of $m$ basis functions $\left\{\phi_{i}(\x)\right\}_{i=1}^{m}$ with associated weights $\left\{w_{i}\right\}_{i=1}^{m}$.
+% Basis function models, for specific classes of basis functions such as the sigmoid or the squared exponential, have the advantage of being universal approximators, i.e. there exist a function of that form that can approximate any function, with mild assumptions, to any desired degree of accuracy.
 The details on how to learn the parameters of the model and the hyper-parameters of the basis functions are described in \citet{Almosallam:15b}.
+\gpz's variance estimate is composed of a model uncertainty term corresponding to sparsity of the training set photometry and a noise uncertainty term encompassing noisy photometric observations, enabling quantification of any need for more representative or more precise training samples.
+\gpz\ may also weight training set samples by importance according to $|z_{\rm{spec}} - z_{\rm{phot}}| / (1+z_{\rm{spec}})$ to minimize the normalized \pz\ point estimate error, however, this function may be adapted to \pzpdf s, pressuring the model to dedicate more resources to test set galaxies that are not well-represented in the training set.
 
-A unique feature in \textsc{GPz}, is that the variance estimate is composed of two terms each quantifying a different source of uncertainty.
-One term (the model uncertainty) reflects how much of the uncertainty is due to lack of training samples at the location of interest, whereas the second term (the noise uncertainty) reflects how much of the uncertainty is caused from observing many noisy samples at that location.
-Thus, the predictive variance can determine whether we need more representative samples or more precise samples for any particular location in the input space.
-\textsc{GPz} can also emphasize the importance of some samples as weights. This weight can be for example $|z_{\rm{spec}}-z_{\rm{phot}}|/(1+z_{\rm{spec}})$ to target the desired objective of minimizing the normalized redshift error or as a function of their probability in the test set relative to the training set in order to pressure the model to better fit samples that are rare in the training set but are expected to be abundant during testing.
-
-The data is prepared for \textsc{GPz} by taking the log of the magnitude errors, decorrelating the data set using PCA and imputing any missing magnitude values using a simple linear model that estimates the missing magnitudes given the observed ones.
-The log transformation helps to smooth the long tail distribution of the magnitude errors, which is more stable numerically and makes the optimization process unconstrained.
-The missing values are imputed by computing the mean of the training set $\mu$ and its covariance $\Sigma$, then we use the following equation to estimate the missing values from the observed ones %\[
-\begin{equation}
-x_{u} = \mu_{u}+\Sigma_{uo}\Sigma_{oo}^{-1}(x_{o}-\mu_{o}),
-\end{equation}  %\]
-where the subscript $o$ in $x_{o}$ indexes the \emph{observed} part of the input $x$, whereas the subscript $u$ indexes the \emph{unobserved} set (similarly for $\mu$ and $\Sigma$).
-This is the optimal expected value of the unobserved variables given the observed ones if the distribution is jointly Gaussian, note that if the variables are independent, i.e. $\Sigma_{uo}=0$, this will reduce to a simple average predictor.
-We use the Variable Covariance (VC) option in \textsc{GPz} with 200 basis functions after we note that there is no significant increase in the performance on the validation set (using 80\%-20\% training-validation split) and with no cost-sensitive learning applied.
-
+To smooth the long tail in the distribution of magnitude errors, we use the log of the magnitude errors, improving numerical stability and eliminating the need for constraints on the optimization process.
+% We use principal component analysis (PCA) to decorrelate the data
+% WHAT IS BEING DECORRELATED HERE?
+Unobserved magnitudes $x_{\rm u} = \mu_{\rm u} + \Sigma_{\rm uo}\Sigma_{\rm oo}^{-1}(x_{\rm o} - \mu_{\rm o})$ were imputed from observed magnitudes $x_{\rm o}$ and the training set mean $\mu$ and covariance $\Sigma$ using a linear model.
+This is the optimal expected value of the unobserved variables given the observed ones under the assumption that the distribution is jointly Gaussian; note that this reduces to a simple average if the covariates are independent with $\Sigma_{\rm uo} = 0$.
+We reserved for validation 20\% of the training set and used the Variable Covariance option in \textsc{GPz} with 200 basis functions, neglecting to apply cost-sensitive learning options.
 
 \subsubsection{METAPhoR}
 \label{sec:metaphor}
