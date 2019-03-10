@@ -121,7 +121,7 @@ Using the Toolkit for Multivariate Data Analysis with ROOT\footnote{\url{http://
 % \annz\ propagates the intrinsic uncertainty on the input parameters and the uncertainty in the machine learning method to the expected photo-$z$ solution, averaged over multiple runs weighted based on the performance of each run.
 
 In this study, we used \annz-v.2.0.4 to output only the result of the ANN algorithm.
-\Pzpdf s were produced by running an ensemble of 5 ANNs with 6 $ugrizy$ inputs, 2 hidden layers with 12 nodes each, and 1 output of redshift).
+\Pzpdf s were produced by running an ensemble of 5 ANNs with a $6:12:12:1$ architecture corresponding to the 6 $ugrizy$ inputs, 2 hidden layers with 12 nodes each, and 1 output of redshift.
 Each of the five ANNs was trained with different random seeds for the initialization of input parameters.
 Additionally, all ANNs were trained on only a $i \leq 25.3$ subsample of the DC1 training set, and half of the training set was reserved for validation to prevent overfitting.
 Undetected galaxies were excluded from the training set, and per-band non-detections in the test set were replaced with the mean magnitude in that band within the entire test set.
@@ -204,18 +204,19 @@ The usual cross-validation step was also omitted for this study.
 \label{sec:skynet}
 %(J. Cohen-Tanugi and Hugo Tranin)
 
-\textsc{SkyNet}\footnote{\url{http://ccpforge.cse.rl.ac.uk/gf/project/skynet/}} \citep{Graff:14} is a publicly available neural network software, based on a 2nd order conjugate gradient optimization scheme \citep[see][for further details]{Graff:14}. %It has been used efficiently for redshift PDF estimates \citep{Sanchez:14,Bonnett:15,Bonnett:16}.
+\skynet \footnote{\url{http://ccpforge.cse.rl.ac.uk/gf/project/skynet/}} \citep{Graff:14} employs a neural network based on a second order conjugate gradient optimization scheme \citep[see][for further details]{Graff:14}. %It has been used efficiently for redshift PDF estimates \citep{Sanchez:14,Bonnett:15,Bonnett:16}.
+The neural network is configured as a standard multilayer perceptron with three hidden layers and one input layer with 12 nodes corresponding to the 6 photometric magnitudes and their measurement errors.
+We use \skynet\ as a regressor for \pz\ point estimation and as a classifier for \pzpdf\ estimation.
 
-%In the present work, we use \textsc{SkyNet} both as a regressor (for redshift point estimates) and a classifier (for PDF estimates).
-The neural network is configured as a standard multilayer perceptron with three hidden layers and one input layer with $12$ nodes (the $6$ magnitudes and their errors).
-%For the regressor, the output layer is a single linear node, while each hidden layer has $10$ nodes with a tanh activation function.
-The classifier is laid out such that the hidden layers have 20:40:40 nodes each, all rectified linear units, and the output layer has $200$ nodes (corresponding to 200 bins for the PDF) activated with a ``softmax'' function so that they automatically sum to $1$.
-While previous implementations of the code, such as \citet{Sanchez:14} and \citet{Bonnett:15} (see Appendix C.3), implement a ``sliding bin'' smoothing, no such procedure was used in this study.
+The regressor used a standard \chisq\ error function with a single linear node as the output layer and 10 nodes with a $\tanh$ activation function for each hidden layer.
+The classifier used a cross-entropy error function with a 20:40:40 node (all rectified linear units) architecture for each hidden layer and an output layer of 200 nodes corresponding to 200 bins for the PDF, with a softmax activation function to enforce the normalization condition that the probabilities sum to unity.
+While previous implementations of the code \citep[see Appendix C.3 of~][]{Sanchez:14,Bonnett:15} implement a sliding bin smoothing, no such procedure was used in this study.
 
-To avoid over-fitting, a $30$ per cent fraction of the training set is used as validation, and the training is stopped as soon as the error rate begins to increase in the validation set.
-The weights are randomly initialized based on normal sampling.
-The error function is a standard chi-square function for the regressor, and a cross-entropy function for the classifier.
-Finally, the data are all whitened before processing, with magnitudes pegged to (45,45,40,35,42,42) and their errors pegged to (20,20,10,5,15,15) for $ugrizy$ filters, respectively.
+We pre-whitened the data by pegging the magnitudes to (45,45,40,35,42,42) and errors to (20,20,10,5,15,15) for $ugrizy$ filters, respectively.
+% NO CLUDE WHAT THIS MEANS
+To avoid over-fitting, $30\%$ of the training set was reserved for validation, and training was halted as soon as the error rate began to increase on the validation set.
+The weights were randomly initialized based on normal sampling.
+% WHAT WEIGHTS?
 
 \subsubsection{TPZ}
 \label{sec:tpz}
