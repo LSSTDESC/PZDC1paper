@@ -33,21 +33,17 @@ We describe the algorithms and implementations of the model-based and data-drive
 \subsection{Template-based Approaches}
 \label{sec:templatecodes}
 
-We test three publicly available and commonly used template-based codes that share the standard physically motivated approach of calculating model fluxes for a set of template SEDs on a grid of redshift values and evaluating a merit function using the observed and model fluxes.
-These three also share the \chisq\ merit function
-\begin{equation}
-	\label{eq_temp_chi}
-	\chi^{2}(z, T, A) \equiv \sum_{b}^{N_{\rm{filt}}} \left(\frac{F^{\rm{obs}}_{b} - A F^{\rm{mod}}_{b}(T, z)}{\sigma^{\rm{obs}}_{b}}\right)^{2},
-\end{equation}
-of normalization factor $A$, template $T$, and redshift $z$, which is a sum of observed flux error $\sigma_{b}^{\rm{obs}}$-weighted squared differences between the observed flux $F^{\rm{obs}}_{b}$ and the normalized predicted flux $F^{\rm{mod}}_{b}(T, z)$ in $N_{\rm{filt}}$ photometric filters $b$, which in our case is the \lsst\ $ugrizy$ filters.
+We test three publicly available and commonly used template-based codes that share the standard physically motivated approach of calculating model fluxes for a set of template SEDs on a grid of redshift values and evaluating a \chisq\ merit function using the observed and model fluxes.
 
 \subsubsection{LePhare}
 \label{sec:lephare}
 %(C\'ecile Roucelle, Eric Nuss, Johann Cohen-Tanugi)
 
-\lephare \footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}}\citep[Photometric Analysis for Redshift Estimate,][]{Arnouts:99,Ilbert:06} matches observed colors with those predicted from a template set, which can be semi-empirical or entirely synthetic, directly according to Equation~\ref{eq_temp_chi} without modification.
+\lephare \footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}}\citep[Photometric Analysis for Redshift Estimate,][]{Arnouts:99,Ilbert:06} matches observed colors with those predicted from a template set, which can be semi-empirical or entirely synthetic, directly according to the likelihood $\chi^{2}(z, T, A) \equiv \sum_{b}^{N_{\rm{filt}}} \left((F^{\rm{obs}}_{b} - A F^{\rm{mod}}_{b}(T, z)) / \sigma^{\rm{obs}}_{b}\right)^{2}$ of normalization factor $A$, template $T$, and redshift $z$.
+In words, the likelihood is a sum of observed flux error $\sigma_{b}^{\rm{obs}}$-weighted squared differences between the observed flux $F^{\rm{obs}}_{b}$ and the normalized predicted flux $F^{\rm{mod}}_{b}(T, z)$ in $N_{\rm{filt}}$ photometric filters $b$, which is the \lsst\ $ugrizy$ filters in this case.
 The reported \pzpdf\ is an arbitrary normalization of the likelihood evaluated on the output redshift grid.
 %\textsc{LePhare} has been used to produce the COSMOS2015 photo-$z$ catalogue \citep{Laigle:16}.
+
 Here we use \lephare-v 2.2 with the DC1 template set of Section~\ref{sec:buzztemplates}.
 
 \subsubsection{BPZ}
@@ -86,7 +82,7 @@ We set the template error to zero since the same templates were in fact used to 
 
 We compared nine data-driven \pz\ estimation approaches, eight of which are described in this section and one of which is discussed in Section~\ref{sec:trainz}.
 Because the algorithms differ more from one another and the techniques are relative newcomers to the astronomical literature, we provide somewhat more detail about the implementations below.
-%
+
 % Some aspects of data treatment were left to the individual code runners, for example, whether and how to split the DC1 training set for validation.
 % The codes considered treated
 % Another key difference is the treatment of non-detections in one or more bands.
@@ -99,24 +95,24 @@ Because the algorithms differ more from one another and the techniques are relat
 \label{sec:annz2}
 %(John Soo)
 
-\annz \footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{Sadeh:16} employs several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree (BDT), and k-nearest neighbour (KNN) regression.
+\annz \footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{Sadeh:16} employs several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree, and k-nearest neighbour (KNN) regression.
 In addition to accounting for errors on the input photometry, \annz\ uses the KNN-uncertainty estimate of \citet{Oyaizu:08} to quantify uncertainty in the choice of method over multiple runs.
-Using the Toolkit for Multivariate Data Analysis (TMVA) with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, it can return the results of running a single machine learning algorithm, a ``best'' choice of the results from simultaneously running multiple algorithms, or a combination of the results of multiple algorithms weighted by their method uncertainties averaged over multiple runs.
+Using the Toolkit for Multivariate Data Analysis with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, it can return the results of running a single machine learning algorithm, a ``best'' choice of the results from simultaneously running multiple algorithms, or a combination of the results of multiple algorithms weighted by their method uncertainties averaged over multiple runs.
 %\textsc{ANNz2} is capable of producing both photo-$z$ point estimates and redshift posterior probability distributions $p(z)$.
 % It can also perform classifications, and supports reweighting between samples.
 % \annz\ propagates the intrinsic uncertainty on the input parameters and the uncertainty in the machine learning method to the expected photo-$z$ solution, averaged over multiple runs weighted based on the performance of each run.
 
 In this study, we used \annz-v.2.0.4 to output only the result of the ANN algorithm.
-\Pzpdf s were produced by running an ensemble of 5 ANNs with architecture $6:12:12:1$ (6 $ugrizy$ inputs, 2 hidden layers with 12 nodes each, and 1 output), each trained with different random seeds for the initialization of input parameters.
-%Training was conducted on a subset of the given training sample which satisfies $i\le25.3$ as it would have improved the results compared to training on the entire sample.
-To prevent overtraining, half of the training set was set aside for validation.
+\Pzpdf s were produced by running an ensemble of 5 ANNs with 6 $ugrizy$ inputs, 2 hidden layers with 12 nodes each, and 1 output of redshift).
+Each of the five ANNs was trained with different random seeds for the initialization of input parameters.
+Additionally, all ANNs were trained on only a $i \leq 25.3$ subsample of the DC1 training set, and half of the training set was reserved for validation to prevent overfitting.
 Undetected galaxies were excluded from the training set, and per-band non-detections in the test set were replaced with the mean magnitude in that band within the entire test set.
 
 \subsubsection{Colour-Matched Nearest-Neighbours}
 \label{sec:cmnn}
 %(Melissa Graham)
 
-The nearest-neighbours colour-matching photometric redshift estimator \citep[\cmnn][]{Graham:17} uses a training set of galaxies with known redshifts that has equivalent or better photometry than the test set in terms of quality and filter coverage.
+The nearest-neighbours colour-matching photometric redshift estimator \citep[\cmnn,][]{Graham:17} uses a training set of galaxies with known redshifts that has equivalent or better photometry than the test set in terms of quality and filter coverage.
 For each galaxy in the test set, \cmnn\ identifies a colour-matched subset of training galaxies using a threshold in the Mahalanobis distance $D_M$ in the space of available colours for the test set galaxy
 % between the test galaxy and all training set galaxies:
 % \begin{equation}
@@ -129,7 +125,7 @@ Undetected bands are dropped, thereby reducing the effective $N_{\rm{filt}}$ for
 The \pzpdf\ of a given test set galaxy is the normalized distribution of redshifts of its colour-matched subset of training set galaxies.
 
 Here, we make two modifications to the implementation of \citet{Graham:17} to comply with the controlled experimental conditions.
-First, we do not impose non-detections on galaxies fainter than the expected \lsst\ 10-year limiting magnitude or bright enough to saturate with \lsst's CCDs, instead using all of the photometry for the DC1 test and training sets.
+First, we do not impose nondetections on galaxies fainter than the expected \lsst\ 10-year limiting magnitude or bright enough to saturate with \lsst's CCDs, instead using all of the photometry for the DC1 test and training sets.
 Second, we apply the initial colour cut to the training set before calculating the Mahalanobis distance in order to accelerate processing and use a magnitude pseudo-prior as in \citet{Graham:17}, but for both we use cut-off values corresponding to the DC1 training set galaxies' colours and magnitudes.
 
 We make an additional adaptation to enable the \cmnn\ algorithm to yield accurate \pzpdf s for all galaxies, as the original \citet{Graham:17} algorithm is optimized for \pz\ point estimates and is susceptible to less accurate \pzpdf s for bright galaxies or those with few matches in colour-space.
