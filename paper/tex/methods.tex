@@ -33,7 +33,7 @@ We describe the algorithms and implementations of the model-based and data-drive
 \subsection{Template-based Approaches}
 \label{sec:templatecodes}
 
-We test three publicly available and commonly used template-based codes, \bpz, \eazy, and \lephare, that share the standard physically motivated approach of calculating model fluxes for a set of template SEDs on a grid of redshift values and evaluating a merit function using the observed and model fluxes.
+We test three publicly available and commonly used template-based codes, \lephare, \bpz, and \eazy, that share the standard physically motivated approach of calculating model fluxes for a set of template SEDs on a grid of redshift values and evaluating a merit function using the observed and model fluxes.
 These three also share the \chisq\ merit function
 \begin{equation}
 	\label{eq_temp_chi}
@@ -41,11 +41,20 @@ These three also share the \chisq\ merit function
 \end{equation}
 of normalization factor $A$, template $T$, and redshift $z$, which is a sum of observed flux error $\sigma_{b}^{\rm{obs}}$-weighted squared differences between the observed flux $F^{\rm{obs}}_{b}$ and the normalized predicted flux $F^{\rm{mod}}_{b}(T, z)$ in $N_{\rm{filt}}$ photometric filters $b$, which in our case is the \lsst\ $ugrizy$ filters.
 
+\subsubsection{LePhare}
+\label{sec:lephare}
+%(C\'ecile Roucelle, Eric Nuss, Johann Cohen-Tanugi)
+
+\lephare \footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}}\citep[Photometric Analysis for Redshift Estimate,][]{Arnouts:99,Ilbert:06} matches observed colors with those predicted from a template set, which can be semi-empirical or entirely synthetic, directly according to Equation~\ref{eq_temp_chi} without modification.
+The reported \pzpdf\ is an arbitrary normalization of the likelihood evaluated on the output redshift grid.
+%\textsc{LePhare} has been used to produce the COSMOS2015 photo-$z$ catalogue \citep{Laigle:16}.
+Here we use \lephare-v 2.2 with the DC1 template set of Section~\ref{sec:buzztemplates}.
+
 \subsubsection{BPZ}
 \label{sec:BPZ}
 %(Sam Schmidt)
 
-\bpz\footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}} \citep[Bayesian Photometric Redshift,][]{Benitez:00} is a template-based \pz\ code that determines the likelihood $p(C \mid z, T)$ of a galaxy's observed colours $C$ for a set of SED templates $T$ at redshifts $z$.
+\bpz \footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}} \citep[Bayesian Photometric Redshift,][]{Benitez:00} determines the likelihood $p(C \mid z, T)$ of a galaxy's observed colours $C$ for a set of SED templates $T$ at redshifts $z$.
 The \bpz\ likelihood is related to Equation~\ref{eq_temp_chi} by $p(C \mid z, T) \propto \exp[- \chi^{2} / 2]$.
 Given a Bayesian prior $p(z, T \mid m_{0})$ over apparent magnitude $m_0$ and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \mid C, m_0)$ by marginalizing over all SED templates as in \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
 The \bpz\ prior is the product of an SED template proportion that varies with apparent magnitude $p(T \mid m_{0})$ and a prior $p(z \mid T, m_{0})$ over the expected redshift as a function of apparent magnitude and SED template.
@@ -60,7 +69,7 @@ Prior to running the code, the non-detection placeholder magnitude was replaced 
 \label{sec:eazy}
 %(Rongpu Zhou)
 
-\eazy\footnote{\url{https://github.com/gbrammer/eazy-photoz}} \citep[Easy and Accurate Photometric Redshifts from Yale,][]{Brammer:08} extends the basic \chisq\ fit procedure that defines template-fitting approaches.
+\eazy \footnote{\url{https://github.com/gbrammer/eazy-photoz}} \citep[Easy and Accurate Photometric Redshifts from Yale,][]{Brammer:08} extends the basic \chisq\ fit procedure that defines template-fitting approaches.
 The algorithm models the observed photometry with a linear combination of template SEDs at each redshift.
 The best-fit SED is found by simultaneously fitting one, two, or all of the templates via \chisq\ minimization, which is distinct from marginalizing across all templates.
 The minimized \chisq\ likelihood at each redshift is then combined with an apparent magnitude prior to obtain the redshift posterior PDF.
@@ -71,20 +80,6 @@ The SED-independent apparent magnitude prior was derived empirically from the DC
 The \eazy\ architecture cannot accept a template set other than the same five basis templates employed by \texttt{k-correct} when constructing the DC1 catalogue.
 However, \eazy\ does feature a flexible \texttt{all-templates} mode, which fits the photometric data with a linear combination of the five basis templates.
 We set the template error to zero since the same templates were in fact used to produce the DC1 photometry.
-
-\subsubsection{LePhare}
-\label{sec:lephare}
-%(C\'ecile Roucelle, Eric Nuss, Johann Cohen-Tanugi)
-
-\textsc{LePhare}\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}}\citep[Photometric Analysis for Redshift Estimate,][]{Arnouts:99,Ilbert:06} is a photo-$z$ reconstruction code based on a $\chi^2$ template-fitting procedure.
-The observed colors are matched with the colours predicted from a set of spectral energy distribution (SED) which can be either synthetic or based on a semi-empirical approach. %\textsc{LePhare} has been used to produce the COSMOS2015 photo-$z$ catalogue \citep{Laigle:16}.
-
-Each SED is convolved with the simulated LSST filter transmission curves (accounting for instrument efficiency).
-The computed photo-$z$ is then the value that minimizes the merit function $\chi^2 (z,T,A)$ from \citet[]{Arnouts:99}, and given in Equation~\ref{eq_temp_chi}.
-
-In this paper we use \textsc{LePhare v 2.2}.
-The set of templates used for fitting the photo-$z$'s are the 100 discrete Buzzard SED templates as described in section~\ref{sec:buzztemplates}, and the full $p(z)$ corresponds to the likelihoods calculated at each point on our $z$-grid.
-
 
 \subsection{Training-based Codes}
 \label{sec:trainingcodes}
