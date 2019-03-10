@@ -116,38 +116,25 @@ Undetected galaxies were excluded from the training set, and per-band non-detect
 \label{sec:cmnn}
 %(Melissa Graham)
 
-The nearest-neighbours colour-matching photometric redshift estimator (\textsc{CMNN}) is presented in \citet[][hereafter G18]{Graham:17}.
-This method uses a training set of galaxies with known redshifts that has equivalent or better photometry as the test set in terms of quality and filter coverage.
-For each galaxy in the test set we identify a colour-matched subset of training galaxies.
-This subset is identified by first calculating the Mahalanobis distance $D_M$ in colour-space between the test galaxy and all training-set galaxies:
-\begin{equation}
-D_{\rm M} = \sum^{N_{\rm colours}}\frac{(c_{\rm train}-c_{\rm test})^2}{(\delta c_{\rm test})^2}
-\end{equation}
-where c colour, $\delta c_{\rm test}$ is the measurement error on the colour, and $N_{\rm colours}$ is the total number of colors (i.e., in our case $u$-$g$, $g$-$r$, $r$-$i$, $i$-$z$, and $z$-$y$).
-Then, we choose a threshold value for $D_M$ that defines the colour match set based on a set value of the percent point function (PPF): for example, for $N_{\rm dof}=5$, choosing a vPPF$=0.95$, $95$ per cent of all training galaxies consistent with the test galaxy will have $D_M < 11.07$ (where $N_{\rm dof}$ is the number of degrees of freedom, in this case the number of colours).
-If a galaxy had a non-detection in a band, that band was dropped and $N_{\rm dof}$ was reduced by one in the colour-matching space.
-For a given test galaxy, the $p(z)$ is the normalized distribution of the true catalogue redshifts of this colour-matched subset of training galaxies.
+The nearest-neighbours colour-matching photometric redshift estimator \citep[\cmnn][]{Graham:17} uses a training set of galaxies with known redshifts that has equivalent or better photometry than the test set in terms of quality and filter coverage.
+For each galaxy in the test set, \cmnn\ identifies a colour-matched subset of training galaxies using a threshold in the Mahalanobis distance $D_M$ in the space of available colours for the test set galaxy
+% between the test galaxy and all training set galaxies:
+% \begin{equation}
+% D_{\rm M} = \sum^{N_{\rm colours}}\frac{(c_{\rm train}-c_{\rm test})^2}{(\delta c_{\rm test})^2}
+% \end{equation}
+% where c colour, $\delta c_{\rm test}$ is the measurement error on the colour, and $N_{\rm colours}$ is the total number of colors (i.e., in our case $u$-$g$, $g$-$r$, $r$-$i$, $i$-$z$, and $z$-$y$).
+that defines the colour match set based on a value of the percent point function (PPF).
+As an example, for $N_{\rm{filt}}=5$ with PPF$=0.95$, $95\%$ of all training galaxies consistent with the test galaxy will have $D_M < 11.07$.
+Undetected bands are dropped, thereby reducing the effective $N_{\rm{filt}}$ for that galaxy.
+The \pzpdf\ of a given test set galaxy is the normalized distribution of redshifts of its colour-matched subset of training set galaxies.
 
-We have applied the nearest-neighbours colour-matching photometric redshift estimator described in G18 to the simulated data.
-Compared to its application in G18, there are some minor differences in the application of this estimator to the Buzzard catalogue.
-First, we do not impose non-detections on galaxies with a magnitude fainter than the expected LSST 10-year limiting magnitude or bright enough to saturate with LSST: {\it all} of the photometry for all the galaxies in the test and training sets are used for this experiment.
-Second, as in G18 we do apply an initial cut in colour to the training set before calculating the Mahalanobis distance in order to accelerate processing, and also use a magnitude pseudo-prior to improve photo-$z$ estimates, but for both we have used different cut-off values that are appropriate for the Buzzard galaxies' colours and magnitudes.
-Third, we set different parameters for the identification of the colour-matched subset of training galaxies and the selection of a photometric redshift estimate.
-In G18 we used a PPF value of 0.68 to identify the colour-matched subset of training galaxies and used the redshift of nearest neighbour in colour-space as the photo-$z$ estimate.
-These choices work well when the desire is to obtain accurate photo-$z$ estimates for most test-set galaxies, but does not return an accurate $p(z)$ in all cases -- especially for galaxies that are bright and/or have few matches in colour-space.
-Since an accurate estimate of $p(z)$ is desired for this work we make several changes to our implementation of the \textsc{CMNN} photo-$z$ estimator.
-We continue to use a ${\rm PPF} = 0.95$ to generate the subset of colour-matched training galaxies, but weight them by the inverse of their Mahalanobis distance.
-This weighting maintains some of the accuracy that was previously achieved by simply using the nearest neighbour in colour-space.
-We then use the weights to create the $p(z)$ instead of having the redshift of each colour-matched training-set galaxy count equally.
-To obtain a robust estimate of the $p(z)$ for galaxies with a small number of colour-matched training set galaxies, when this number is less than $20$ the nearest $20$ neighbours in colour-space are used instead, and we convolve the $p(z)$ with a Gaussian with a standard deviation of:
-\begin{equation}
-\sigma = \sigma_{\rm train} \sqrt{({\rm PPF}_{20}/0.95)^2 -1}
-\end{equation}
-\noindent to appropriately broaden it so that the $p(z)$ for these test galaxies represents the enlarged PPF value associated with it.
-Overall, these three changes will yield less precise photo-$z$ estimates compared to those presented in G18, but they will all have significantly more accurate estimates of the $p(z)$, particularly for the brightest test galaxies.
-This is sufficient for this work because, as described in G18, the goal of the \textsc{CMNN} photo-$z$ estimator was never to provide the ``best'' (or even competitive) estimates in the first place, given its reliance on a deep training set, but rather to provide a means for direct comparisons between LSST photometric quality and photo-$z$ estimates.
-With this work we show how the input parameters should be set in order to return accurate $p(z)$ estimates in addition to point value estimates.
+Here, we make two modifications to the implementation of \citet{Graham:17} to comply with the controlled experimental conditions.
+First, we do not impose non-detections on galaxies fainter than the expected \lsst\ 10-year limiting magnitude or bright enough to saturate with \lsst's CCDs, instead using all of the photometry for the DC1 test and training sets.
+Second, we apply the initial colour cut to the training set before calculating the Mahalanobis distance in order to accelerate processing and use a magnitude pseudo-prior as in \citet{Graham:17}, but for both we use cut-off values corresponding to the DC1 training set galaxies' colours and magnitudes.
 
+We make an additional adaptation to enable the \cmnn\ algorithm to yield accurate \pzpdf s for all galaxies, as the original \citet{Graham:17} algorithm is optimized for \pz\ point estimates and is susceptible to less accurate \pzpdf s for bright galaxies or those with few matches in colour-space.
+We use PPF$=0.95$ rather than PPF$=0.68$ to generate the subset of colour-matched training galaxies, whose redshifts are weighted by their inverse Mahalanobis distances of the when composing the \pzpdf\ rather than weighting all colour-matched training galaxies equally.
+Additionally, when the number of colour-matched training set galaxies is less than 20, the nearest 20 neighbours in color-space are used instead, and the output \pzpdf\ is convolved with a Gaussian kernel of variance $\sigma_{\rm train}^{2}({\rm PPF}_{20}/0.95)^2 -1$ to account foe the corresponding growth of the effective PPF to include 20 neighbors.
 
 \subsubsection{Delight}
 \label{sec:delight}
