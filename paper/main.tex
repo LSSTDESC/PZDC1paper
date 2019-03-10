@@ -50,7 +50,7 @@ mathlines]{lineno}
 \newcommand{\textul}{\underline}
 
 % projects
-\newcommand{\proj}[1]{}{\textsc{#1}}
+\newcommand{\proj}[1]{\textsc{#1}}
 \newcommand{\lsst}{\proj{LSST}}
 \newcommand{\lsstdesc}{\lsst-\proj{DESC}}
 \newcommand{\sdss}{\proj{SDSS}}
@@ -64,20 +64,20 @@ mathlines]{lineno}
 \newcommand{\nz}{$N(z)$}
 
 % codes
-\newcommand{\code}[1]{}{\texttt{#1}}
-\newcommand{\qp}{\code{qp}}
-\newcommand{\annz2}{\code{ANNz2}}
-\newcommand{\bpz}{\code{BPz}}
-\newcommand{\cmnn}{\code{CMNN}}
-\newcommand{\delight}{\code{Delight}}
-\newcommand{\eazy}{\code{EAZY}}
-\newcommand{\flexzboost}{\code{FlexZBoost}}
-\newcommand{\gpz}{\code{GPz}}
-\newcommand{\lephare}{\code{LePhare}}
-\newcommand{\metaphor}{\code{METAPhoR}}
-\newcommand{\skynet}{\code{SkyNet}}
-\newcommand{\tpz}{\code{TPZ}}
-\newcommand{\trainz}{\code{trainZ}}
+\newcommand{\pzcode}[1]{\texttt{#1}}
+\newcommand{\qp}{\pzcode{qp}}
+\newcommand{\annz}{\pzcode{ANNz2}}
+\newcommand{\bpz}{\pzcode{BPz}}
+\newcommand{\cmnn}{\pzcode{CMNN}}
+\newcommand{\delight}{\pzcode{Delight}}
+\newcommand{\eazy}{\pzcode{EAZY}}
+\newcommand{\flexzboost}{\pzcode{FlexZBoost}}
+\newcommand{\gpz}{\pzcode{GPz}}
+\newcommand{\lephare}{\pzcode{LePhare}}
+\newcommand{\metaphor}{\pzcode{METAPhoR}}
+\newcommand{\skynet}{\pzcode{SkyNet}}
+\newcommand{\tpz}{\pzcode{TPZ}}
+\newcommand{\trainz}{\pzcode{trainZ}}
 
 \newcommand*\mathinhead[2]{\texorpdfstring{$\boldsymbol{#1}$}{#2}}
 
@@ -89,7 +89,7 @@ mathlines]{lineno}
 \newcommand{\scc}[1]{\textcolor{scc}{#1}}%Stefano Cavuoti Comments in dark green
 \definecolor{newpink}{rgb}{0.858, 0.188, 0.478}
 \newcommand{\erfan}[1]{\textcolor{newpink}{#1}} % Erfan Nourbakhsh comments in pink
-\newcommand{\jan}[1]{\textcolor{orange}{#1}}%Alex Malz comments in green
+\newcommand{\jan}[1]{\textcolor{orange}{#1}}%Jeff Newman comments in Orange
 
 \def\X{{\mathbf{X}}}
 \def\x{{\mathbf{x}}}
@@ -155,9 +155,10 @@ Furthermore, we raise attention to the limitations of established metrics for as
 The authors would like to thank their LSST-DESC publication review committee for comments that improved the paper draft.
 
 { \red{personal funding sources}}
-S.~Schmidt acknowledges support from DOE grant DE-SC0009999 and NSF/AURA grant N56981C.  AIM is advised by David W. Hogg and was supported by National Science Foundation grant AST-1517237.
+S.~Schmidt acknowledges support from DOE grant DE-SC0009999 and NSF/AURA grant N56981C.
+AIM is advised by David W. Hogg and was supported by National Science Foundation grant AST-1517237.
 
-In addition to packages cited in the text, analyses performed in this paper used the following software packages: \textsc{Numpy} and \textsc{Scipy} \citep{numpyscipy}, \textsc{Matplotlib} \citep{matplotlib}, \textsc{Seaborn} \citep{seaborn}, \textsc{minFunc} \citep{minfunc}, \textsc{pySkyNet} \citep{pyskynet}, and {\textsc photUtils} from the LSST simulations package \citep{lsstphotutils}.
+In addition to packages cited in the text, analyses performed in this paper used the following software packages: \textsc{Numpy} and \textsc{Scipy} \citep{numpyscipy}, \textsc{Matplotlib} \citep{matplotlib}, \textsc{Seaborn} \citep{seaborn}, \textsc{minFunc} \citep{minfunc}, \textsc{pySkyNet} \citep{pyskynet}, and {\textsc photUtils} from the \lsst\ simulations package \citep{lsstphotutils}.
 
 \input{desc-tex/ack/standard} % also available: key standard_short
 
