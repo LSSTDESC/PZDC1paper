@@ -222,21 +222,15 @@ The weights were randomly initialized based on normal sampling.
 \label{sec:tpz}
 %(Erfan Nourbakhsh)
 
-Trees for \Pz \citep[\tpz\footnote{\url{https://github.com/mgckind/MLZ}},][]{Carrasco_Kind:13,Carrascokind:14} is a parallel machine learning algorithm that generates photometric redshift PDFs using prediction trees and random forest techniques.
-The code recursively splits the input data (i.~e.~the training sample), into two branches, one after another, until a terminal leaf is created that meets a termination criterion (e.~g.~a minimum leaf size or a variance threshold).
-Bootstrap samples from the training data and associated errors are used to build a set of prediction trees.
-In order to minimize correlation between the trees, the data is divided in such a way that the highest information gain among the random subsample of features is obtained at every point.
-The regions in each terminal leaf node corresponds to a specific subsample of the entire data that possesses similar properties.
+Trees for \Pz \citep[\tpz\footnote{\url{https://github.com/mgckind/MLZ}},][]{Carrasco_Kind:13,Carrascokind:14} uses prediction trees and random forest techniques to estimate \pzpdf s.
+\tpz\ recursively splits the training set into branch pairs based on maximizing information gain among a random subsample of features, to minimize correlation between the trees, terminating only when a newly created leaf meets a criterion, such as a leaf size minimum or a variance threshold.
+The regions in each terminal leaf node correspond to a subsample of the training set with similar properties.
+Bootstrap samples from the training set photometry and errors are used to build a set of prediction trees.
 
-The training data is examined before running TPZ.
-Since TPZ does not handle non-detections (magnitudes flagged as 99.0), we replace these values with an approximation of the $1\sigma$ detection threshold, i.~e.~a signal to noise ratio of 1 in terms of magnitude uncertainty using the equation $dm = 2.5 ~ \log ( 1 + N/S )$ where $dm \sim 0.7526 ~ mag$ for $N/S=1$.
-That is, for each band, we replace the non-detection with the magnitude corresponding to the error of 0.7526 from the error model forecasted for 10-year LSST data.
-The Out-of-Bag \citep{Breiman:84,Carrasco_Kind:13} cross-validation technique is used within TPZ to evaluate its predictive validity and determine the relative importance of the different input attributes.
-We employed this information to calibrate our algorithm.
-
-In the present work, the LSST magnitudes $u,~g,~r,~i$ and colours $u-g,~g-r,~r-i,~i-z,~z-y$ and their associated errors are used in the process of growing 100 trees with a minimum leaf size of 5 (the $z$ and $y$ magnitudes did not show significant correlation with the redshift in our cross-validation, so we did not use them when constructing our trees).
+To run \tpz, we replaced nondetections with an approximation of the $1\sigma$ detection threshold based on the error forecast of the 10-year \lsst\ data, i.~e. $dm = 2.5 \log (1 + N/S)$ where $dm \sim 0.7526$ mag for $N/S = 1$.
+We calibrated \tpz\ with the Out-of-Bag cross-validation technique \citep{Breiman:84,Carrasco_Kind:13} to evaluate its predictive validity and determine the relative importance of the different input attributes.
+We grew 100 trees to a minimum leaf size of 5 using the $ugri$ magnitudes, all $u-g, g-r, r-i, i-z, z-y$ colours, and the associated errors, as the $z$ and $y$ magnitudes did not show significant correlation with the redshift in our cross-validation.
 We partitioned our redshift space into 200 bins and smoothed each individual PDF with a smoothing scale of twice the bin size.
-%there was a typo here that had 100 bins, I double checked, it is 200 in the final run.
 
 \subsubsection{Delight}
 \label{sec:delight}
