@@ -28,13 +28,13 @@ Though not exhaustive, this sample represents codes for which there was sufficie
 \end{table*}
 
 We describe the algorithms and implementations of the model-based and data-driven codes in Sections~\ref{sec:templatecodes} and \ref{sec:trainingcodes} respectively.
-For each approach, we note how it accounts for photometric uncertainties, how it interprets negative fluxes, what its native output format of \pzpdf s is, and what, if any, preprocessing, including validation, of the prior information it performs.
+% For each approach, we note how it accounts for photometric uncertainties, how it interprets negative fluxes, what its native output format of \pzpdf s is, and what, if any, preprocessing, including validation, of the prior information it performs.
 
 \subsection{Template-based Approaches}
 \label{sec:templatecodes}
 
 We test three publicly available and commonly used template-based codes, \bpz, \eazy, and \lephare, that share the standard physically motivated approach of calculating model fluxes for a set of template SEDs on a grid of redshift values and evaluating a merit function using the observed and model fluxes.
-These three also share the $\chi^{2}$ merit function
+These three also share the \chisq\ merit function
 \begin{equation}
 	\label{eq_temp_chi}
 	\chi^{2}(z, T, A) \equiv \sum_{b}^{N_{\rm{filt}}} \left(\frac{F^{\rm{obs}}_{b} - A F^{\rm{mod}}_{b}(T, z)}{\sigma^{\rm{obs}}_{b}}\right)^{2},
@@ -60,22 +60,20 @@ Prior to running the code, the non-detection placeholder magnitude was replaced 
 \label{sec:eazy}
 %(Rongpu Zhou)
 
-\textsc{EAZY}\footnote{\url{https://github.com/gbrammer/eazy-photoz}} \citep[Easy and Accurate Photometric Redshifts from Yale,][]{Brammer:08} is a template-based photo-$z$ code that includes several features that extend the basic $\chi^2$ fit used in many template codes.
-The code can fit the observed photometry with SEDs created from a linear combination of a set of templates at each redshift, and the best-fit SED is found by simultaneously fitting one, two or all of the templates by minimizing $\chi^2$.
-The minimized $\chi^2(z)$ is then combined with an apparent magnitude prior to obtain the posterior redshift probability distribution.
-On examination of the source code for EAZY, it appears that rather than marginalizing across all templates in the $\chi^2$ calculation, \textsc{EAZY} takes only the minimum value of $\chi^2$ at each redshift.
-This improper marginalization does not lead to the correct posterior distribution, an implementation issue that will need to be addressed in the future.
-%, although some argue that this is not the mathematically correct way of calculating the posteriors.
-\textsc{EAZY} can also account for the uncertainties in the templates by adding an empirically derived template error in quadrature as a function of redshift to the flux errors.
+\eazy\footnote{\url{https://github.com/gbrammer/eazy-photoz}} \citep[Easy and Accurate Photometric Redshifts from Yale,][]{Brammer:08} extends the basic \chisq\ fit procedure that defines template-fitting approaches.
+The algorithm models the observed photometry with a linear combination of template SEDs at each redshift.
+The best-fit SED is found by simultaneously fitting one, two, or all of the templates via \chisq\ minimization, which is distinct from marginalizing across all templates.
+The minimized \chisq\ likelihood at each redshift is then combined with an apparent magnitude prior to obtain the redshift posterior PDF.
+We note that the utilization of the best-fit SED rather than a proper marginalization does not lead to the correct posterior distribution, an implementation issue that has now been identified and will be addressed by the developers in the future.
+\eazy\ can account for uncertainty in the template set by adding in quadrature to the flux errors an empirically derived template error as a function of redshift.
 
-In this paper we use the all-templates mode, which fits the photometric data with a linear combination of the five basis templates.
-The EAZY architecture cannot accept a template set other than the same five basis templates employed by \texttt{k-correct} when constructing our mock galaxies.
-EAZY was thus run using linear combinations of these five templates rather than using the 100 discrete templates shared by the other template-fitting codes.
-We employed the $5$ basis templates described in Section~\ref{sec:buzzard}, and set the template error to zero since these same templates were used to produce the simulated catalog photometry. %\red{The quality parameter \texttt{Qz} is...}
-The ability to fit for linear combinations of templates highlights an important implementation difference between similar photo-z codes.
-The likelihoods include the application of a type-independent apparent magnitude prior estimated from the training data.
+The SED-independent apparent magnitude prior was derived empirically from the DC1 training set.
+The \eazy\ architecture cannot accept a template set other than the same five basis templates employed by \texttt{k-correct} when constructing the DC1 catalogue.
+However, \eazy\ does feature a flexible \texttt{all-templates} mode, which fits the photometric data with a linear combination of the five basis templates.
+We set the template error to zero since the same templates were in fact used to produce the DC1 photometry.
 
-\subsubsection{LePhare}\label{sec:lephare}
+\subsubsection{LePhare}
+\label{sec:lephare}
 %(C\'ecile Roucelle, Eric Nuss, Johann Cohen-Tanugi)
 
 \textsc{LePhare}\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}}\citep[Photometric Analysis for Redshift Estimate,][]{Arnouts:99,Ilbert:06} is a photo-$z$ reconstruction code based on a $\chi^2$ template-fitting procedure.
