@@ -238,22 +238,16 @@ We partitioned our redshift space into 200 bins and smoothed each individual PDF
 
 \delight \footnote{\url{https://github.com/ixkael/Delight}} \citep{Leistedt:17} is a hybrid technique that infers \pz s with a data-driven model of latent SEDs and a physical model of photometric fluxes as a function of redshift.
 Generally, machine learning methods rely on representative training data with shared band passes, while template based methods rely on a complete library of templates based on physical models constructed.
-\delight\ takes the best aspects of both approaches by constructing a large collection of latent SED templates (or physical flux-redshift models) from training data, with a template SED library as a guide to the learning of the model, thereby circumventing the machine learning prerequisite of representative training data in the same photometric bands and the template fitting requirement of detailed galaxy SED models.
-This conceptually novel approach is achieved with Gaussian processes operating in flux-redshift space.
+\delight\ aims to take the best aspects of both approaches by constructing a large collection of latent SED templates (or physical flux-redshift models) from training data, with a template SED library as a guide to the learning of the model, thereby circumventing the machine learning prerequisite of representative training data in the same photometric bands and the template fitting requirement of detailed galaxy SED models.
 
 Each test set galaxy $i$ has a posterior $p(z \vert \mathbf{\hat{F}}) \approx \sum_i p(\mathbf{\hat{F}} \vert z, T_i) p(z \vert T_i) p(T_i)$ of redshift $z$ conditioned on noisy flux $\mathbf{\hat{F}}$, where $p(z \vert T_i) p(T_i)$ captures prior information about the redshift distributions and abundances of the galaxy templates $T_i$.
 As in traditional template fitting, each likelihood $p(\mathbf{\hat{F}} \vert \mathbf{F})$ relates the noisy flux $\mathbf{\hat{F}}$ with the noiseless flux $\mathbf{F}$ predicted by the model of a linear combination of templates, carefully constructed to account for model uncertainties and different normalization of the same SED.
-The machine learning approach appears in the inclusion of a pairwise comparison term $p(\mathbf{F} \vert z, z_j, \mathbf{\hat{F}}_j)$ for the prediction of flux at a redshift $z$ with respect to training set galaxy $j$ with redshift $z_j$ and flux $\mathbf{\hat{F}}_j$.  
-Thus the \pz\ posterior $p(\mathbf{\hat{F}} \vert z, T_i) = \int p(\mathbf{\hat{F}} \vert \mathbf{F}) p(\mathbf{F} \vert z, z_j, \mathbf{\hat{F}}_j) d\mathbf{F}$ is essentially the probability that the training and the target galaxies have the same SED at a different redshift.
-The flux prediction $p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)$ of the training galaxy at redshift $z$ is modeled via a Gaussian process,
+\delight\ models SEDs as a linar combination of template SEDs plus Gaussian processes $F_b \sim \mathcal{GP}\left( \mu^F, k^F \right)$ with zero mean function $\mu^{F}$ and a physically motivated kernel $k^{F}$ that induces realistic correlations in flux-redshift space.
 
-The underlying latent SEDs are modeled as a linear combination of a set of pre-defined template SEDs, plus zero mean Gaussian processes with factorized kernels.
+The machine learning approach appears in the inclusion of a pairwise comparison term $p(\mathbf{F} \vert z, z_j, \mathbf{\hat{F}}_j)$ for the prediction of flux at a redshift $z$ with respect to training set galaxy $j$ with redshift $z_j$ and flux $\mathbf{\hat{F}}_j$.
+Thus the \pz\ posterior $p(\mathbf{\hat{F}} \vert z, T_i) = \int p(\mathbf{\hat{F}} \vert \mathbf{F}) p(\mathbf{F} \vert z, z_j, \mathbf{\hat{F}}_j) d\mathbf{F}$ may be interpreted as the probability that the training and the target galaxies have the same SED at a different redshift.
+The flux prediction $p(\mathbf{F} \vert z, z_j, \mathbf{\hat{F}}_j)$ of the training galaxy at redshift $z$ is modeled via a Gaussian process,
 
-
-\begin{equation} \label{eq:delight_gp}
-F_b \sim \mathcal{GP}\left( \mu^F,k^F \right),
-\end{equation}
-\noindent with mean function $\mu^F$ and kernel $k^F$, both imposed to capture expected correlations resulting from the known underlying physics (i.e., fluxes resulting from observing SEDs through filter response, and the SEDs being redshifted).
 The reader should refer to \citet{Leistedt:17} for further details.
 
 In this study, all $100$ ordered Buzzard templates, as described in Section~\ref{sec:buzztemplates}, were used in \textsc{Delight}, and the Gaussian process was trained using the provided training sample.
