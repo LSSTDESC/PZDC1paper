@@ -236,25 +236,19 @@ We partitioned our redshift space into 200 bins and smoothed each individual PDF
 \label{sec:delight}
 %(John Soo)
 
-\delight \footnote{\url{https://github.com/ixkael/Delight}} \citep{Leistedt:17} infers \pz s with a data-driven model of latent SEDs and a physical model of photometric fluxes as a function of redshift.
-Delight models the underlying latent SEDs as a linear combination of a set of pre-defined template SEDs, plus zero mean Gaussian processes with factorized kernels.
-Generally, machine learning methods rely on representative training data with similar band passes, while template based methods rely on a complete library of templates based on physical models constructed.
-\textsc{Delight} is constructed in attempt to combine the advantages and eliminate the disadvantages of both template-based and machine learning algorithms: it constructs a large collection of latent SED templates (or physical flux-redshift models) from training data, with a template SED library as a guide to the learning of the model.
-The advantage of \textsc{Delight} is that it neither needs representative training data in the same photometric bands, nor does it need detailed galaxy SED models to work.
+\delight \footnote{\url{https://github.com/ixkael/Delight}} \citep{Leistedt:17} is a hybrid technique that infers \pz s with a data-driven model of latent SEDs and a physical model of photometric fluxes as a function of redshift.
+Generally, machine learning methods rely on representative training data with shared band passes, while template based methods rely on a complete library of templates based on physical models constructed.
+\delight\ takes the best aspects of both approaches by constructing a large collection of latent SED templates (or physical flux-redshift models) from training data, with a template SED library as a guide to the learning of the model, thereby circumventing the machine learning prerequisite of representative training data in the same photometric bands and the template fitting requirement of detailed galaxy SED models.
+This conceptually novel approach is achieved with Gaussian processes operating in flux-redshift space.
 
-This conceptually novel approach is done by using Gaussian processes operating in flux-redshift space.
-The posterior distribution on the redshift of a target galaxy is obtained via a pairwise comparison with training galaxies,
-
-\begin{equation}
-p(z|\mathbf{\hat{F}}) \approx \sum_i p(\mathbf{\hat{F}}|z,t_i)\, p(z|t_i)p(t_i),
-\end{equation}
-\noindent where $p(z|t_i)p(t_i)$ captures prior information about the redshift distributions and abundances of the galaxies, with $t_i$ denoting the galaxy template; while $p(\mathbf{\hat{F}}|z,t_i)$ is the posterior of noisy flux $\mathbf{\hat{F}}$ at redshift $z$.
-For each training-target pair, $p(\mathbf{\hat{F}}|z,t_i)$ is evaluated as follows:
-\begin{equation} \label{eq:delight_noisy}
-p(\mathbf{\hat{F}}|z,t_i) = \int p(\mathbf{\hat{F}}|\mathbf{F})\, p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)\, d\mathbf{F},
-\end{equation}
-where $p(\mathbf{\hat{F}}|\mathbf{F})$ is the likelihood function, it compares the noisy real flux $\mathbf{\hat{F}}$ with the noiseless flux $\mathbf{F}$ obtained from the linear combination of template models, carefully constructed to account for model uncertainties and different normalization of the same SED; while $p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)$ is the prediction of flux at a different redshift $z$ with respect to the training object with redshift $z_i$ and flux $\mathbf{\hat{F}}_i$. Eq.~\ref{eq:delight_noisy} is essentially the probability that the training and the target galaxies having the same SED but at a different redshift.
+Each test set galaxy $i$ has a posterior $p(z \vert \mathbf{\hat{F}}) \approx \sum_i p(\mathbf{\hat{F}} \vert z, T_i) p(z \vert T_i) p(T_i)$ of redshift $z$ conditioned on noisy flux $\mathbf{\hat{F}}$, where $p(z \vert T_i) p(T_i)$ captures prior information about the redshift distributions and abundances of the galaxy templates $T_i$.
+As in traditional template fitting, each likelihood $p(\mathbf{\hat{F}} \vert \mathbf{F})$ relates the noisy flux $\mathbf{\hat{F}}$ with the noiseless flux $\mathbf{F}$ predicted by the model of a linear combination of templates, carefully constructed to account for model uncertainties and different normalization of the same SED.
+The machine learning approach appears in the inclusion of a pairwise comparison term $p(\mathbf{F} \vert z, z_j, \mathbf{\hat{F}}_j)$ for the prediction of flux at a redshift $z$ with respect to training set galaxy $j$ with redshift $z_j$ and flux $\mathbf{\hat{F}}_j$.  
+Thus the \pz\ posterior $p(\mathbf{\hat{F}} \vert z, T_i) = \int p(\mathbf{\hat{F}} \vert \mathbf{F}) p(\mathbf{F} \vert z, z_j, \mathbf{\hat{F}}_j) d\mathbf{F}$ is essentially the probability that the training and the target galaxies have the same SED at a different redshift.
 The flux prediction $p(\mathbf{F}|z,z_i,\mathbf{\hat{F}}_i)$ of the training galaxy at redshift $z$ is modeled via a Gaussian process,
+
+The underlying latent SEDs are modeled as a linear combination of a set of pre-defined template SEDs, plus zero mean Gaussian processes with factorized kernels.
+
 
 \begin{equation} \label{eq:delight_gp}
 F_b \sim \mathcal{GP}\left( \mu^F,k^F \right),
