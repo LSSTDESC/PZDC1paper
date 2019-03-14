@@ -9,12 +9,12 @@
 The goal of this study is to evaluate the degree to which \pzpdf s of each method can be trusted for a generic probabilistic data analysis.
 Obviously \pzpdf s must not take negative values and must integrate to unity over the range of possible redshifts.
 The overloaded ``$p(z)$'' is a widespread abuse of notation that obfuscates this goal, so we will dedicate some attention to breaking it apart.
-Galaxies have redshifts $z$ and photometric data $d$ drawn from a joint probability space $p(z, d)$ in nature that is not known to us.
-If it were known, however, each galaxy $i$ would have a \textit{true posterior \pzpdf}\ $p(z \vert d_{i})$ as well as a true likelihood $p(d \vert z_{i})$.
-There are a number of metrics that can be used to test the accuracy of a \pz\ posterior as an estimator of a true \pz\ posterior if it is known.
-Even for simulated data, the true \pzpdf\ is in general not accessible unless the photometry is in fact drawn from the true \pz\ likelihoods, a mock catalogue generation procedure that has not yet appeared in the literature.
-Furthermore, only limited applications of \pzpdf s that could be used as the basis for a metric have been presented in the literature.
+Galaxies have redshifts $z$ and photometric data $d$ drawn from a joint probability space $p(z, d)$ in nature.
+As a result, each observed galaxy $i$ has a \textit{true posterior \pzpdf}\ $p(z \vert d_{i})$ as well as a true likelihood $p(d \vert z_{i})$.
+There are a number of metrics that can be used to test the accuracy of a \pz\ posterior as an estimator of a true \pz\ posterior if the true \pzpdf\ is known.
+However, the true \pzpdf\ is in general not accessible unless the photometry is in fact drawn from the true \pz\ likelihoods, a mock catalogue generation procedure that has not yet appeared in the literature and was not performed for this work.
 
+Before describing the metrics appropriate to the DC1 data set, we outline the philosophy behind our choices.
 A \pzpdf\ estimator derived by method $H$ must be understood as a posterior probability distribution
 \begin{equation}
 \hat{p}^{H}_{i}(z) \equiv p(z \vert d_{i}, I_{D}, I_{H}),
@@ -22,57 +22,43 @@ A \pzpdf\ estimator derived by method $H$ must be understood as a posterior prob
 conditioned not only on the photometric data $d_{i}$ for that galaxy but also on parameters encompassing a number of things that will differ depending on the method $H$ used to produce it, namely the assumptions $I_{H}$ necessary for the method to be valid and any inputs $I_{D}$ it takes as prior information, such as a template library or training set.
 Because of this, direct comparison of \pzpdf s produced by different methods is in some sense impossible; even if they share the same prior information $I_{D}$, by definition they cannot be conditioned on the same assumptions $I_{H}$, otherwise they would not be distinct methods at all.
 
-In this study, we isolate the effect of differences in prior information $I_{H}$ specific to each method by using a single training set $I_{D}^{ML}$ for all machine learning-based codes and a single template library $I_{D}^{T}$ for all template-based codes.
-These sets of prior information are carefully constructed to be representative and complete, so we have $I_{D} \equiv I_{D}^{ML} \equiv I_{D}^{T}$ for every method $H$.
+In this study, we isolate the effect of differences in prior information $I_{H}$ specific to each method by using a single training set $I_{D}^{\rm ML}$ for all machine learning-based codes and a single template library $I_{D}^{\rm T}$ for all template-based codes.
+These sets of prior information are carefully constructed to be representative and complete, so we have $I_{D} \equiv I_{D}^{\rm ML} \equiv I_{D}^{\rm T}$ for every method $H$.
 Thus, we are saying
 \begin{equation}
 \frac{\hat{p}_{i}^{H}(z)}{\hat{p}_{i}^{H'}(z)} \approx \frac{p(z \vert d_{i}, I_{H})}{p(z \vert d_{i}, I_{H'})},
 \end{equation}
 meaning that we assume comparisons of $\hat{p}_{i}^{H}(z)$ isolate the effect of the method used to obtain the estimator, which should enable interpetation of the differences between estimated PDFs in terms of the specifics of the method implementations.
 
-Some scientific applications of \pzpdf s necessitate knowledge of each individual galaxy's \pzpdf, for example galaxy intrinsic alignment studies, strong lensing foreground shear prediction, and photometric supernova classification, while others require only knowledge of the ensemble redshift distribution, $N(z)$.
-Due to the paucity of principled techniques for using and validating individual galaxy \pzpdf s in the literature, there have been few alternatives to the common practice of reducing \pzpdf s to point estimates in prior comparisons of \pz\ code performance.
-Though the outmoded practice should not be encouraged, we also calculate traditional metrics based on the most common point estimators derived from \pzpdf s in Appendix~\ref{sec:pointmetrics}.
-
-The most popular application of \pzpdf s is the estimation of the overall redshift distribution $N(z)$, the true value of which is known for the DC1 data set and will be denoted as $\tilde{N}(z)$.
-In terms of the prior information provided to each method, the true redshift distribution satisfies the tautology $\tilde{N}(z) = p(z \vert I_{D})$ due to our experimental set-up; because the DC1 training and template sets are representative and complete, $I_{D}$ represents a prior that is also equal to the truth.
-In this ideal case of complete and representative prior information, the method that would give the best approximation to $\hat{N}(z)$ would be one that neglects all the information contained in the photometry $\{d_{i}\}_{N_{tot}}$ and gives every galaxy the same \pzpdf\ $\hat{p}_{i}(z) = \tilde{N}(z)$ for all $i$; the inclusion of any information from the photometry would only introduce noise to the optimal result of returning the prior.
-This is the exact estimator, \trainz, that we have described in Section~\ref{sec:method:trainz}, and which will serve as an experimental control.
-
-Though alternatives exist \citep{Malz:chippr}, ``stacking'' according to
-\begin{equation}
-  \label{eq:stacked}
-  \hat{N}^{H}(z) \equiv \frac{1}{N_{tot}}\ \sum_{i}^{N_{tot}}\ \hat{p}^{H}_{i}(z)
-\end{equation}
-is the most widely accepted method for obtaining $\hat{N}^{H}(z)$ as an estimator of the redshift distribution from \pzpdf s derived by a method $H$.
-Though we do not endorse the use of the stacked estimator of the redshift distribution, we use it under the untested assumption that the response of our metrics of $\hat{N}^{H}(z)$ will be analogous to the same metrics applied to a principled estimator of the redshift distribution.
-The exact implementation of the stacked estimator $\hat{N}^{H}(z)$ depends on the parametrization of the \pzpdf s, which may differ across codes and can affect the precision of the estimator \citep{Malz:qp}.
-Even considering a single method under the same parametrization, such as the $200$-bin $0<z<2$ piecewise constant function used here, the exact bin definitions will affect the result.
+The exact implementation of the metrics theoretically depends on the parametrization of the \pzpdf s, which may differ across codes and can affect the precision of the estimator \citep{Malz:qp}.
+Even considering a single method under the same parametrization, such as the 200-bin $0 < z < 2$ piecewise constant function used here, the exact bin definitions will affect the result.
 %\red{Note: Let's address how the gridding (endpoints and spacing) affects the metrics, from the email correspondence Re: [LSST-DESC-MEMBERS] Summary of Nov 29 PZ Telecon. (AIM)}
 The piecewise constant format is chosen because of its established presence in the literature, and the choice of 200 bins was motivated by the approximate number of columns expected to be available for storage of \pzpdf s for the final \lsst\ Project tables.\footnote{See, e.~g.~the \lsst\ Data Products Definition Document, available at: \url{https://ls.st/dpdd}}
-All the \pzpdf\ catalogs are processed using the \qp\ software package \citep{Malz:qp}\footnote{available at: \url{http://github.com/aimalz/qp/}} for manipulating and calculating metrics of univariate PDFs.
 We will discuss the choice of \pzpdf\ parameterization further in Section~\ref{sec:results}.
 
-\subsection{Metrics of an ensemble of photo-\mathinhead{$z$}{z} posteriors}
+This analysis is conducted using the \qp\footnote{\url{http://github.com/aimalz/qp/}}\ software package \citep{Malz:qp} for manipulating and calculating metrics of univariate PDFs.
+We present the metrics of \pzpdf s that address our goals in the sections below.
+Though the outmoded practice should not be encouraged, those seeking a connection to previous comparison studies will find metrics of common redshift point estimators derived from \pzpdf s in Appendix~\ref{sec:pointmetrics}.
+
+\subsection{Metrics of an ensemble of photo-\mathinhead{$z$}{} posteriors}
 \label{sec:qualmet}
 
-Because the \pzpdf s in the \lsst\ catalog will be used for many applications, some of which require accuracy of each individual catalog entry, we consider several metrics that get at the population-level performance of the \pzpdf s as distinct from a summary statistic thereof.
+Because \lsst's \pzpdf s will be used for many scientific applications, some of which require accuracy of each individual catalog entry, we consider several metrics that probe the population-level performance of the \pzpdf s.
 
 \subsubsection{Probability integral transform (PIT)}
 \label{sec:pit}
 %(Alex Malz, Peter Freeman, Sam Schmidt)
 
-
-The probability integral transform (PIT) has been employed recently to evaluate fidelity of posterior distributions \citep[e.~g.~][]{Bordoloi:10,Polsterer:16,Tanaka:17}.  The PIT value is defined for each individual galaxy as:
+The probability integral transform (PIT)
 \begin{align}
 \label{eq:pit}
-\mathrm{PIT} &= \int_{-\infty}^{z_{\rm true}}p(z)\, dz \,.
+\mathrm{PIT} &\equiv \int_{-\infty}^{z_{\rm true}} p(z) dz
 \end{align}
-The distribution of PIT values quantifies the behavior of the {\it ensemble} of \pzpdf s, enabling us to evaluate whether the population of \pzpdf s is, on average, accurate.
-The PIT value for each galaxy is the Cumulative Distribution Function (CDF) of its \pzpdf\ evaluated at its true redshift.
-A catalogue of \pzpdf s that are accurate should have a flat PIT histogram (i.e., the individual PIT values as samples from each CDF should match a Uniform(0,1) distribution if the CDFs are accurate).
-Specific deviations from flatness indicate inaccuracy: overly broad \pzpdf s would manifest as underrepresentation of the lowest and highest PIT values, whereas overly narrow \pzpdf s would manifest as over-representation of the lowest and highest PIT values.
-High frequency at only $\mathrm{PIT}\approx0$ and $\mathrm{PIT}\approx1$ indicates the presence of catastrophic outliers with highly inaccurate \pzpdf s where the true redshift of a galaxy is outside of the support of its \pzpdf.
+is the Cumulative Distribution Function (CDF) of a \pzpdf\ evaluated at its true redshift, and the distribution of PIT values probes the average accuracy of the \pzpdf s of an ensemble of galaxies.
+A catalogue of accurate \pzpdf s should have a PIT distribution that is uniform $U(0,1)$, and deviations from flatness are interpretable: overly broad \pzpdf s induce underrepresentation of the lowest and highest PIT values, whereas overly narrow \pzpdf s induce overrepresentation of the lowest and highest PIT values.
+Catastrophic outliers with a true redshift outside the support of its \pzpdf\ have $\mathrm{PIT} \approx 0$ or $\mathrm{PIT} \approx 1$.
+
+The PIT distribution has been used to quantify the performance of \pzpdf\ methods in the past \citep[e.~g.~][]{Bordoloi:10,Polsterer:16,Tanaka:17}.
 \citet{Tanaka:17} use the histogram of PIT values as a diagnostic indicator of overall code performance, while \citet{Freeman:17} independently define the PIT and demonstrate how its individual values may be used both to perform hypothesis testing (via, e.g., the KS, CvM, and AD tests; see below) and to construct quantile-quantile plots.
 %\red{We might want to divide this by redshift to get trends, as the overall PIT could be impacted by true n(z).
 %For example, a PIT with nontrivial shape could be due to that behavior being uniform as a function of redshift or significant inaccuracy only in a small range of redshifts where $n(z)$ is large and a flat PIT elsewhere.}
@@ -180,10 +166,22 @@ is a weighted version of the CvM statistic, making it more sensitive to the tail
 %\end{equation}
 %as a metric on the stacked redshift distribution estimator of Eq.~\ref{eq:stacked}. Noting the assumptions made in using Eq.~\ref{eq:stacked}, we say that a photo-$z$ PDFs method whose stacked redshift distribution estimator $\hat{n}(z)$ more closely resembles the true redshift distribution $n'(z)$ is desired, i.e. we seek to minimize the KLD.
 
-
-\subsubsection{Moments}
+\subsubsection{Metrics of a science-motivated quantity}
 \label{sec:moments}
 %(Alex Malz)
+
+The most popular application of \pzpdf s is the estimation of the overall redshift distribution $N(z)$, the true value of which is known for the DC1 data set and will be denoted as $\tilde{N}(z)$.
+In terms of the prior information provided to each method, the true redshift distribution satisfies the tautology $\tilde{N}(z) = p(z \vert I_{D})$ due to our experimental set-up; because the DC1 training and template sets are representative and complete, $I_{D}$ represents a prior that is also equal to the truth.
+In this ideal case of complete and representative prior information, the method that would give the best approximation to $\hat{N}(z)$ would be one that neglects all the information contained in the photometry $\{d_{i}\}_{N_{tot}}$ and gives every galaxy the same \pzpdf\ $\hat{p}_{i}(z) = \tilde{N}(z)$ for all $i$; the inclusion of any information from the photometry would only introduce noise to the optimal result of returning the prior.
+This is the exact estimator, \trainz, that we have described in Section~\ref{sec:method:trainz}, and which will serve as an experimental control.
+
+Though alternatives exist \citep{Malz:chippr}, ``stacking'' according to
+\begin{equation}
+  \label{eq:stacked}
+  \hat{N}^{H}(z) \equiv \frac{1}{N_{tot}}\ \sum_{i}^{N_{tot}}\ \hat{p}^{H}_{i}(z)
+\end{equation}
+is the most widely accepted method for obtaining $\hat{N}^{H}(z)$ as an estimator of the redshift distribution from \pzpdf s derived by a method $H$.
+Though we do not endorse the use of the stacked estimator of the redshift distribution, we use it under the untested assumption that the response of our metrics of $\hat{N}^{H}(z)$ will be analogous to the same metrics applied to a principled estimator of the redshift distribution.
 
 We additionaly calculate the first three moments of the estimated redshift distribution $\hat{N}^{H}(z)$ for each code and compare them to the moments of the true redshift distribution $N'(z)$.
 The $m^{\mathrm{th}}$ moment of a distribution is defined as
