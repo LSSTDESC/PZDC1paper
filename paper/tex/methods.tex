@@ -148,7 +148,7 @@ Additionally, when the number of colour-matched training set galaxies is less th
 \label{sec:flexzboost}
 %(Ann Lee, Rafael Izbicki, Taylor Pospisil, Peter Freeman)
 
-\flexzboost \footnote{\url{https://github.com/tpospisi/flexcode};  \url{https://github.com/rizbicki/FlexCoDE} \label{flexzboost_github}} \citep{Izbicki:17} is built on \texttt{FlexCode}, a general-purpose methodology for converting any conditional mean point estimator of $z$ to a conditional density estimator $p(z \vert \x) \equiv f(z \vert \x)$, where $\x$ here represents our photometric covariates and errors.
+\flexzboost \footnote{\url{https://github.com/tpospisi/flexcode};\\ \url{https://github.com/rizbicki/FlexCoDE} \label{flexzboost_github}} \citep{Izbicki:17} is built on \texttt{FlexCode}, a general-purpose methodology for converting any conditional mean point estimator of $z$ to a conditional density estimator $p(z \vert \x) \equiv f(z \vert \x)$, where $\x$ here represents our photometric covariates and errors.
 \flexzboost\ expands the unknown function $f(z \vert \x) = \sum_{i}\beta_{i}(\x)\phi_{i}(z)$ using an orthonormal basis $\{\phi_{i}(z)\}_{i}$.
 By the orthogonality property, the expansion coefficients $\beta_{i}(\x) = \mathbb{E}\left[\phi_i(z)|\x\right] \equiv \int f(z \vert \x) \phi_{i}(z) dz$ are thus conditional means.
 The expectation value $\mathbb{E}\left[\phi_i(z) \vert \x\right]$ of the expansion coefficients conditioned on the data is equivalent to the regression of the space of possible redshifts on the space of possible photometry.
@@ -256,10 +256,12 @@ Photometric uncertainties from the inputs are propagated into the code, while no
 \subsection{trainZ: a pathological \pz\ estimator}
 \label{sec:method:trainz}
 
-We also include as an experimental control a pathological \pzpdf\ estimation method, dubbed \trainz, which assigns each test set galaxy a \pzpdf\ equal to the normalized redshift distribution $N(z)$ of the training set, according to $p(z \vert \{z_{j}\}) \equiv \frac{1}{N_{ \mathrm train}}\sum_{\mathrm i=1}^{N_{\mathrm train}} \begin{cases} 1 & \text{if\ } z_{k}\leq z_{i} < z_{k+1}\\ 0 & \text{otherwise} \end{cases}$.
+We also consider a pathological \pzpdf\ estimation method, dubbed \trainz, which assigns each test set galaxy a \pzpdf\ equal to the normalized redshift distribution $N(z)$ of the training set, according to
+\begin{equation}
+	p(z \vert \{z_{j}\}) \equiv \frac{1}{N_{ \mathrm train}}\sum_{\mathrm i=1}^{N_{\mathrm train}} \begin{cases} 1 & \text{if\ } z_{k}\leq z_{i} < z_{k+1}\\ 0 & \text{otherwise} \end{cases}.
+\end{equation}
 Unlike the other methods, the \trainz\ estimator is \textit{independent of the photometric data} of the test set galaxies, effectively performing a KNN procedure with $k=N_{\rm train}$.
 
-As the training sample is drawn from the same underlying distribution as the test sample, modulo the Poisson error due to small sample size, the quantiles of the training and test set distributions should be identical.
-If the training set were not representative, this estimator would produce biased results.
-We will evaluate its performance under the metrics of Section~\ref{sec:metrics} discuss it as an illustrative control case in Section~\ref{sec:caution} to highlight the limitations of metrics of \pzpdf s.
+Though \trainz\ is strongly vulnerable to a nonrepresenative training set, it should optimize performance metrics probing the ensemble properties of the galaxy sample, modulo Poisson error due to small sample size, as the training set and test set are drawn from the same underlying population.
+We will demonstrate its performance under the metrics of Section~\ref{sec:metrics} and discuss it as an illustrative experimental control case in Section~\ref{sec:caution} to highlight the limitations of our evaluation criteria for \pzpdf s.
 % any attempts to break up the sample into tomographic bins will fail, as every galaxy has an identical $p(z)$.
