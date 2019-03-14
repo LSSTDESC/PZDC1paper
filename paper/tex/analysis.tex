@@ -42,19 +42,34 @@ Though the outmoded practice should not be encouraged, those seeking a connectio
 
 \subsection{Metrics of an ensemble of photo-\mathinhead{$z$}{} posteriors}
 \label{sec:qualmet}
+%(Rongpu Zhou, Jeffrey Newman, Alex Malz)
+%(Alex Malz, Peter Freeman, Sam Schmidt)
 
 Because \lsst's \pzpdf s will be used for many scientific applications, some of which require accuracy of each individual catalog entry, we consider several metrics that probe the population-level performance of the \pzpdf s.
+Because we have the true redshifts but not true \pzpdf s for comparison, we remind the reader of the Cumulative Distribution Function (CDF)
+\begin{equation}
+  \label{eq:cdf}
+  \rm{CDF}(q) \equiv \int_{-\infty}^{q} p(z) dz,
+\end{equation}
+of a \pzpdf, which is used as the basis for several of our metrics.
 
-\subsubsection{Probability integral transform (PIT)}
-\label{sec:pit}
-%(Alex Malz, Peter Freeman, Sam Schmidt)
+A quantile of a distribution is the value $q$ at which the CDF of the distribution is equal to $Q$; percentiles and quartiles are familiar examples of linearly spaced sets of 100 and 4 quantiles, respectively.
+The quantile-quantile (QQ) plot serves as a graphical visualization for comparing two distributions, where the quantiles of one distribution are plotted against the quantiles of the other distribution,
+%\blue{Include an equation to ensure quantile definition is crystal clear before building upon it for PIT.}\red{Is maybe the above text clear enough?  Text may be more clear than any equation I can come up with--SJS.}
+providing an easy way to qualitatively assess the consistency between an estimating distribution and a true distribution.
+%location, scale and skewness.
+The closer the QQ plot is to diagonal, the closer the match between the distributions.
+% In this paper, QQ plots are used for two purposes: (1) for comparing $N(z)$ from \pzpdf s (estimated using Eq.~\ref{eq:stacked}) with the true $N(z)$, and (2) for assessing the overall consistency of an ensemble of \pzpdf s with their true redshifts on a population level, where the distribution of the PIT values (see previous section) is compared to a uniform distribution between $0$ and $1$.
+%\red{is this enough reason to include both?--SJS}
+%\aim{Maybe we should explain why we expect the distribution of CDFs to be uniform.}\red{Note: this is just describing the PIT.  I'm going to swap the order of PIT to come before this, and then say we are evaluating the distribution of PIT values.  I will also add why we expect this to be uniform--SJS}
 
 The probability integral transform (PIT)
 \begin{align}
 \label{eq:pit}
 \mathrm{PIT} &\equiv \int_{-\infty}^{z_{\rm true}} p(z) dz
 \end{align}
-is the Cumulative Distribution Function (CDF) of a \pzpdf\ evaluated at its true redshift, and the distribution of PIT values probes the average accuracy of the \pzpdf s of an ensemble of galaxies.
+is the CDF of a \pzpdf\ evaluated at its true redshift, and the distribution of PIT values probes the average accuracy of the \pzpdf s of an ensemble of galaxies.
+The distribution of PIT values is effectively the derivative of the QQ plot.
 A catalogue of accurate \pzpdf s should have a PIT distribution that is uniform $U(0,1)$, and deviations from flatness are interpretable: overly broad \pzpdf s induce underrepresentation of the lowest and highest PIT values, whereas overly narrow \pzpdf s induce overrepresentation of the lowest and highest PIT values.
 Catastrophic outliers with a true redshift outside the support of its \pzpdf\ have $\mathrm{PIT} \approx 0$ or $\mathrm{PIT} \approx 1$.
 
@@ -62,22 +77,9 @@ The PIT distribution has been used to quantify the performance of \pzpdf\ method
 \citet{Tanaka:17} use the histogram of PIT values as a diagnostic indicator of overall code performance, while \citet{Freeman:17} independently define the PIT and demonstrate how its individual values may be used both to perform hypothesis testing (via, e.g., the KS, CvM, and AD tests; see below) and to construct quantile-quantile plots.
 %\red{We might want to divide this by redshift to get trends, as the overall PIT could be impacted by true n(z).
 %For example, a PIT with nontrivial shape could be due to that behavior being uniform as a function of redshift or significant inaccuracy only in a small range of redshifts where $n(z)$ is large and a flat PIT elsewhere.}
+Though the QQ plot contains very similar information to that shown in the PIT histogram plot, due to being the PIT being the derivative of the QQ, we include both forms for completeness and enhanced visual interpretability.
 
-\subsubsection{Quantile-quantile (QQ) plot}
-\label{sec:qq}
-%(Rongpu Zhou, Jeffrey Newman, Alex Malz)
-
-A quantile is defined by partitioning a distribution into consecutive intervals containing equal amounts of probability, or equal numbers of objects in each interval in the case of a distribution of objects.
-The quantile-quantile (QQ) plot serves as a graphical visualization for comparing two distributions, where the quantiles of one distribution are plotted against the quantiles of the other distribution.
-%\blue{Include an equation to ensure quantile definition is crystal clear before building upon it for PIT.}\red{Is maybe the above text clear enough?  Text may be more clear than any equation I can come up with--SJS.}
-The QQ plot provides an easy way to qualitatively assess the differences in various properties such as the moments of an estimating distribution relative to a true distribution.
-%location, scale and skewness.
-
-In this paper, QQ plots are used for two purposes: (1) for comparing $N(z)$ from \pzpdf s (estimated using Eq.~\ref{eq:stacked}) with the true $N(z)$, and (2) for assessing the overall consistency of an ensemble of \pzpdf s with their true redshifts on a population level, where the distribution of the PIT values (see previous section) is compared to a uniform distribution between $0$ and $1$.
-Though the QQ plot contains very similar information to that shown in the PIT histogram plot, due to being the PIT being the derivative of the QQ, we include both forms for completeness and enhanced visual interpretability. %\red{is this enough reason to include both?--SJS}
-%\aim{Maybe we should explain why we expect the distribution of CDFs to be uniform.}\red{Note: this is just describing the PIT.  I'm going to swap the order of PIT to come before this, and then say we are evaluating the distribution of PIT values.  I will also add why we expect this to be uniform--SJS}
-
-\subsubsection{Conditional density estimation loss}
+\subsection{Conditional density estimation loss}
 \label{sec:CDE_loss}
 %(Alex Malz, Ann Lee)
 
@@ -183,6 +185,7 @@ Though alternatives exist \citep{Malz:chippr}, ``stacking'' according to
 is the most widely accepted method for obtaining $\hat{N}^{H}(z)$ as an estimator of the redshift distribution from \pzpdf s derived by a method $H$.
 Though we do not endorse the use of the stacked estimator of the redshift distribution, we use it under the untested assumption that the response of our metrics of $\hat{N}^{H}(z)$ will be analogous to the same metrics applied to a principled estimator of the redshift distribution.
 
+We use the QQ plot to visualize the relationship between $\hat{N}^{H}(z)$ and $\tilde{N}(z)$.
 We additionaly calculate the first three moments of the estimated redshift distribution $\hat{N}^{H}(z)$ for each code and compare them to the moments of the true redshift distribution $N'(z)$.
 The $m^{\mathrm{th}}$ moment of a distribution is defined as
 \begin{equation}
