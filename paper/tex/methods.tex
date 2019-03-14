@@ -253,17 +253,13 @@ The Gaussian process was trained using the full DC1 training set.
 We used the full DC1 template set with a flat prior in magnitude and SED type.
 Photometric uncertainties from the inputs are propagated into the code, while non-detections for each band are set to the mean of the respective bands.
 
-\subsection{trainZ: a straw-person \pz\ estimator}
+\subsection{trainZ: a pathological \pz\ estimator}
 \label{sec:method:trainz}
 
-In addition to the main photo-$z$ algorithms described above we also include a very simple method as a pathological example.
-For \trainz, as we will we call this simple estimator, we well define $p(z)$ as simply:
-\begin{equation}
-p(z) = \frac{1}{N_{ \mathrm train}}\sum_{\mathrm i=1}^{N_{\mathrm train}}z_{\mathrm train}
-\end{equation}
-That is, we simply set the redshift PDF of every galaxy equal to the normalized $N(z)$ of the training sample.
-This estimator is essentially a k nearest-neighbour estimator with k equal to the number of galaxies in the training sample.
-As the training sample is drawn from the same underlying distribution as the test sample, modulo small deviations due to sample size, the quantiles of the training and test distributions should be identical, modulo fluctuations due to finite sample size.
-This is a wildly unrealistic estimator, as it assigns all galaxies, no matter their apparent magnitude, colour, or true redshift, the same redshift PDF, and is thus uninformative at the level of individual object redshifts, but is designed to perform very well for the ensemble of all objects.
-If the training set was not representative, this estimator would produce biased results, and any attempts to break up the sample into tomographic bins will fail, as every galaxy has an identical $p(z)$.
-We will discuss this method and cautions relative to metrics in Section~\ref{sec:caution}.
+We also include as an experimental control a pathological \pzpdf\ estimation method, dubbed \trainz, which assigns each test set galaxy a \pzpdf\ equal to the normalized redshift distribution $N(z)$ of the training set, according to $p(z \vert \{z_{j}\}) \equiv \frac{1}{N_{ \mathrm train}}\sum_{\mathrm i=1}^{N_{\mathrm train}} \begin{cases} 1 & \text{if\ } z_{k}\leq z_{i} < z_{k+1}\\ 0 & \text{otherwise} \end{cases}$.
+Unlike the other methods, the \trainz\ estimator is \textit{independent of the photometric data} of the test set galaxies, effectively performing a KNN procedure with $k=N_{\rm train}$.
+
+As the training sample is drawn from the same underlying distribution as the test sample, modulo the Poisson error due to small sample size, the quantiles of the training and test set distributions should be identical.
+If the training set were not representative, this estimator would produce biased results.
+We will evaluate its performance under the metrics of Section~\ref{sec:metrics} discuss it as an illustrative control case in Section~\ref{sec:caution} to highlight the limitations of metrics of \pzpdf s.
+% any attempts to break up the sample into tomographic bins will fail, as every galaxy has an identical $p(z)$.
