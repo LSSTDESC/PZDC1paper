@@ -260,7 +260,7 @@ We also consider a pathological \pzpdf\ estimation method, dubbed \trainz, which
 \begin{equation}
 	p(z \vert \{z_{j}\}) \equiv \frac{1}{N_{ \mathrm train}}\sum_{\mathrm i=1}^{N_{\mathrm train}} \begin{cases} 1 & \text{if\ } z_{k}\leq z_{i} < z_{k+1}\\ 0 & \text{otherwise} \end{cases}.
 \end{equation}
-Unlike the other methods, the \trainz\ estimator is \textit{independent of the photometric data} of the test set galaxies, effectively performing a KNN procedure with $k=N_{\rm train}$.
+Unlike the other methods, the \trainz\ estimator is \textit{independent of the photometric data}, effectively performing a KNN procedure with $k=N_{\rm train}$.
 
 Though \trainz\ is strongly vulnerable to a nonrepresenative training set, it should optimize performance metrics probing the ensemble properties of the galaxy sample, modulo Poisson error due to small sample size, as the training set and test set are drawn from the same underlying population.
 We will demonstrate its performance under the metrics of Section~\ref{sec:metrics} and discuss it as an illustrative experimental control case in Section~\ref{sec:caution} to highlight the limitations of our evaluation criteria for \pzpdf s.
