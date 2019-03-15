@@ -222,11 +222,9 @@ This metric is the only one that can appropriately penalize \trainz\ and indicat
 %(Alex Malz, Sam Schmidt)
 
 We remind the reader that contributed codes were given a goal of obtaining accurate \pzpdf s, not an accurate stacked estimator of the redshift distribution, so we do not expect the same codes to necessarily perform well for both classes of metrics.
+In previous sections we have mentioned that optimizing for a specific metric does not guarantee good performance on other metrics, nor are our metrics able to assess the fidelity of individual \pzpdf s relative to true posteriors.
 As previously stated, there are a variety of scientific use cases for \pz s, and metric-specific relative performance implies that we may need multiple \pzpdf\ approaches tuned to each metric in order to maximize returns over all science cases in large upcoming surveys.
 
-Samples from accurate photo-$z$ posteriors should reproduce the space of $p(z,{\rm data})$.
-However, it is difficult to test this reconstruction given our data set, as the galaxy distributions arise from mock objects pasted on to an underlying dark matter halo catalogue with properties designed to match empirical relations, rather than being drawn from statistical distributions in redshift.
-In previous sections we have mentioned that optimizing for a specific metric does not guarantee good performance on other metrics, nor is there any guarantee that good performance by our metrics corresponds to \textit{accurate} photo-$z$ posteriors, in the sense of predicting redshifts for individual galaxies.
 %\aim{Explain that samples from accurate photo-$z$ posteriors should reconstruct the space of $p(z, data)$, a test we can't check with our datasets.}
 In other words, we can construct photo-$z$ estimators that provide good coverage in many of our tests, but which have very little predictive power.
 
