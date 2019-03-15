@@ -28,7 +28,11 @@ The settings used on \gpz\ in this work forced broadening of the single Gaussian
 % We will discuss this further in Section~\ref{sec:discussion}.
 % \red{someone review this statement to make sure that I'm saying this correctly!}
 
-\subsection{Ensembles of \pzpdf s}
+\subsection{\Pzpdf\ ensembles}
+\label{sec:pitqq}
+
+Fig.~\ref{fig:pitqq} shows a histogram of PIT values, QQ plot, and QQ difference plot relative to the ideal diagonal, showcasing the biases and trends in the average accuracy of the \pzpdf s for each code.
+The high QQ values (more high than low PIT values) of \bpz, \cmnn, \delight, \eazy, and \gpz\ indicate \pzpdf s biased low, and the low QQ values (more low than high PIT values) of \skynet\ and \tpz\ indicate \pzpdf s biased high.
 
 \begin{figure*}
 \centering
@@ -37,9 +41,6 @@ The settings used on \gpz\ in this work forced broadening of the single Gaussian
 The twelve codes exhibit varying degrees of four deviations from perfection: an overabundance of PIT values at the centre of the distribution indicate a catalogue of overly broad \pzpdf s, an excess of PIT values at the extrema indicates a catalogue of overly narrow \pzpdf s, catastrophic outliers manifest as overabundances at PIT values of 0 and 1, and asymmetry indicates systematic bias, a form of model misspecification.}
 \label{fig:pitqq}
 \end{figure*}
-
-Fig.~\ref{fig:pitqq} shows a histogram of PIT values, QQ plot, and QQ difference plot relative to the ideal diagonal, showcasing the biases and trends in the average accuracy of the \pzpdf s for each code.
-The high QQ values (more high than low PIT values) of \bpz, \cmnn, \delight, \eazy, and \gpz\ indicate \pzpdf s biased low, and the low QQ values (more low than high PIT values) of \skynet\ and \tpz\ indicate \pzpdf s biased high.
 
 The PIT histograms of \delight, \cmnn, \skynet, and \tpz\ feature an underrepresentation of extreme values, indicative of overly broad \pzpdf s, while the overrepresentation of extreme values for for \metaphor indicate overly narrow \pzpdf s.
 These five codes in particular have a free parameter for bandwidth, which may be responsible for this vulnerability, in spite of the opportunity for fine-tuning with perfect prior information.
@@ -73,22 +74,10 @@ Photo-z Code & fraction PIT$<10^{-4}$ or $>$0.9999\\
 \end{tabular}
 \end{table}
 
-Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlier rate $f_{\rm O}$ as the fraction of galaxies with $\rm{PIT} < 0.0001$ or $\rm{PIT} > 0.9999$.
-Though these spikes in the first and last bin of the PIT histogram were cut out of Figure~\ref{fig:pitqq} for visualization, the catastrophic outlier rates are provided in Table~\ref{tab:pitoutlier}.
+Though the spikes in the first and last bin of the PIT histogram were cut off in Figure~\ref{fig:pitqq} for visualization, the catastrophic outlier rates are provided in Table~\ref{tab:pitoutlier}.
+As expected, \trainz\ achieves precisely the 0.0002 value expected of an ideal PIT distribution.
+\annz, \flexzboost, \lephare, and \metaphor\ have notably high catastrophic outlier rates $> 0.02$, exceeding 100 times the ideal PIT rate, meriting further investigation.
 
-For a proper Uniform distribution we expect a value of $0.0002$.
-Several codes show a marked excess, with \textsc{ANNz2, FlexZBoost, LePhare, and METAPhoR} with $f_{\rm O} > 0.02$, indicating a sizeable number of catastrophic redshift solutions where the true redshift is not covered by the extent of $p(z)$.
-For \textsc{METAPhoR} this may be partially due to an overall underprediction of the $p(z)$ width, however this is not the case for the other codes.
-\textsc{LePhare} is a particular outlier with nearly 5 per cent of objects outside of $p(z)$ support.
-Further study will be necessary to determine what is causing these misclassifications for \textsc{LePhare}.
-As expected, and by design, \textsc{TrainZ} has the proper fraction of outliers for the $f_{\rm O}$ statistic.
-
-%\begin{figure*}
-%\centering
-%\includegraphics[width=\textwidth]{fig/PIT_histogram_plot_11codes.jpg}
-%\caption{The PIT histogram plots produced for every photo-$z$ code.  Ideal behaviour would match a uniform distribution, indicated by the horizontal dashed line.  Histograms with an overabundance of PIT values at the centre of the distribution indicate $p(z)$ distributions that are overly broad, while an excess of values at the extrema indicate $p(z)$ distributions that are overly narrow.  Values of PIT=0 and PIT=1 indicate ``catastrophic failures'' where the true redshift is completely outside the support of $p(z)$.  Asymmetric features are indicative of systematic bias in the redshift predictions.
-%\aim{Could we combine this with the previous figure by plotting both as differences from ideal on one plot with left and right axis labels?  The information seems degenerate (which makes sense!)}\red{as you say, the information is degenerat, this form emphasizes the differences a bit more, and shows off the catastrophic outliers with PIT=0 and 1 a bit better in my mind.} } \label{fig:pit}
-%\end{figure*}
 \begin{figure*}
 \centering
 \includegraphics[width=\textwidth]{fig/KSvsCvMvsAD_PIT_withnull_jpg.jpg}
