@@ -6,8 +6,7 @@
 
 % All code runners were asked to output redshift posterior estimates on 200 linear-spaced bins between redshifts 0 and 2.
 
-The goal of this study is to evaluate the degree to which \pzpdf s of each method can be trusted for a generic probabilistic data analysis.
-Obviously \pzpdf s must not take negative values and must integrate to unity over the range of possible redshifts.
+The goal of this study is to evaluate the degree to which \pzpdf s of each method can be trusted for a generic analysis.
 The overloaded ``$p(z)$'' is a widespread abuse of notation that obfuscates this goal, so we will dedicate some attention to breaking it apart.
 Galaxies have redshifts $z$ and photometric data $d$ drawn from a joint probability space $p(z, d)$ in nature.
 As a result, each observed galaxy $i$ has a \textit{true posterior \pzpdf}\ $p(z \vert d_{i})$ as well as a true likelihood $p(d \vert z_{i})$.
@@ -34,31 +33,12 @@ The exact implementation of the metrics theoretically depends on the parametriza
 Even considering a single method under the same parametrization, such as the 200-bin $0 < z < 2$ piecewise constant function used here, the exact bin definitions will affect the result.
 %\red{Note: Let's address how the gridding (endpoints and spacing) affects the metrics, from the email correspondence Re: [LSST-DESC-MEMBERS] Summary of Nov 29 PZ Telecon. (AIM)}
 The piecewise constant format is chosen because of its established presence in the literature, and the choice of 200 bins was motivated by the approximate number of columns expected to be available for storage of \pzpdf s for the final \lsst\ Project tables.\footnote{See, e.~g.~the \lsst\ Data Products Definition Document, available at: \url{https://ls.st/dpdd}}
-We will discuss the choice of \pzpdf\ parameterization further in Section~\ref{sec:results}.
+We will discuss the choice of \pzpdf\ parameterization further in Section~\ref{sec:discussion}.
 
 This analysis is conducted using the \qp\footnote{\url{http://github.com/aimalz/qp/}}\ software package \citep{Malz:qp} for manipulating and calculating metrics of univariate PDFs.
 We present the metrics of \pzpdf s that address our goals in the sections below.
-Though the outmoded practice should not be encouraged, those seeking a connection to previous comparison studies will find metrics of common redshift point estimators derived from \pzpdf s in Appendix~\ref{sec:pointmetrics}.
-
-\subsection{Metric of individual \pzpdf s}
-\label{sec:CDE_loss}
-%(Alex Malz, Ann Lee)
-
-The \buzz\ simulation process precludes testing the degree to which samples from our \pz\ posteriors reconstruct the space of $p(z, {\rm data})$.
-To the knowledge of the authors, there is only one metric that can be used to evaluate the performance of individual \pzpdf\ estimators in the absence of true \pz\ posteriors.
-Using the notation introduced in Section~\ref{sec:flexzboost}, the conditional density estimation (CDE) loss is defined as
-\begin{equation}
-  \label{eq:cde-loss}
-  L(f, \widehat{f}) \equiv \int \int (f(z \vert \x) - \widehat{f}(z \vert \x))^{2} dz dP(\x)
-\end{equation}
-in terms of the photometry $\x$, an analogue to the familiar root-mean-square-error used in conventional regression.
-We estimate the CDE loss via
-\begin{equation}
-  \label{eq:estimated-cde-loss}
-  \hat{L}(f, \widehat{f}) = \mathbb{E}_\X \left[\int \widehat{f}(z \mid \X)^{2} dz\right] - 2 \mathbb{E}_{\X, Z}\left[\widehat{f}(Z \mid \X)\right] + K_{f},
-\end{equation}
-where the first term is the expectation value of the \pz\ posterior with respect to the marginal distribution of the photometric covariates $\X$, the second term is the expectation value with respect to the joint distribution of $\X$ and the space $Z$ of all possible redshifts, and the third term $K_{f}$ is a constant depending only upon the true conditional densities $f(z \vert \x)$.
-We may estimate these expectations empirically on the test or validation data \citep[Eq.~7 in][]{Izbicki:17b} without knowledge of the true densities.
+Section~\ref{sec:qualmet} outlines aggregate metrics of a catalogue of \pzpdf s, and Section~\ref{sec:CDE_loss} presents a metric of individual \pzpdf s in the absence of true \pzpdf s.
+Though the outmoded practices should not be encouraged, those seeking a connection to previous comparison studies will find metrics of redshift point estimate reductions of \pzpdf s in Appendix~\ref{sec:pointmetrics} and metrics of a science-specific summary statistics heuristically derived from \pzpdf s in Appendix~\ref{sec:moments}.
 
 \subsection{Metrics of an ensemble of \pzpdf s}
 \label{sec:qualmet}
@@ -75,10 +55,7 @@ Because we have the true redshifts but not true \pzpdf s for comparison, we remi
 of a generic univariate PDF $f(z)$, which is used as the basis for several of our metrics.
 
 A quantile of a distribution is the value $q$ at which the CDF of the distribution is equal to $Q$; percentiles and quartiles are familiar examples of linearly spaced sets of 100 and 4 quantiles, respectively.
-The quantile-quantile (QQ) plot serves as a graphical visualization for comparing two distributions, where the quantiles of one distribution are plotted against the quantiles of the other distribution,
-%\blue{Include an equation to ensure quantile definition is crystal clear before building upon it for PIT.}\red{Is maybe the above text clear enough?  Text may be more clear than any equation I can come up with--SJS.}
-providing an easy way to qualitatively assess the consistency between an estimating distribution and a true distribution.
-%location, scale and skewness.
+The quantile-quantile (QQ) plot serves as a graphical visualization for comparing two distributions, where the quantiles of one distribution are plotted against the quantiles of the other distribution, providing an easy way to qualitatively assess the consistency between an estimating distribution and a true distribution.
 The closer the QQ plot is to diagonal, the closer the match between the distributions.
 % In this paper, QQ plots are used for two purposes: (1) for comparing $N(z)$ from \pzpdf s (estimated using Eq.~\ref{eq:stacked}) with the true $N(z)$, and (2) for assessing the overall consistency of an ensemble of \pzpdf s with their true redshifts on a population level, where the distribution of the PIT values (see previous section) is compared to a uniform distribution between $0$ and $1$.
 %\red{is this enough reason to include both?--SJS}
@@ -87,7 +64,7 @@ The closer the QQ plot is to diagonal, the closer the match between the distribu
 The probability integral transform (PIT)
 \begin{align}
 \label{eq:pit}
-\mathrm{PIT} &\equiv \rm{CDF}[\hat{p}, z_{\rm true}] %\int_{-\infty}^{z_{\rm true}} p(z) dz
+\mathrm{PIT} &\equiv \rm{CDF}[\hat{p}, z_{\rm true}]
 \end{align}
 is the CDF of a \pzpdf\ evaluated at its true redshift, and the distribution of PIT values probes the average accuracy of the \pzpdf s of an ensemble of galaxies.
 The distribution of PIT values is effectively the derivative of the QQ plot.
@@ -104,11 +81,6 @@ Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlie
 %\label{sec:crps}
 %\red{The CRPS is used to assess the accuracy of two probabilistic models respectively.}
 
-% \subsection{Metrics over estimated probability distributions}
-% \label{sec:quantmet}
-
-% We compute metrics comparing the CDF of PIT values to the CDF of a Uniform distribution, and also compute the CDF of the true redshift distribution $N'(z)$ compared the $\hat{N}(z)$ distribution derived from summing the \pzpdf s as described in Eq.~\ref{eq:stacked}.
-
 %\subsubsection{Root-mean-square error (RMSE)}
 %\label{sec:rmse}
 %%(Alex Malz)%
@@ -119,9 +91,6 @@ Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlie
 %%may be used for two purposes in this analysis.
 %%We calculate it between the true redshift distribution $N'(z)$ and each estimator $\hat{N}(z)$ (derived by Eq.~\ref{eq:stacked}) as well as between the ideal QQ and PIT curves from each method studied and the ideal curves.
 %Though this metric does not account for the fact that the redshift distribution function is, in fact, a probability distribution, it can still be interpreted as a measure of the integrated difference between the estimated distribution and the true distribution.%, and it can be used to quantify the otherwise qualitative metrics.
-
-% \subsubsection{Kolmogorov-Smirnov (KS) and related statistics}
-% \label{sec:ks}
 
 We evaluate a number of quantitative metrics derived from the visually interpretable QQ plot and PIT histogram, built on the Kolmogorov-Smirnov (KS) statistic
 \begin{equation}
@@ -149,20 +118,34 @@ The Anderson-Darling (AD) statistic
   \rm{AD}^2 \equiv N_{tot}\int_{-\infty}^{+\infty} \frac{\big(\rm{CDF}[\hat{f}, z] - \rm{CDF}[\tilde{f}, z]\big)^2} {\rm{CDF}[\tilde{f}, z] (1 -\rm{CDF}[\tilde{f}, z]} \mathrm{d}\rm{CDF}[\tilde{f}, z]
 \end{equation}
 is a weighted mean-squared difference featuring enhanced sensitivity to discrepancies in the tails of the distribution.
-% The CvM statistic is similar to the KS statistic as it is also computed from the distance between the measured CDF and the ideal CDF, but instead of the maximum distance, the CvM statistic
-% is the average of the distance squared.
-% In this paper we use the CvM statistic to evaluate the performance of both $n(z)$ and $p(z)$.
-% The AD statistic
-% is a weighted version of the CvM statistic, making it more sensitive to the tails of the distribution, where $N_{tot}$ is the sample size.
 %The KS statistic and the CvM and AD statistics related to it are all used to evaluate the performance of both $\hat{n}(z)$ and the QQ and PIT of the CDFs of the ensemble of photo-$z$ interim posteriors.
 In anticipation of a substantial fraction of galaxies having PIT of 0 or 1, a consequence of catastrophic outliers, we evaluate the AD statistic with modified bounds of integration $(0.01, 0.99)$ to exclude those extremes in the name of numerical stability.
 
 %\subsubsection{Kullback-Leibler Divergence (KLD)}
 %\label{sec:kl}
 %(Alex Malz)
-%
 %The KLD is a measure of the loss in information when using a probability distribution that is an estimate of a known true probability distribution, so we use
 %\begin{equation}
 %\mathrm{KLD} = \int_{-\infty}^{\infty}n'(z)\log\left[\frac{n'(z)}{\hat{n}(z)}\right]dz
 %\end{equation}
 %as a metric on the stacked redshift distribution estimator of Eq.~\ref{eq:stacked}. Noting the assumptions made in using Eq.~\ref{eq:stacked}, we say that a photo-$z$ PDFs method whose stacked redshift distribution estimator $\hat{n}(z)$ more closely resembles the true redshift distribution $n'(z)$ is desired, i.e. we seek to minimize the KLD.
+
+\subsection{Conditional Density Estimate (CDE) Loss: a metric of individual \pzpdf s}
+\label{sec:CDE_loss}
+%(Alex Malz, Ann Lee)
+
+The \buzz\ simulation process precludes testing the degree to which samples from our \pz\ posteriors reconstruct the space of $p(z, {\rm data})$.
+To the knowledge of the authors, there is only one metric that can be used to evaluate the performance of individual \pzpdf\ estimators in the absence of true \pz\ posteriors.
+Using the notation introduced in Section~\ref{sec:flexzboost}, the conditional density estimation (CDE) loss is defined as
+\begin{equation}
+  \label{eq:cde-loss}
+  L(f, \widehat{f}) \equiv \int \int (f(z \vert \x) - \widehat{f}(z \vert \x))^{2} dz dP(\x)
+\end{equation}
+in terms of the photometry $\x$, an analogue to the familiar root-mean-square-error used in conventional regression.
+We estimate the CDE loss via
+\begin{equation}
+  \label{eq:estimated-cde-loss}
+  \hat{L}(f, \widehat{f}) = \mathbb{E}_\X \left[\int \widehat{f}(z \mid \X)^{2} dz\right] - 2 \mathbb{E}_{\X, Z}\left[\widehat{f}(Z \mid \X)\right] + K_{f},
+\end{equation}
+where the first term is the expectation value of the \pz\ posterior with respect to the marginal distribution of the photometric covariates $\X$, the second term is the expectation value with respect to the joint distribution of $\X$ and the space $Z$ of all possible redshifts, and the third term $K_{f}$ is a constant depending only upon the true conditional densities $f(z \vert \x)$.
+We may estimate these expectations empirically on the test or validation data \citep[Eq.~7 in][]{Izbicki:17b} without knowledge of the true densities.
