@@ -166,31 +166,3 @@ In anticipation of a substantial fraction of galaxies having PIT of 0 or 1, a co
 %\mathrm{KLD} = \int_{-\infty}^{\infty}n'(z)\log\left[\frac{n'(z)}{\hat{n}(z)}\right]dz
 %\end{equation}
 %as a metric on the stacked redshift distribution estimator of Eq.~\ref{eq:stacked}. Noting the assumptions made in using Eq.~\ref{eq:stacked}, we say that a photo-$z$ PDFs method whose stacked redshift distribution estimator $\hat{n}(z)$ more closely resembles the true redshift distribution $n'(z)$ is desired, i.e. we seek to minimize the KLD.
-
-\subsubsection{Metrics of a science-motivated quantity}
-\label{sec:moments}
-%(Alex Malz)
-
-Perhaps the most popular application of \pzpdf s is the estimation of the overall redshift distribution $N(z)$, a quantity that enters some cosmological calculations and the true value of which is known for the DC1 data set and will be denoted as $\tilde{N}(z)$.
-In terms of the prior information provided to each method, the true redshift distribution satisfies the tautology $\tilde{N}(z) = p(z \vert I_{D})$ due to our experimental set-up; because the DC1 training and template sets are representative and complete, $I_{D}$ represents a prior that is also equal to the truth.
-In this ideal case of complete and representative prior information, the method that would give the best approximation to $\hat{N}(z)$ would be one that neglects all the information contained in the photometry $\{d_{i}\}_{N_{tot}}$ and gives every galaxy the same \pzpdf\ $\hat{p}_{i}(z) = \tilde{N}(z)$ for all $i$; the inclusion of any information from the photometry would only introduce noise to the optimal result of returning the prior.
-This is the exact estimator, \trainz, that we have described in Section~\ref{sec:trainz}, and which will serve as an experimental control.
-
-Though alternatives exist \citep{Malz:chippr}, ``stacking'' according to
-\begin{equation}
-  \label{eq:stacked}
-  \hat{N}^{H}(z) \equiv \frac{1}{N_{tot}}\ \sum_{i}^{N_{tot}}\ \hat{p}^{H}_{i}(z)
-\end{equation}
-is the most widely accepted method for obtaining $\hat{N}^{H}(z)$ as an estimator of the redshift distribution from \pzpdf s derived by a method $H$.
-Though we do not endorse the use of the stacked estimator of the redshift distribution, we use it under the untested assumption that the response of our metrics of $\hat{N}^{H}(z)$ will be analogous to the same metrics applied to a principled estimator of the redshift distribution.
-In addition, very few scientific use cases will employ the overall $\hat{N}(z)$ with no cuts, as we explore in this paper.
-We discuss in Section~\ref{sec:futurework} variants of the stacked estimator, such as realistic tomographic binning schemes, that will be explored in future work.
-
-As $N(z)$ is itself a univariate PDF, we apply the metrics of the previous sections to it as well.
-We additionaly calculate the first three moments
-\begin{equation}
-  \label{eq:moment}
-  \langle z^{m}\rangle \equiv \int_{-\infty}^{\infty} z^{m} N(z) dz
-\end{equation}
-of the estimated redshift distribution $\hat{N}^{H}(z)$ for each code and compare them to the moments of the true redshift distribution $\tilde{N}(z)$.
-Under the assumption that the stacked estimator is unbiased, a superior method minimizes the difference between the true and estimated moments.
