@@ -38,62 +38,50 @@ The twelve codes exhibit varying degrees of four deviations from perfection: an 
 \label{fig:pitqq}
 \end{figure*}
 
-Fig.~\ref{fig:pitqq} shows both the QQ plots and the histogram of PIT values, QQ plot, and a QQ difference plot relative to the ideal diagonal.
-Biases and trends in whether the average width of the $p(z)$ values being over/under-predicted are evident.
-An overall bias where the predicted redshift is systematically low manifests as the measured QQ value falling above the diagonal, as is the case for \textsc{BPZ} and \textsc{EAZY}, while a systematic overprediction shows up as the measured QQ value falling below the diagonal, as seen in \textsc{TPZ}.
-In terms of PIT histograms, a systematic underprediction of redshift corresponds to fewer PIT values at $PIT<0.5$ and more at $PIT>0.5$, while a systematic overprediction will show the opposite.
+Fig.~\ref{fig:pitqq} shows a histogram of PIT values, QQ plot, and QQ difference plot relative to the ideal diagonal, showcasing the biases and trends in the average accuracy of the \pzpdf s for each code.
+The high QQ values (more high than low PIT values) of \bpz, \cmnn, \delight, \eazy, and \gpz\ indicate \pzpdf s biased low, and the low QQ values (more low than high PIT values) of \skynet\ and \tpz\ indicate \pzpdf s biased high.
 
-Examination of the PIT histograms and QQ plots smethod:hows that there are fairly generic issues with the width of $p(z)$ uncertainties: \textsc{Delight, CMNN, SkyNet} and \textsc{TPZ} all show a PIT histogram with a dearth of low values and and an excess of high values, signs that, on average, their $p(z)$ are more broad than the true distribution of redshifts.
-\textsc{METAPhoR} shows the opposite trend, indicating the the $p(z)$  are more narrow than the distributions given by the true redshifts.
-In all of these code cases there is a free parameter or bandwidth that can be used to tune uncertainties.
-The sensitivity of multiple codes to this bandwidth choice emphasizes the fact that great care must be taken in setting user-defined parameters in photo-$z$ codes, even in the presence of representative training/validation data.  for \textsc{FlexZBoost} the ``sharpening'' parameter (described in Section~\ref{sec:flexzboost}) plays a key role in improving the results, resulting in a QQ plot that is very nearly diagonal.
-A similar sharpening procedure could be beneficial for several codes.
-Interestingly, the three purely template-based codes, \textsc{BPZ, EAZY}, and \textsc{LePhare}, show relatively well behaved $p(z)$ statistics (albeit with some bias), which may indicate that the likelihood estimation with representative templates is accurately capturing the uncertainties on individual redshifts.
-
-%Fig.~\ref{fig:pitqq} shows the PIT histogram plots produced by each photo-$z$ code.
-%These plots show information that is very similar to that shown in the QQ plot in many ways.
-The ideal PIT histogram would follow the black dashed line, representing a uniform distribution of PIT values, equivalent to the diagonal line in the QQ plot.
-Overly broad $p(z)$ values show up as an excess of PIT values near $0.5$ and a dearth of values at the edges, while overly narrow $p(z)$ will have an excess at the edges and will be missing values at the centre.
-Another feature evident in the PIT histograms is the number of ``catastrophic outlier'' values where the true redshift falls outside of the non-zero support of $p(z)$, corresponding to PIT$=0.0$ or $1.0$ is more apparent than in the QQ plots.
-Following Kodra \& Newman (in prep.) we define $f_{\rm O}$ as the fraction of objects with $PIT<0.0001$ or $PIT>0.9999$.
-Table~\ref{tab:pitoutlier} lists these fractions for each of the codes.
-For a proper Uniform distribution we expect a value of $0.0002$.
-Several codes show a marked excess, with \textsc{ANNz2, FlexZBoost, LePhare, and METAPhoR} with $f_{\rm O} > 0.02$, indicating a sizeable number of catastrophic redshift solutions where the true redshift is not covered by the extent of $p(z)$.  For \textsc{METAPhoR} this may be partially due to an overall underprediction of the $p(z)$ width, however this is not the case for the other codes.
-\textsc{LePhare} is a particular outlier with nearly 5 per cent of objects outside of $p(z)$ support.
-Further study will be necessary to determine what is causing these misclassifications for \textsc{LePhare}.
-As expected, and by design, \textsc{TrainZ} has the proper fraction of outliers for the $f_{\rm O}$ statistic.
-
+The PIT histograms of \delight, \cmnn, \skynet, and \tpz\ feature an underrepresentation of extreme values, indicative of overly broad \pzpdf s, while the overrepresentation of extreme values for for \metaphor indicate overly narrow \pzpdf s.
+These five codes in particular have a free parameter for bandwidth, which may be responsible for this vulnerability, in spite of the opportunity for fine-tuning with perfect prior information.
+\flexzboost's ``sharpening'' parameter (described in Section~\ref{sec:flexzboost}) played a key role in diagonalizing the QQ plot, indicating a common avenue for improvement in the approaches that share this type of parameter.
+On the other hand, the three purely template-based codes, \bpz, \eazy, and \lephare, do not exhibit much systematic broadening or narrowing, which may indicate that complete template coverage effectively defends from these effects.
 
 \begin{table}
 \setlength{\tabcolsep}{2pt}
 \centering
-\caption{The fraction of ``catastrophic outlier'' PIT values.
+\caption{The catastrophic outlier rate as defined by extreme PIT values.
 We expect a value of 0.0002 for a proper Uniform distribution.
 An excess over this small value indicates true redshifts that fall outside the non-zero support of the $p(z)$.}
 \label{tab:pitoutlier}
 \begin{tabular}{lc}
 \hline
-\hline
- ``catastrophic outlier''\\ PIT fraction\\
-\hline
 Photo-z Code & fraction PIT$<10^{-4}$ or $>$0.9999\\
 \hline
-\textsc{ANNz2} & 0.0265\\
-\textsc{BPZ} & 0.0192\\
-\textsc{Delight} & 0.0006\\
-\textsc{EAZY} & 0.0154\\
-\textsc{FlexZBoost} & 0.0202\\
-\textsc{GPz} & 0.0058\\
-\textsc{LePhare} & 0.0486\\
-\textsc{METAPhoR}& 0.0229\\
-\textsc{CMNN} & 0.0034\\
-\textsc{Skynet} & 0.0001\\
-\textsc{TPZ} & 0.0130\\
+\annz       & 0.0265\\
+\bpz        & 0.0192\\
+\delight    & 0.0006\\
+\eazy       & 0.0154\\
+\flexzboost & 0.0202\\
+\gpz        & 0.0058\\
+\lephare    & 0.0486\\
+\metaphor   & 0.0229\\
+\cmnn       & 0.0034\\
+\skynet     & 0.0001\\
+\tpz        & 0.0130\\
 \hline
-\textsc{TrainZ} & 0.0002\\
+\trainz     & 0.0002\\
 \end{tabular}
 \end{table}
 
+Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlier rate $f_{\rm O}$ as the fraction of galaxies with $\rm{PIT} < 0.0001$ or $\rm{PIT} > 0.9999$.
+Though these spikes in the first and last bin of the PIT histogram were cut out of Figure~\ref{fig:pitqq} for visualization, the catastrophic outlier rates are provided in Table~\ref{tab:pitoutlier}.
+
+For a proper Uniform distribution we expect a value of $0.0002$.
+Several codes show a marked excess, with \textsc{ANNz2, FlexZBoost, LePhare, and METAPhoR} with $f_{\rm O} > 0.02$, indicating a sizeable number of catastrophic redshift solutions where the true redshift is not covered by the extent of $p(z)$.
+For \textsc{METAPhoR} this may be partially due to an overall underprediction of the $p(z)$ width, however this is not the case for the other codes.
+\textsc{LePhare} is a particular outlier with nearly 5 per cent of objects outside of $p(z)$ support.
+Further study will be necessary to determine what is causing these misclassifications for \textsc{LePhare}.
+As expected, and by design, \textsc{TrainZ} has the proper fraction of outliers for the $f_{\rm O}$ statistic.
 
 %\begin{figure*}
 %\centering
