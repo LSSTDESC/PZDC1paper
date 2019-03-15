@@ -116,16 +116,9 @@ While this work assumes that science applications value the information of the f
 \subsection{Reduction of \pzpdf s to point estimates}
 \label{sec:pointest}
 
-Though we acknowledge that many of the codes can also return a native \pz\ point estimate, we consider two common \pz\ point estimators, the mode $z_{PEAK}$ and mean $z_{WEIGHT}$, derived from \pzpdf s.
-$z_{PEAK}$  is simply the maximum value attained for each galaxy p(z), the mode of the probability distribution.
-$z_{WEIGHT}$ is defined similarly to how it is defined in \citet{Dahlen:13}, as the weighted mean of the redshift over the {\it main peak} of $p(z)$ containing the $z_{PEAK}$ value.
-The main peak is defined by subtracting 0.05$\,\times\,z_{PEAK}$ from $p(z)$ and identifying the roots to isolate the peak containing $z_{PEAK}$, $z_{WEIGHT}$ is defined as the weighted mean redshift within this peak.
-We restrict to a single peak in order to avoid confusion from bimodal and multimodal $p(z)$ such as those shown in bottom panels of Figure~\ref{fig:pz_examples}.
-For example, for a bimodal probability distribution a weighted mean calculated over both peaks would fall between the peaks, at a redshift where the probability is minimal.
-Restricting the weighting to a single peak ensures that the point estimate will fall in the region of maximum redshift probability.
-%\red{Have Dritan check zweight description to make sure this is what was done.}
-% The most common point estimators of photo-$z$ PDFs are the mode, median, and mean of the distribution.  Following \cite{Tanaka:17}, we report the values of the following metrics using whichever of these point estimators performs best for each method, noting which point reduction is used in each case.
-%
+Though we acknowledge that many of the codes can also return a native \pz\ point estimate, we put all codes on equal footing by considering two generic \pz\ point estimators, the mode $z_{PEAK}$ and main-peak-mean $z_{WEIGHT}$ \citep{Dahlen:13}, a weighted mean within the bounds of the main peak, as identified by the roots of $p(z) - 0.05 \times z_{PEAK}$.
+Though $z_{WEIGHT}$ neglects information in a secondary peak of a, say, bimodal distribution, it avoids the pitfall of reducing the \pzpdf\ to a redshift between peaks where there is low probability.
+
 \subsection{Metrics of \pz\ point estimates}
 \label{sec:point_metrics}
 
