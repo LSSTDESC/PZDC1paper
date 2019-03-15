@@ -171,7 +171,7 @@ is a weighted mean-squared difference featuring enhanced sensitivity to discrepa
 Perhaps the most popular application of \pzpdf s is the estimation of the overall redshift distribution $N(z)$, a quantity that enters some cosmological calculations and the true value of which is known for the DC1 data set and will be denoted as $\tilde{N}(z)$.
 In terms of the prior information provided to each method, the true redshift distribution satisfies the tautology $\tilde{N}(z) = p(z \vert I_{D})$ due to our experimental set-up; because the DC1 training and template sets are representative and complete, $I_{D}$ represents a prior that is also equal to the truth.
 In this ideal case of complete and representative prior information, the method that would give the best approximation to $\hat{N}(z)$ would be one that neglects all the information contained in the photometry $\{d_{i}\}_{N_{tot}}$ and gives every galaxy the same \pzpdf\ $\hat{p}_{i}(z) = \tilde{N}(z)$ for all $i$; the inclusion of any information from the photometry would only introduce noise to the optimal result of returning the prior.
-This is the exact estimator, \trainz, that we have described in Section~\ref{sec:method:trainz}, and which will serve as an experimental control.
+This is the exact estimator, \trainz, that we have described in Section~\ref{sec:trainz}, and which will serve as an experimental control.
 
 Though alternatives exist \citep{Malz:chippr}, ``stacking'' according to
 \begin{equation}

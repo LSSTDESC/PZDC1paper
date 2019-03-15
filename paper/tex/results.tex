@@ -34,7 +34,7 @@ The settings used on \gpz\ in this work forced broadening of the single Gaussian
 \centering
 \includegraphics[width=0.74\textwidth]{fig/PITANDQQplot_12codes_crop.jpg}
 \caption{The QQ plot (red) and PIT histogram (blue) of the \pzpdf\ codes (panels) along with the ideal QQ (black dashed diagonal) and ideal PIT (gray horizontal) curves, as well as a difference plot for the QQ difference from the ideal diagonal (lower inset).
-The twelve codes exhibit varying degrees of four deviations from perfection: an overabundance of PIT values at the centre of the distribution indicate a catalogue of overly broad \pzpdf s, an excess of PIT values at the extrema indicates a catalogue of overly narrow \pzpdf s, catastrophic outliers manifest as overabundances at PIT values of $0$ and $1$, and asymmetry indicates systematic bias, a form of model misspecification.}
+The twelve codes exhibit varying degrees of four deviations from perfection: an overabundance of PIT values at the centre of the distribution indicate a catalogue of overly broad \pzpdf s, an excess of PIT values at the extrema indicates a catalogue of overly narrow \pzpdf s, catastrophic outliers manifest as overabundances at PIT values of 0 and 1, and asymmetry indicates systematic bias, a form of model misspecification.}
 \label{fig:pitqq}
 \end{figure*}
 
@@ -43,7 +43,7 @@ Biases and trends in whether the average width of the $p(z)$ values being over/u
 An overall bias where the predicted redshift is systematically low manifests as the measured QQ value falling above the diagonal, as is the case for \textsc{BPZ} and \textsc{EAZY}, while a systematic overprediction shows up as the measured QQ value falling below the diagonal, as seen in \textsc{TPZ}.
 In terms of PIT histograms, a systematic underprediction of redshift corresponds to fewer PIT values at $PIT<0.5$ and more at $PIT>0.5$, while a systematic overprediction will show the opposite.
 
-Examination of the PIT histograms and QQ plots shows that there are fairly generic issues with the width of $p(z)$ uncertainties: \textsc{Delight, CMNN, SkyNet} and \textsc{TPZ} all show a PIT histogram with a dearth of low values and and an excess of high values, signs that, on average, their $p(z)$ are more broad than the true distribution of redshifts.
+Examination of the PIT histograms and QQ plots smethod:hows that there are fairly generic issues with the width of $p(z)$ uncertainties: \textsc{Delight, CMNN, SkyNet} and \textsc{TPZ} all show a PIT histogram with a dearth of low values and and an excess of high values, signs that, on average, their $p(z)$ are more broad than the true distribution of redshifts.
 \textsc{METAPhoR} shows the opposite trend, indicating the the $p(z)$  are more narrow than the distributions given by the true redshifts.
 In all of these code cases there is a free parameter or bandwidth that can be used to tune uncertainties.
 The sensitivity of multiple codes to this bandwidth choice emphasizes the fact that great care must be taken in setting user-defined parameters in photo-$z$ codes, even in the presence of representative training/validation data.  for \textsc{FlexZBoost} the ``sharpening'' parameter (described in Section~\ref{sec:flexzboost}) plays a key role in improving the results, resulting in a QQ plot that is very nearly diagonal.
@@ -124,7 +124,8 @@ The discreteness in the individual $p(z)$ estimated by \textsc{ANNz2} can be att
 While multiple bins may receive weight, the bins themselves will still be discretized, and no additional smoothing was performed.
 Overall, \textsc{FlexZBoost} and \textsc{ANNz2} show the best ensemble agreement in their distribution of PIT values.
 
-\subsection{Metrics of the stacked estimator of the redshift distribution}\label{sec:stackedmetrics}
+\subsection{Metrics of the stacked estimator of the redshift distribution}
+\label{sec:stackedmetrics}
 
 \begin{figure*}
 \centering
@@ -177,7 +178,6 @@ Unlike the previous implementation of \textsc{SkyNet} in \citet{Bonnett:15}, no 
 Either of these decisions could be the cause of the bias seen in our results.
 Future runs of \textsc{SkyNet} will explore these implementation choices and their effects.
 
-
 Figure~\ref{fig:nz_stats} shows the quantitative Kolmogorov-Smirnoff (KS), Cramer-Von Mises (CvM), and Anderson Darling (AD) test statistics for each of the codes for the $\hat{N}(z)$ based measures.
 %\red{Can p-values be supplied for each statistic? The statistics themselves are difficult to interpret, other than ``lower is better'' (no, p-values are very difficult to compute for non-uniform distributions)}
 \textsc{FlexZBoost}, \textsc{CMNN}, and \textsc{TPZ} outperform the other codes in the $\hat{N}(z)$ metrics.
@@ -189,8 +189,6 @@ The optimal result in the PIT metrics, as illustrated in the shape of the QQ plo
 This is something that will be looked into for \textsc{TPZ} in the future.
 
 %\red{discussion of why NN and FZBoost are doing well, how we can try to improve the other codes}
-%\textcolor{cyan}{Ann: }
-
 
 Table~\ref{tab:cdeloss} shows the CDE loss statistic for each photo-$z$ code.
 Once again \textsc{FlexZBoost} and \textsc{CMNN} score very well for the stacked $\hat{N}(z)$ metrics, as do \textsc{GPz} and \textsc{TPZ}.
@@ -223,7 +221,8 @@ We discuss more realistic tomographic bin selections that will be explored in a 
 
 %\red{overall conclusions of the Results section}
 
-\subsection{Interpretation of metrics}\label{sec:caution}
+\subsection{Interpretation of metrics}
+\label{sec:caution}
 %Caution on metrics and photo-$z$ codes}\label{sec:caution}
 %(Alex Malz, Sam Schmidt)
 
@@ -234,7 +233,7 @@ In previous sections we have mentioned that optimizing for a specific metric doe
 In other words, we can construct photo-$z$ estimators that provide good coverage in many of our tests, but which have very little predictive power.
 
 
-The \trainz\ estimator, which assigns every galaxy a $p(z)$ equal to $N(z)$ of the training set as described in Section~\ref{sec:method:trainz}, is introduced as a ``null test'' to demonstrate this point via \textit{reductio ad absurdum}.
+The \trainz\ estimator, which assigns every galaxy a $p(z)$ equal to $N(z)$ of the training set as described in Section~\ref{sec:trainz}, is introduced as a ``null test'' to demonstrate this point via \textit{reductio ad absurdum}.
 \trainz\ outperforms all codes on the PIT-based metrics, and all but one code on the $N(z)$ based statistics.
 Because our training set is perfectly representative of the test set, $N(z)$ should be identical for both sets down to statistical noise.
 %\textit{Explain the connection between \trainz\ and these metrics.}
