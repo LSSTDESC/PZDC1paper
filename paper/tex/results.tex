@@ -56,7 +56,8 @@ An excess over this small value indicates true redshifts that fall outside the n
 \label{tab:pitoutlier}
 \begin{tabular}{lc}
 \hline
-Photo-z Code & fraction PIT$<10^{-4}$ or $>$0.9999\\
+\hline
+\Pz\ Code & fraction PIT$<10^{-4}$ or $>$0.9999\\
 \hline
 \annz       & 0.0265\\
 \bpz        & 0.0192\\
@@ -141,13 +142,15 @@ Accuracy of the moments varies widely between codes, raising concerns about the 
 
 \begin{table}
 \setlength{\tabcolsep}{2pt}
-\caption{Moments of the stacked $\hat{n}(z)$ distribution}\label{tab:moments}
+\caption{Moments of the stacked estimator $\hat{N}(z)$ of the redshift distribution.
+Most of the codes considered recover the moments of $\tilde{N}(z)$}
+\label{tab:moments}
 \begin{tabular}{lccc}
 \hline
 \hline
- \multicolumn{4}{l}{Stacked $n(z)$ Moments} \\
+ \multicolumn{4}{l}{Moments of $\hat{N}(z)$} \\
 \hline
-              & mean & variance & skewness \\
+Estimator  & mean       & variance    & skewness \\
 Empirical ``truth'' & 0.701 & 0.630 & 0.671  \\
 \hline
 \annz       & 0.702      & 0.625      & 0.653    \\
@@ -161,6 +164,7 @@ Empirical ``truth'' & 0.701 & 0.630 & 0.671  \\
 \cmnn       & 0.701      & 0.628      & 0.667    \\
 \skynet     & 0.743      & 0.708      & 0.797    \\
 \tpz        & 0.700      & 0.619      & 0.643    \\
+\hline
 \trainz	    & 0.699 		 & 0.627 	    & 0.666 \\
 \end{tabular}
 \end{table}
@@ -177,28 +181,30 @@ Thus the CDE loss is the most effective metric for generic science cases.
 
 \begin{table}  %%% DATA TABLE %%%
 \centering
-\caption{CDE loss statistic for each photo-$z$ code.} \label{tab:cdeloss}
+\caption{CDE loss statistic of the individual \pzpdf s for each code.
+A lower value of the CDE loss indicates more accurate individual \pzpdf s, with \cmnn\ and \flexzboost\ performing best under this metric.}
+\label{tab:cdeloss}
 \begin{tabular}{lr}
 \hline
-\bf Photo-$z$ Code & \bf CDE Loss \\
+Photo-$z$ Code & CDE Loss \\
 \hline
-\annz 		& $-6.88$ \\
-\bpz 		& $-7.82$ \\
+\annz 	    & $-6.88$ \\
+\bpz 		    & $-7.82$ \\
 %\textsc{Delight} 	& $-4.06$ \\
 \delight    & $-8.33$\\
 %\textsc{EAZY} 		& $-7.97$ \\
 \eazy       & $-7.07$ \\
 %\textsc{FlexZBoost} & $-11.51$ \\
 \flexzboost & $-10.60$\\
-\gpz		& $-9.93$ \\
-\lephare 	& $-1.66$ \\
+\gpz		    & $-9.93$ \\
+\lephare 	  & $-1.66$ \\
 \metaphor 	& $-6.28$ \\
 %\textsc{CMNN} 		& $-$ \\
-\cmnn         & $-10.43$ \\
-\skynet 	& $-7.89$ \\
-\tpz 		& $-9.55$ \\
+\cmnn       & $-10.43$ \\
+\skynet 	  & $-7.89$ \\
+\tpz 		    & $-9.55$ \\
 \hline
-\trainz		& $-0.83$ \\
+\trainz		  & $-0.83$ \\
 %\textsc{Frankenz}	& $-$  \\
 %\hline
 \end{tabular}
@@ -222,164 +228,19 @@ This metric is the only one that can appropriately penalize \trainz\ and indicat
 %(Alex Malz, Sam Schmidt)
 
 We remind the reader that contributed codes were given a goal of obtaining accurate \pzpdf s, not an accurate stacked estimator of the redshift distribution, so we do not expect the same codes to necessarily perform well for both classes of metrics.
-In previous sections we have mentioned that optimizing for a specific metric does not guarantee good performance on other metrics, nor are our metrics able to assess the fidelity of individual \pzpdf s relative to true posteriors.
-As previously stated, there are a variety of scientific use cases for \pz s, and metric-specific relative performance implies that we may need multiple \pzpdf\ approaches tuned to each metric in order to maximize returns over all science cases in large upcoming surveys.
+Furthermore, our metrics are not necessarily able to assess the fidelity of individual \pzpdf s relative to true posteriors.
+Metric-specific performance implies that we may need multiple \pzpdf\ approaches tuned to each metric in order to maximize returns over all science cases in large upcoming surveys.
 
-%\aim{Explain that samples from accurate photo-$z$ posteriors should reconstruct the space of $p(z, data)$, a test we can't check with our datasets.}
-In other words, we can construct photo-$z$ estimators that provide good coverage in many of our tests, but which have very little predictive power.
-
-The \trainz\ estimator, which assigns every galaxy a $p(z)$ equal to $N(z)$ of the training set as described in Section~\ref{sec:trainz}, is introduced as a ``null test'' to demonstrate this point via \textit{reductio ad absurdum}.
-\trainz\ outperforms all codes on the PIT-based metrics, and all but one code on the $N(z)$ based statistics.
+The \trainz\ estimator, which assigns every galaxy a \pzpdf\ equal to $N(z)$ of the training set as described in Section~\ref{sec:trainz}, is introduced as a control case to demonstrate this point via \textit{reductio ad absurdum}.
 Because our training set is perfectly representative of the test set, $N(z)$ should be identical for both sets down to statistical noise.
+\textit{We make the alarming observation that \trainz\ outperforms all codes on the PIT-based metrics, and all but one code on the $N(z)$ based statistics.}
 %\textit{Explain the connection between \trainz\ and these metrics.}
 
-The CDE loss and point estimate metrics, however, successfully identify problems with \trainz.
-As shown in Appendix~\ref{sec:pointmetrics}, \trainz ~has identical $ZPEAK$ and $ZWEIGHT$ values for every galaxy, and thus the photo-$z$s are constant as a function of spec-$z$s, i.e. a horizontal line at the mode and mean of the training set distribution respectively.
-The explicit dependence on the {\it individual} posteriors in the calculation of the CDE loss, described in Section~\ref{sec:CDE_loss}, distinguishes this metric from the other $p(z)$ metrics that test the overall ensemble of $p(z)$ distributions.
-With a representative training set, \trainz\ will score well on the ensemble metrics, but fails miserably for metrics tied to individual redshifts presented in this paper.
-We note that many of the ensemble-based metrics are prominent in the photo-$z$ literature despite their inability to identify problems such as those exemplified by \trainz.
-
-%\aim{Explain why CDE loss is different from other metrics (isn't fooled by \trainz) and note that the others have more of a presence in the literature despite their flaw of failing to identify this severe problem.}
+The CDE loss and point estimate metrics appropriately penalize \trainz's naivete.
+As shown in Appendix~\ref{sec:pointmetrics}, \trainz ~has identical $ZPEAK$ and $ZWEIGHT$ values for every galaxy, and thus the \pz\ point estimats are constant as a function of true redshift, i.e. a horizontal line at the mode and mean of the training set distribution respectively.
+The explicit dependence on the individual posteriors in the calculation of the CDE loss, described in Section~\ref{sec:cdelossresults}, distinguishes this metric from those of the \pzpdf\ ensemble and stacked estimator of the redshift distribution, despite their prevalence in the \pz\ literature.
 
 % While looking at one, or even most of our metrics would have given the impression that this estimator was nearly optimal, red flags in CDE loss and point estimates reveal the problems.
 %[more caution on over-reliance on metrics, and making sure that metrics test all of what you want] \red{this definitely still needs work}
-In summary, context is crucial to interpreting metrics and defending against deceptively well performing methods such as \trainz.
-The best photo-$z$ method is the one that most effectively achieves our science goals, not the one that performs best on a metric that does not accurately reflect those goals.
+In summary, context is crucial to defending against deceptively strong performers such as \trainz; the best \pzpdf\ method is the one that most effectively achieves our science goals, not the one that performs best on a metric that does not reflect those goals.
 In the absence of clear goals or the information necessary for a principled metric definition, we must think carefully before choosing a single metric.
-
-%\begin{table*}  %%% DATA TABLE %%%
-%\caption{KS, CvM and AD statistics for each photo-$z$ code.} \label{tab:results}
-%PIT statistic
-%
-%\begin{tabular}{lrrrr}
-%\hline
-%\bf Photo-$z$ Code & \bf KS & \bf CvM & \bf AD & \bf AD \\
-%                   &        &         & $v=[0.05,0.95]$ & $v=[0.01,0.99]$        \\
-%\hline
-%\textsc{ANNz2} 		& $0.0200$ &   $52.25$ &   $583.0$ &   $759.2$ \\
-%\textsc{BPZ} 		& $0.0388$ &  $280.79$ &  $1361.4$ &  $1557.5$ \\
-%%\textsc{Delight} 	& $0.1380$ & $3040.59$ & $13880.2$ & $17761.4$ \\
-%\textsc{Delight}    & $0.0876$ & $1075.17$ & $4407.8$  & $6167.5$\\
-%%\textsc{EAZY} 		& $0.0690$ &  $994.19$ &  $3479.5$ &  $4158.8$ \\
-%\textsc{EAZY}       & $0.0723$ & $1105.58$ & $3475.0$  & $4418.6$\\
-%%\textsc{FlexZBoost} & $0.0260$ &   $70.58$ &   $595.0$ &   $533.0$ \\
-%\textsc{FlexZBoost} & $0.0240$ &   $68.83$ &   $567.9$ &   $478.8$\\
-%\textsc{GPz} 		& $0.0449$ &  $258.56$ &   $904.8$ &  $1414.8$ \\
-%\textsc{LePhare} 	& $0.0663$ &  $473.05$ &    $85.9$ &   $383.8$ \\
-%\textsc{METAPhoR} 	& $0.0438$ &  $298.56$ &   $248.6$ &   $715.5$ \\
-%%\textsc{CMNN} 		& $-$ & $-$ & $-$ & $-$ \\
-%\textsc{CMNN}         & $0.0795$  &$1011.11$ &  $3908.2$ &  $6307.5$ \\
-%\textsc{SkyNet} 	& $0.0747$ &  $763.00$ &  $2740.2$ &  $4216.4$ \\
-%\textsc{TPZ} 		& $0.1138$ & $1801.74$ &  $9046.2$ & $10565.7$ \\
-%%\textsc{Frankenz}	& $-$ & $-$ & $-$ & $-$ \\
-%\hline
-%\end{tabular}
-
-%Stacked $n(z)$ statistic
-%
-%\begin{tabular}{lrrrr}
-%\hline
-%\bf Photo-$z$ Code & \bf KS & \bf CvM & \bf AD & \bf AD \\
-%                   &        &         & $z=[0.002,2.0]$ & $z=[0.0,2.0]$        \\
-%\hline
-%\textsc{ANNz2} 		& $0.0237$ &  $25.676$ &   $276.4$ &   $276.0$ \\
-%\textsc{BPZ} 		& $0.0131$ &  $17.587$ &   $169.0$ &   $170.9$ \\
-%%\textsc{Delight} 	& $0.0184$ &  $18.975$ &   $151.5$ &   $151.5$ \\
-%\textsc{Delight}    & $0.0256$ &  $42.341$ &   $253.3$ &   $253.2$ \\
-%%\textsc{EAZY} 		& $0.0434$ & $167.329$ &   $811.3$ &   $817.0$ \\
-%\textsc{EAZY}       & $0.0441$ & $169.977$ &   $827.7$ &   $833.3$ \\
-%%\textsc{FlexZBoost} & $0.0065$ &   $2.764$ &    $24.7$ &    $24.6$ \\
-%\textsc{FlexZBoost} & $0.0128$ &   $7.007$ &  $127.02$ &   $126.9$\\
-%\textsc{GPz} 		& $0.0168$ &  $25.605$ &   $307.1$ &   $307.1$ \\
-%\textsc{LePhare} 	& $0.0254$ &  $58.900$ &   $477.4$ &   $472.0$ \\
-%\textsc{METAPhoR} 	& $0.0350$ &  $60.790$ &   $671.9$ &   $672.3$ \\
-%%\textsc{CMNN} 		& $-$ & $-$ & $-$ & $-$ \\
-%\textsc{CMNN}         & $0.0043$ & $0.538$   &   $5.6$   &      $5.8$ \\
-%\textsc{SkyNet} 	& $0.0483$ & $385.830$ &  $2119.4$ &  $2110.3$ \\
-%\textsc{TPZ} 		& $0.0126$ &   $9.483$ &   $110.7$ &   $110.6$ \\
-%%\textsc{Frankenz}	& $-$ & $-$ & $-$ & $-$ \\
-%\hline
-%\end{tabular}
-%\end{table*}
-
-%\begin{table}
-%\setlength{\tabcolsep}{2pt}
-%\begin{center}
-%\caption{Root-Mean-Square-Error (RMSE) statistics for the twelve photo-z codes for both PIT and $\hat{N}(z)$ distributions.}\label{tab:rmse}
-%\begin{tabular}{lcc}
-%\hline
-%\hline
-%Root-Mean-Square-Error \\
-%(RMSE) statistics \\
-%\hline
-%Photo-z Code & PIT RMSE & N(z) RMSE\\
-%\hline
-%\textsc{ANNz2}      & 0.019 & 0.0054\\
-%\textsc{BPZ}        & 0.032 & 0.0050\\
-%\textsc{Delight}    & 0.111 & 0.0056\\
-%\textsc{EAZY}       & 0.054 & 0.0102\\
-%\textsc{FlexZBoost} & 0.021 & 0.0022\\
-%\textsc{GPz}        & 0.027 & 0.0042\\
-%\textsc{LePhare}    & 0.028 & 0.0062\\
-%\textsc{METAPhoR}   & 0.064 & 0.0081\\
-%\textsc{CMNN}         & 0.108 & 0.0009\\
-%\textsc{Skynet}     & 0.054 & 0.0144\\
-%\textsc{TPZ}        & 0.082 & 0.0031\\
-%\hline
-%\trainz		& 0.0025 & 0.0013\\
-%\end{tabular}
-%\end{center}
-%\end{table}
-
-%\begin{table}
-%\begin{center}
-%caption{RMSE Statistics for the 11 Photo-z codes for DC1 $i<25.3$ ``gold'' sample}\label{tab:pitrmse}
-%%\begin{tabular}{|l|c|c|c|c|}
-%\begin{tabular}{lc}
-%\hline
-%\hline
-% PIT RMSE statistics \\
-%\hline
-%Photo-z Code & PIT RMSE\\
-%\hline
-%\texttt{ANNz2}      & 0.019\\
-%\texttt{BPZ}        & 0.032\\
-%\texttt{Delight}    & 0.111\\
-%\texttt{EAZY}       & 0.054\\
-%\texttt{FlexZBoost} & 0.021\\
-%\texttt{GPz}        & 0.048\\
-%texttt{LePhare}    & 0.028\\
-%\texttt{METAPhoR}   & 0.064\\
-%\texttt{NN}         & 0.108 \\
-%\texttt{Skynet}     & 0.054\\
-%texttt{TPZ}        & 0.082\\
-%\hline
-%\end{tabular}
-%\end{center}
-%\end{table}
-%
-%\begin{table}
-%\begin{center}
-%\caption{RMSE Statistics for the 11 Photo-z codes for DC1 $i<25.3$ ``gold'' sample}\label{tab:nzrmse}
-%%\begin{tabular}{|l|c|c|c|c|}
-%\begin{tabular}{lc}
-%\hline
-%\hline
-% N(z) RMSE statistics \\
-%\hline
-%hoto-z Code & N(z) RMSE\\
-%\hline
-%\texttt{ANNz2}      & 0.0054\\
-%\texttt{BPZ}        & 0.0050\\
-%\texttt{Delight}    & 0.0056\\
-%\texttt{EAZY}       & 0.0102\\
-%\texttt{FlexZBoost} & 0.0022\\
-%\texttt{GPz}        & 0.0042\\
-%\texttt{LePhare}    & 0.0062\\
-%\texttt{METAPhoR}   & 0.0081\\
-%\texttt{NN}         & 0.0009\\
-%\texttt{Skynet}     & 0.0144\\
-%\texttt{TPZ}        & 0.0031\\
-%\end{tabular}
-%\end{center}
-%\end{table}
