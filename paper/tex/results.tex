@@ -131,50 +131,41 @@ We make the reassuring observation that these related statistics do not disagree
 \label{fig:nz_stats}
 \end{figure*}
 
-It is, however, surprising that \tpz\ does well on $\hat{N}(z)$ given its poor performance on the ensemble \pzpdf, especially knowing that \tpz\ was optimized for \pzpdf\ ensemble metrics rather than the stacked estimator of the redshift distribution.
+It is, however, surprising that \tpz\ does well on $\hat{N}(z)$ given its poor performance on the ensemble \pzpdf s, especially knowing that \tpz\ was optimized for \pzpdf\ ensemble metrics rather than the stacked estimator of the redshift distribution.
 A possible explanation is the choice of smoothing parameter chosen during validation, which affects \pzpdf\ widths as well as overall redshift bias and could be modified to improve performance under the \pzpdf\ metrics.
+
+Table~\ref{tab:moments} lists the first three moments of the stacked $\hat{N}(z)$ distribution relative to the empirical estimate of the truth distribution.
+Accuracy of the moments varies widely between codes, raising concerns about the propagation to cosmological analyses.
+%\red{[mention that we are calculating moments for the entire sample, will look at fiducial tomographic bins in a follow-up paper (unless group and reviewers realy think we should include in this paper.]}
+%\red{FlexZBoost has some of the best $n(z)$ statistics, but the moments are not good.  Why is this?  Is it the over/underprediction of the high redshift part of the distribution?  Discuss this after talking with Rafael.}
 
 \begin{table}
 \setlength{\tabcolsep}{2pt}
-\caption{Moments of the stacked $\hat{N}(z)$ distribution}\label{tab:moments}
+\caption{Moments of the stacked $\hat{n}(z)$ distribution}\label{tab:moments}
 \begin{tabular}{lccc}
 \hline
 \hline
  \multicolumn{4}{l}{Stacked $n(z)$ Moments} \\
 \hline
               & 1st Moment & 2nd Moment & 3rd Moment \\
-\textsc{Truth}     & 0.701      &   0.630    & 0.671  \\
+Empirical estimate of truth & 0.701 & 0.630 & 0.671  \\
 \hline
 Photo-z Code       & 1st Moment & 2nd Moment & 3rd Moment\\
 \hline
-\textsc{ANNz2}     & 0.702      & 0.625      & 0.653    \\
-\textsc{BPZ}       & 0.699      & 0.629      & 0.671    \\
-\textsc{Delight}   & 0.692      & 0.609      & 0.638    \\
-\textsc{EAZY}      & 0.681      & 0.595      & 0.619    \\
-\textsc{FlexZBoost}& 0.694      & 0.610      & 0.631    \\
-\textsc{GPz}       & 0.696      & 0.615      & 0.639    \\
-\textsc{LePhare}   & 0.718      & 0.668      & 0.741    \\
-\textsc{METAPhoR}  & 0.705      & 0.628      & 0.657    \\
-\textsc{CMNN}        & 0.701      & 0.628      & 0.667    \\
-\textsc{Skynet}    & 0.743      & 0.708      & 0.797    \\
-\textsc{TPZ}       & 0.700      & 0.619      & 0.643    \\
-\hline
-\trainz	   & 0.699 		& 0.627 	& 0.666 \\
+\annz       & 0.702      & 0.625      & 0.653    \\
+\bpz        & 0.699      & 0.629      & 0.671    \\
+\delight    & 0.692      & 0.609      & 0.638    \\
+\eazy       & 0.681      & 0.595      & 0.619    \\
+\flexzboost & 0.694      & 0.610      & 0.631    \\
+\gpz        & 0.696      & 0.615      & 0.639    \\
+\lephare    & 0.718      & 0.668      & 0.741    \\
+\metaphor   & 0.705      & 0.628      & 0.657    \\
+\cmnn       & 0.701      & 0.628      & 0.667    \\
+\skynet     & 0.743      & 0.708      & 0.797    \\
+\tpz        & 0.700      & 0.619      & 0.643    \\
+\trainz	    & 0.699 		 & 0.627 	    & 0.666 \\
 \end{tabular}
 \end{table}
-
-Table~\ref{tab:moments} lists the first three moments of the stacked $\hat{N}(z)$ distribution, including the moments of the ``truth'' distribution for comparison.
-Several codes are able to reproduce the mean and variance of the distribution to less than a per cent, while several codes do not, which may be a cause for concern, given that mean and variance of the redshift distribution are key properties in cosmological analyses.
-We note that this stated goal of the study as defined for participants was to accurately reproduce $p(z)$, the ``stacking'' of the probability distributions to estimate $\hat{N}(z)$ was not the focus as stated to the participants.
-This explains why some of the best-performing empirical codes in terms of $p(z)$ measures (e.~g.~\textsc{FlexZBoost}) do not do as well at reproducing $\hat{N}(z)$ moments.
-Had we defined a different parameter to optimize, in this case overall accuracy of $\hat{N}(z)$ rather than individual $p(z)$, would result in improved performance in a particular metric.
-That is, optimizing photo-$z$ performance for one metric does not automatically give optimal performance for other metrics.
-As previously stated, there are a variety of scientific use cases for photo-$z$'s in large upcoming surveys, and care must be taken in how the metrics used to optimize catalog photometric redshifts are defined as well as in how they are used.
-This implies that we may need multiple photo-z estimators, tuned to the particular metric, in order to maximize returns over all science cases in upcoming surveys.
-In addition, very few scientific use cases will employ the overall $\hat{N}(z)$ with no cuts, as we explore in this paper.
-We discuss more realistic tomographic bin selections that will be explored in a follow-up paper in Section~\ref{sec:futurework}.
-%\red{[mention that we are calculating moments for the entire sample, will look at fiducial tomographic bins in a follow-up paper (unless group and reviewers realy think we should include in this paper.]}
-%\red{FlexZBoost has some of the best $n(z)$ statistics, but the moments are not good.  Why is this?  Is it the over/underprediction of the high redshift part of the distribution?  Discuss this after talking with Rafael.}
 
 \skynet\ exhibits an obvious redshift bias, evident both visually in Figure~\ref{fig:nz} and in the first moment of N(z) listed in Table~\ref{tab:moments}, where it is clearly an outlier.
 \textsc{SkyNet} employed a method where a random sample of training galaxies was chosen, but there was no test that the subset was completely representative of the overall redshift distribution.
@@ -233,6 +224,9 @@ As CDE loss is a better measure of individual redshift performance, rather than 
 \label{sec:caution}
 %Caution on metrics and photo-$z$ codes}\label{sec:caution}
 %(Alex Malz, Sam Schmidt)
+
+We remind the reader that contributed codes were given a goal of obtaining accurate \pzpdf s, not an accurate stacked estimator of the redshift distribution, so we do not expect the same codes to necessarily perform well for both classes of metrics.
+As previously stated, there are a variety of scientific use cases for \pz s, and metric-specific relative performance implies that we may need multiple \pzpdf\ approaches tuned to each metric in order to maximize returns over all science cases in large upcoming surveys.
 
 Samples from accurate photo-$z$ posteriors should reproduce the space of $p(z,{\rm data})$.
 However, it is difficult to test this reconstruction given our data set, as the galaxy distributions arise from mock objects pasted on to an underlying dark matter halo catalogue with properties designed to match empirical relations, rather than being drawn from statistical distributions in redshift.
