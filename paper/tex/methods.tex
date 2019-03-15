@@ -180,7 +180,7 @@ The details on how to learn the parameters of the model and the hyper-parameters
 \gpz\ may also weight training set samples by importance according to $|z_{\rm{spec}} - z_{\rm{phot}}| / (1+z_{\rm{spec}})$ to minimize the normalized \pz\ point estimate error, however, this function may be adapted to \pzpdf s, pressuring the model to dedicate more resources to test set galaxies that are not well-represented in the training set.
 
 To smooth the long tail in the distribution of magnitude errors, we use the log of the magnitude errors, improving numerical stability and eliminating the need for constraints on the optimization process.
-% We use principal component analysis (PCA) to decorrelate the data
+% We use principaphoto-\mathinhead{$z$}{z} interim posteriorsl component analysis (PCA) to decorrelate the data
 % WHAT IS BEING DECORRELATED HERE?
 Unobserved magnitudes $x_{\rm u} = \mu_{\rm u} + \Sigma_{\rm uo}\Sigma_{\rm oo}^{-1}(x_{\rm o} - \mu_{\rm o})$ were imputed from observed magnitudes $x_{\rm o}$ and the training set mean $\mu$ and covariance $\Sigma$ using a linear model.
 This is the optimal expected value of the unobserved variables given the observed ones under the assumption that the distribution is jointly Gaussian; note that this reduces to a simple average if the covariates are independent with $\Sigma_{\rm uo} = 0$.
@@ -233,7 +233,7 @@ We grew 100 trees to a minimum leaf size of 5 using the $ugri$ magnitudes, all $
 We partitioned our redshift space into 200 bins and smoothed each individual PDF with a smoothing scale of twice the bin size.
 
 \subsubsection{Delight}
-\label{sec:delight}
+\label{sec:delightphoto-\mathinhead{$z$}{z} interim posteriors}
 %(John Soo)
 
 \delight \footnote{\url{https://github.com/ixkael/Delight}} \citep{Leistedt:17} is a hybrid technique that infers \pz s with a data-driven model of latent SEDs and a physical model of photometric fluxes as a function of redshift.
