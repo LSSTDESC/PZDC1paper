@@ -3,7 +3,8 @@
 %(Sam Schmidt, Bryce Kalmbach, Johann Cohen Tanugi, Rongpu Zhou, Alex Malz)
 
 We begin with a demonstrative visual inspection of the \pzpdf s produced by each code for individual galaxies.
-Figure~\ref{fig:pz_examples} shows the \pzpdf s for four galaxies chosen as examples of \pzpdf\ archetypes: a narrow unimodal redshift solution, a broad unimodal solution, a bimodal distribution, and a multimodal distribution.
+Figure~\ref{fig:pz_examples} shows the \pzpdf s for four galaxies chosen as examples of \pzpdf\ archetypes: a narrow unimodal PDF, a broad unimodal PDF, a bimodal PDF, and a multimodal PDF.
+We reiterate that under our idealized experimental conditions, differences between codes are the isolated signature of the implicit prior due to the method by which the \pzpdf s were derived.
 
 \begin{figure*}
 %\centering
@@ -18,6 +19,7 @@ The diverse algorithms and implementations induce differences in small-scale str
 The most striking differences between codes are due to small-scale features induced by the interaction between the shared piecewise constant parameterization of $200$ bins $0 < z < 2$ of Section~\ref{sec:metrics} and the smoothing conditions or lack thereof in each algorithm.
 The $\rm{d}z = 0.01$ redshift resolution is sufficient to capture the broad peaks of faint galaxies' \pzpdf s with large photometric errors but is too broad to resolve the narrow peaks for bright galaxies' \pzpdf s with small photometric errors.
 This observation is consistent with the findings of \citet[]{Malz:qp} that the piecewise constant parameterization underperforms in the presence of small-scale structures.
+
 However, the shared small-scale features of \annz, \metaphor, \cmnn, and \skynet\ are a result of various weighted sums of the limited number of training set galaxies with colors similar to those of the test set galaxy in question, with behavior closer to classification than regression in the case of \annz.
 The settings used on \gpz\ in this work forced broadening of the single Gaussian to cover the multimodal redshift solutions of the other codes.
 %Interestingly, while \textsc{ANNz2} shows an abundance of small scale structure in individual $p(z)$ measurements (see Fig.~\ref{fig:pz_examples}), the summed $\hat{N}(z)$ is rather smooth, where the small scale features average out.  This is not the case for the two other codes that show an abundance of substructure in their individual $p(z)$: both \textsc{CMNN} and \textsc{SkyNet} show small scale features both in $p(z)$ and $\hat{N}(z)$.

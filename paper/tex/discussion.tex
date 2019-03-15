@@ -2,23 +2,26 @@
 \label{sec:discussion}
 %(Sam Schmidt, Ofer Lahav, Jeff Newman, Alex Malz, Eve Kovacs, Tony Tyson, Tina Peters)
 
-%The goal was not to determine a ``best'' photo-$z$ code.
-
 % If methods can not reach the goals on idealized data, then they will almost surely not meet those same goals when the more complex problems that we expect to arise from real LSST data are included.
 % The results presented in this paper enable an evaluation of which algorithms are the most promising moving forward, and potentially point to avenues for improvement.
 
 In contrast with other \pzpdf\ comparison papers that have aimed to identify the ``best'' code for a given survey, we have focused on the somewhat more philosophical questions of how to assess \pzpdf\ methods and how to interpret differences between codes in terms of \pzpdf\ performance.
+In Section~\ref{sec:caution}, we reframe the strong performance of our pathological \pzpdf\ technique, \trainz, as a cautionary tale about the importance of choosing appropriate comparison metrics.
+In Section~\ref{sec:newcodes}, we interpret the performance of the genuine \pzpdf\ codes in terms of concrete improvements that should be pursued by the code developers.
+In Section~\ref{sec:futureexperiments}, we outline the experiments we intend to build upon this study
+In Section~\ref{sec:futuredata}, we discuss the enhancements of the mock data set that will be necessary to enable the future experiments.
 
 \subsection{Interpretation of metrics}
 \label{sec:caution}
-%Caution on metrics and photo-$z$ codes}\label{sec:caution}
 %(Alex Malz, Sam Schmidt)
 
 We remind the reader that contributed codes were given a goal of obtaining accurate \pzpdf s, not an accurate stacked estimator of the redshift distribution, so we do not expect the same codes to necessarily perform well for both classes of metrics.
+Indeed, the codes were optimized for their interpretation of our request for ``accurate \pzpdf s,'' and we expect that the implementations would have been adjusted had we requested optimization of the traditional metrics of Appendices~\ref{sec:moments, sec:pointmetrics}.
+
 Furthermore, our metrics are not necessarily able to assess the fidelity of individual \pzpdf s relative to true posteriors.
 Metric-specific performance implies that we may need multiple \pzpdf\ approaches tuned to each metric in order to maximize returns over all science cases in large upcoming surveys.
 
-The \trainz\ estimator, which assigns every galaxy a \pzpdf\ equal to $N(z)$ of the training set as described in Section~\ref{sec:trainz}, is introduced as a control case to demonstrate this point via \textit{reductio ad absurdum}.
+The \trainz\ estimator, which assigns every galaxy a \pzpdf\ equal to $N(z)$ of the training set as described in Section~\ref{sec:trainz}, is introduced as an experimental control or null test to demonstrate this point via \textit{reductio ad absurdum}.
 Because our training set is perfectly representative of the test set, $N(z)$ should be identical for both sets down to statistical noise.
 \textit{We make the alarming observation that \trainz\ outperforms all codes on the PIT-based metrics, and all but one code on the $N(z)$ based statistics.}
 %\textit{Explain the connection between \trainz\ and these metrics.}
@@ -32,18 +35,13 @@ The explicit dependence on the individual posteriors in the calculation of the C
 In summary, context is crucial to defending against deceptively strong performers such as \trainz; the best \pzpdf\ method is the one that most effectively achieves our science goals, not the one that performs best on a metric that does not reflect those goals.
 In the absence of clear goals or the information necessary for a principled metric definition, we must think carefully before choosing a single metric.
 
-Trends in the metrics shared among codes indicate the
+\subsection{Evolution of \pzpdf\ codes}
+\label{sec:newcodes}
 
-One obvious trend in several of the codes tested was an overall over or underprediction of the widths of \pzpdf s, as evidenced by the QQ plots and PIT histograms shown in Figure~\ref{fig:pitqq}.
-A more careful tuning of bandwidth or smoothing during the validation process appears to be necessary for many of the machine learning based codes in order to improve the accuracy of $p(z)$.
-For narrow peaked $p(z)$ the parameterization of the PDF as evaluated on a fixed redshift grid could also have contributed to some overestimates of $p(z)$ width simply due to the finite resolution.
-After evaluating results such as those presented in \citet[]{Malz:qp}, in future analyses we plan to switch from a fixed grid to quantile-based storage of $p(z)$ in order to more efficiently and accurately store redshift PDF results.
+Trends in the metrics shared among codes indicate avenues for improvement of each approach.
 
-Another important factor to keep in mind when examining the results presented in this paper is the fact that they are at some level dependent on the metrics that we aim to optimize: in this case code participants were asked to submit their optimal measures of an accurate $p(z)$, so participants used the training/validation data to optimize their codes accordingly.
-Had we, instead, asked for an optimal $\hat{N(z)}$ the resulting metrics would be different for most, if not all, of the codes, as they would optimize toward a different goal.
-Specific metric choice can affect which codes are among the ``best'' codes.
-As stated earlier, there are cosmological science cases that require either individual galaxy photo-$z$ measures, or ensemble $\hat{N}(z)$ measures.
-We must be aware of that the optimal method for one is not necessarily optimal for the other, and in fact several photo-$z$ algorithms may be necessary in the final cosmological analysis in order to satisfy the requirements of all science use cases.
+Section~\ref{sec:pitqq} identifies over- and under-estimation of the widths of \pzpdf s by certain codes.
+We suggest that the smoothing parameter present in \bpz, \cmnn, \delight, \eazy, \gpz, \skynet, and \tpz\ be chosen more carefully to improve their performance in the QQ plots and PIT histograms of
 
 The example of the simple \trainz\ estimator described in Section~\ref{sec:caution} shows a simple model with a $p(z)$ that is unrealistic for individual objects can still score very well on many of our metrics.
 It is important to look at {\it all} metrics, and keep in mind what information each metric conveys.
@@ -55,7 +53,7 @@ It is important to look at {\it all} metrics, and keep in mind what information 
 %\red{[how optimization defined has impact, here we optimized p(z), not n(z), could be science-case specific if stringent requirements are needed, though that may be a computational/storage challenge if too many use cases needed.]}
 %\red{some discussion of output parameterization, limitations of 200 point fixed grid, in future switch to something like quantiles (cite qp paper)}
 
-\subsubsection{Nontrivial experimental design}
+\subsection{Extended experimental design}
 \label{sec:futureexperiments}
 
 %\begin{enumerate}
@@ -68,6 +66,10 @@ It is important to look at {\it all} metrics, and keep in mind what information 
 %\red{mention the SRM once again, say that the plans are extensive, but we do have a plan and a rough timeline.}
 
 The work presented in this paper is only the first step in characterizing current photo-$z$ codes and moving toward an improved photometric redshift estimator.
+
+As stated earlier, there are cosmological science cases that require either individual galaxy photo-$z$ measures, or ensemble $\hat{N}(z)$ measures.
+We must be aware of that the optimal method for one is not necessarily optimal for the other, and in fact several photo-$z$ algorithms may be necessary in the final cosmological analysis in order to satisfy the requirements of all science use cases.
+
 This initial paper explored code performance in idealized conditions with perfect catalog-based photometry and representative training data.
 As mentioned in Section~\ref{sec:metrics} for the stacked $N(z)$ metrics we examined only the entire galaxy population with no selections in either photo-$z$ ``quality" or redshift.
 The cosmological analyses for weak lensing and large scale structure based measures plan to break galaxy samples into tomographic redshift bins, using photo-$z$ $p(z)$ to infer the redshift distribution for each bin.
@@ -81,7 +83,11 @@ The effects of tomographic bin selection will be explored in a dedicated future 
 
 We re-emphasize that the dataset tested was quite idealized, and discuss enhancements that will be added in future simulations to test photo-$z$ codes on increasingly realistic conditions in the following section.
 
-\subsubsection{More realistic mock data}
+Sequels to this study will also address some shortcomings of our experimental procedure.
+For narrow peaked $p(z)$ the parameterization of the PDF as evaluated on a fixed redshift grid could also have contributed to some overestimates of $p(z)$ width simply due to the finite resolution.
+After evaluating results such as those presented in \citet[]{Malz:qp}, in future analyses we plan to switch from a fixed grid to quantile-based storage of $p(z)$ in order to more efficiently and accurately store redshift PDF results.
+
+\subsection{Realistic mock data}
 \label{sec:futuredata}
 
 %\item \red{inclusion of incompleteness effects on training sample, ``wrong redshifts'', filter curves}
