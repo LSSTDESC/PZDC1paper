@@ -23,7 +23,7 @@ Though not exhaustive, this sample represents codes for which there was sufficie
 \tpz~\citep{Carrasco_Kind:13}	 & machine learning	& \url{https://github.com/mgckind/MLZ} \\
 \delight~\citep{Leistedt:17}   & hybrid           & \url{https://github.com/ixkael/Delight} \\
 \hline
-\trainz 	                             & machine learning	& See Section~\ref{sec:method:trainz} \\
+\trainz 	                             & machine learning	& See Section~\ref{sec:trainz} \\
 \end{tabular}}
 \end{table*}
 
@@ -233,7 +233,7 @@ We grew 100 trees to a minimum leaf size of 5 using the $ugri$ magnitudes, all $
 We partitioned our redshift space into 200 bins and smoothed each individual PDF with a smoothing scale of twice the bin size.
 
 \subsubsection{Delight}
-\label{sec:delightphoto-\mathinhead{$z$}{z} interim posteriors}
+\label{sec:delight}
 %(John Soo)
 
 \delight \footnote{\url{https://github.com/ixkael/Delight}} \citep{Leistedt:17} is a hybrid technique that infers \pz s with a data-driven model of latent SEDs and a physical model of photometric fluxes as a function of redshift.
@@ -254,7 +254,7 @@ We used the full DC1 template set with a flat prior in magnitude and SED type.
 Photometric uncertainties from the inputs are propagated into the code, while non-detections for each band are set to the mean of the respective bands.
 
 \subsection{trainZ: a pathological \pz\ estimator}
-\label{sec:method:trainz}
+\label{sec:trainz}
 
 We also consider a pathological \pzpdf\ estimation method, dubbed \trainz, which assigns each test set galaxy a \pzpdf\ equal to the normalized redshift distribution $N(z)$ of the training set, according to
 \begin{equation}
