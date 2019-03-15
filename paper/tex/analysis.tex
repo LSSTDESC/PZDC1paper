@@ -97,6 +97,7 @@ The PIT distribution has been used to quantify the performance of \pzpdf\ method
 \citet{Tanaka:17} use the histogram of PIT values as a diagnostic indicator of overall code performance, while \citet{Freeman:17} independently define the PIT and demonstrate how its individual values may be used both to perform hypothesis testing (via, e.g., the KS, CvM, and AD tests; see below) and to construct quantile-quantile plots.
 %\red{We might want to divide this by redshift to get trends, as the overall PIT could be impacted by true n(z).
 %For example, a PIT with nontrivial shape could be due to that behavior being uniform as a function of redshift or significant inaccuracy only in a small range of redshifts where $n(z)$ is large and a flat PIT elsewhere.}
+Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlier rate as the fraction of galaxies with $\rm{PIT} < 0.0001$ or $\rm{PIT} > 0.9999$, which should total 0.0002 for an ideal uniform distribution.
 
 %\subsubsection{Continuous Ranked Probability Score (CRPS)}
 %\label{sec:crps}
@@ -185,7 +186,7 @@ As $N(z)$ is itself a univariate PDF, we apply the metrics of the previous secti
 We additionaly calculate the first three moments
 \begin{equation}
   \label{eq:moment}
-\langle z^{m}\rangle \equiv \int_{-\infty}^{\infty} z^{m} N(z) dz
+  \langle z^{m}\rangle \equiv \int_{-\infty}^{\infty} z^{m} N(z) dz
 \end{equation}
 of the estimated redshift distribution $\hat{N}^{H}(z)$ for each code and compare them to the moments of the true redshift distribution $\tilde{N}(z)$.
 Under the assumption that the stacked estimator is unbiased, a superior method minimizes the difference between the true and estimated moments.
