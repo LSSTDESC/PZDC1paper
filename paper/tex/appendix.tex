@@ -19,8 +19,6 @@ Though alternatives exist \citep{Malz:chippr}, ``stacking'' according to
 \end{equation}
 is the most widely accepted method for obtaining $\hat{N}^{H}(z)$ as an estimator of the redshift distribution from \pzpdf s derived by a method $H$.
 Though we do not endorse the use of the stacked estimator of the redshift distribution, we use it under the untested assumption that the response of our metrics of $\hat{N}^{H}(z)$ will be analogous to the same metrics applied to a principled estimator of the redshift distribution.
-In addition, very few scientific use cases will employ the overall $\hat{N}(z)$ with no cuts, as we explore in this paper.
-We discuss in Section~\ref{sec:futurework} variants of the stacked estimator, such as realistic tomographic binning schemes, that will be explored in future work.
 
 As $N(z)$ is itself a univariate PDF, we apply the metrics of the previous sections to it as well.
 We additionaly calculate the first three moments
@@ -113,19 +111,12 @@ The \skynet\ algorithm employs a random subsampling of the training set without 
 \section{\Pz\ point estimation and metrics}
 \label{sec:pointmetrics}
 
-While we assume that all science analysis will use full PDF information and do not recommend the use of single point estimates of redshift for most science applications, we include a brief evaulation as an Appendix.
-Plots of the point estimates can be a useful qualitative diagnostic of photo-z code performance, i.~e.~examining point photo-$z$ vs.~spec-$z$ plots visually can give a quick impression of some common trends in different codes.
-Computing point estimate statistics may also be useful for more direct historical comparisons from older photo-z evaluations.
-If a point-estimate is preferred for a specific science case, it is fairly simple to compute the mean, mode, or some other simple estimator from each $p(z)$, so these point estimates can be easily derived from the stored $p(z)$.
+While this work assumes that science applications value the information of the full \pzpdf, we present conventional metrics of \pz\ point estimates as a quick and dirty diagnostic tool and to facilitate direct comparisons to historical studies.
 
 \subsection{Reduction of \pzpdf s to point estimates}
 \label{sec:pointest}
 
-There are several common point estimators of photo-$z$ posteriors employed by different codes, e.~g. the mode, mean, median of the $p(z)$ distribution.
-In addition, many of the machine learning based estimators can be set up to return a single redshift solution.
-For example, \skynet\ can be configured to run as a regressor that returns a single float rather than a classifier that returns a 200-bin $p(z)$ estimate.
-The single value returned by a machine learning based code may not correspond to a particular measure such as the mode or mean, and so to avoid interpretation of results that might be introduced by variations in choice of specific point-estimate implementation per code, we discard the code-specific point estimates.
-We instead calculate point estimates more uniformly across the codes directly from the $p(z)$ using two measures, $z_{PEAK}$ and $z_{WEIGHT}$.
+Though we acknowledge that many of the codes can also return a native \pz\ point estimate, we consider two common \pz\ point estimators, the mode $z_{PEAK}$ and mean $z_{WEIGHT}$, derived from \pzpdf s.
 $z_{PEAK}$  is simply the maximum value attained for each galaxy p(z), the mode of the probability distribution.
 $z_{WEIGHT}$ is defined similarly to how it is defined in \citet{Dahlen:13}, as the weighted mean of the redshift over the {\it main peak} of $p(z)$ containing the $z_{PEAK}$ value.
 The main peak is defined by subtracting 0.05$\,\times\,z_{PEAK}$ from $p(z)$ and identifying the roots to isolate the peak containing $z_{PEAK}$, $z_{WEIGHT}$ is defined as the weighted mean redshift within this peak.
