@@ -95,6 +95,8 @@ Fig.~\ref{fig:pit_stats} displays the values of the KS, CvM, and AD test statist
 \subsection{Metrics of the stacked estimator of the redshift distribution}
 \label{sec:stackedmetrics}
 
+Fig.~\ref{fig:nz} shows the stacked estimator $\hat{N}(z)$ of the redshift distribution for each code compared to the true redshift distribution $\tilde{N}(z)$, where the stacked estimator has been smoothed for each code in the plot using a kernel density estimate (KDE) with a bandwidth chosen by Scott's Rule \citep{Scott:1992} in order to minimize visual differences in small-scale features; the quantiative statistics, however, are calculated using the empirical CDF which is not smoothed.
+
 \begin{figure*}
 \centering
 \includegraphics[width=0.74\textwidth]{fig/NZsumplot_12codes_scottsrule.jpg}
@@ -104,46 +106,31 @@ Varying levels of agreement are seen among the codes, with the smallest deviatio
 %\aim{Arguably this could also be clarified by showing the true $n'(z)$ once and then differences from it for each cod's stacked estimator\dots}\scc{what if we plot the difference between true and stacked rather than soverposing the two lines? Sam please do not hate me.}
 \end{figure*}
 
-\begin{figure}
-\centering
-\includegraphics[width=0.49\textwidth]{fig/KSvsCvMvsAD_NZ_withnull_jpg.jpg}
-\caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the $\hat{N}(z)$ distributions.
-We make the observation that these related statistics do not disagree significantly with one another.
-\cmnn\ performs comparably well to \trainz, the control case, while \textsc{SkyNet} scores poorly due to an overall bias in its redshift predictions.}
-\label{fig:nz_stats}
-\end{figure}
+Many of the codes, including all the model-fitting approaches and \annz, \gpz, \metaphor, and \skynet\ from the data-driven camp, overestimate the redshift density at $z \sim 1.4$.
+This behavior is a consequence of the $4000\ {\rm \AA}$ break passing through the gap between the $z$ and $y$ filters, which induces a genuine discontinuity in the $z - y$ colour as a function of redshift that can sway the \pzpdf\ estimates in the absence of bluer spectral features.
 
-Fig.~\ref{fig:nz} shows the stacked $\hat{N}(z)$ distribution compared to the true redshift distribution $N'(z)$ for all tested codes.
-The red line indicates the summed $p(z)$ for each code, while the blue line shows the true redshift distribution.
-All distributions are smoothed via kernel density estimation (KDE) with a common bandwidth chosen via Scott's rule \citep{Scott:1992} in order to minimize differences in small-scale features and make for a more uniform comparison between codes.
-While Scott's rule is used to display $N'(z)$ in the figure, all quantitative statistics are computed via the empirical CDF, and are thus unaffected by bandwidth/smoothing choice.
-%New text for the new figure
-As expected, \textsc{TrainZ} is in excellent agreement with the true redshift distribution: as the training sample is selected from the same underlying distribution as the test set, the redshift distributions are identical, up to Poisson fluctuations due to the finite number of sample galaxies.
-\textsc{CMNN} is also in excellent agreement for similar reasons: with a representative training sample of galaxies spanning the colour-space, the sum of the colour-matched neighbour redshifts should return the true redshift distribution. \textsc{FlexZBoost} and \textsc{TPZ} also show very good agreement, with only slight departures, with an over/under-prediction in the high redshift tail of $\hat{N}(z)$ evident around $z\sim1.4$.
-In fact, several of the other codes show an excess at $z \sim 1.4$, particularly the template-based codes \textsc{BPZ}, \textsc{EAZY}, and \textsc{LePhare}.
-This is likely due to the $4000\ {\rm \AA}$ break passing through the gap between the $z$ and $y$ filters, resulting in a drastic change in $z-y$ colour for galaxies in this redshift range.
-With a relative dearth of strong features blue-ward of the $4000\ {\rm \AA}$ break in most galaxy SEDs, the colour change in the two reddest filter bandpasses of a survey has a large influence on the redshift determination.
-The $z\sim1.4$ feature is one of the most prominent sources of larger uncertainty in individual galaxy $p(z)$.
-In our sample individual galaxy $p(z)$'s tend to be broader around $z\sim1.4$ and point estimates are more uncertain in this regime, as is readily seen in the point-estimate plots shown in Fig.~\ref{fig:pz_pointestimates} and described in the Appendix.
-This feature is not unique to this dataset, it is a common occurrence in photo-$z$ estimation.
-The fact that similar excesses appear in Figure~\ref{fig:nz} for \textsc{ANNz2} and \textsc{METAPhoR} shows that the effect is not limited to template-based codes.
-However, the lack of such a feature in the other codes shows that it is possible to eliminate the degeneracies.
-Further study on this issue may provide a solution for codes that suffer from this shortcoming.
+\annz, \gpz, and \metaphor\ show signs of overtraining, estimating enhanced peaks and diminished troughs relative to the training set, an obstacle that may be overcome with adjustment of the implementation.
 
-%end of new text (and slightly modified text)
-Two of the machine learning based codes, \textsc{ANNz2} and \textsc{METAPhoR}, appear to be over-trained, adding excess galaxy probability to the redshift peaks with the largest number of training galaxies, and missing probability in the troughs where training galaxies are of fewer number.
-Given that our training data is drawn from the same galaxy population as the test set, and our data has prominent peaks in $N'(z)$, perhaps it is not unexpected that such overtraining occurs in some codes, though the fact that it does not occur in all training-based codes indicates that it may be due to specifics of the implementations and bandwidth choices of \textsc{ANNz2} and \textsc{METAPhoR}.
-This, once again, emphasizes that care much be taken in choice of bandwith parameters in individual codes in order to avoid such overtraining.
-%\aim{Move the text on Scott's Rule to Discussion?}
-%Scott's rule \citep{Scott:1992} was used to determine the smoothing bandwidth of the true redshift sample: that is, a single smoothing scale was chosen to represent the true redshift sample for all twelve codes.
-%As with the $p(z)$ values in Figure~\ref{fig:pitqq}, different levels of substructure are obvious for the different codes.
-%While Scott's rule provides a relatively good general smoothing scale to represent the true $N'(z)$, there are smaller scale fluctuations: while \textsc{FlexZBoost} and \textsc{CMNN} appear somewhat discrepant in Fig.~\ref{fig:nz}, they are actually the two most accurate in terms of their quantitative measurements.
-%\textsc{SkyNet} also shows excess small-scale structure, but also shows significant overestimate of the high redshift galaxy population.
-\textsc{SkyNet} shows an obvious redshift bias, evident both visually in Figure~\ref{fig:nz} and in the first moment of N(z) listed in Table~\ref{tab:moments}, where it is clearly an outlier.
+\skynet\ exhibits an obvious redshift bias, evident both visually in Figure~\ref{fig:nz} and in the first moment of N(z) listed in Table~\ref{tab:moments}, where it is clearly an outlier.
 \textsc{SkyNet} employed a method where a random sample of training galaxies was chosen, but there was no test that the subset was completely representative of the overall redshift distribution.
 Unlike the previous implementation of \textsc{SkyNet} in \citet{Bonnett:15}, no effort was made to add extra weight to more rare low and high redshift galaxies.
 Either of these decisions could be the cause of the bias seen in our results.
 Future runs of \textsc{SkyNet} will explore these implementation choices and their effects.
+
+As expected, \trainz\ perfectly recovers the true redshift distribution: as the training sample is selected from the same underlying distribution as the test set, the redshift distributions are identical, up to Poisson fluctuations due to the finite number of sample galaxies.
+\cmnn\ is also in excellent agreement for similar reasons: with a representative training sample of galaxies spanning the colour-space, the sum of the colour-matched neighbour redshifts should return the true redshift distribution.
+\flexzboost\ and \tpz\ also perform superb recovery of the true redshift distribution, with only a slight deviation at $z \sim 1.4$.
+Our metrics, however, cannot discern whether these four approaches, as well as \delight, are spared the $z \sim 1.4$ degeneracy in $\hat{N}(z)$ because they have more effectively used information in the data or if the impact is simply washed out by the effective average over the test set galaxy sample.
+See Appendix~\ref{sec:pointmetrics} for further discussion of the $z \sim 1.4$ issue.
+
+\begin{figure*}
+\centering
+\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_NZ_withnull_jpg.jpg}
+\caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the $\hat{N}(z)$ distributions.
+We make the observation that these related statistics do not disagree significantly with one another.
+\cmnn\ performs comparably well to \trainz, the control case, while \textsc{SkyNet} scores poorly due to an overall bias in its redshift predictions.}
+\label{fig:nz_stats}
+\end{figure*}
 
 Figure~\ref{fig:nz_stats} shows the quantitative Kolmogorov-Smirnoff (KS), Cramer-Von Mises (CvM), and Anderson Darling (AD) test statistics for each of the codes for the $\hat{N}(z)$ based measures.
 %\red{Can p-values be supplied for each statistic? The statistics themselves are difficult to interpret, other than ``lower is better'' (no, p-values are very difficult to compute for non-uniform distributions)}
