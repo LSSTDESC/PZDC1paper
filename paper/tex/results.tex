@@ -18,7 +18,7 @@ The diverse algorithms and implementations induce differences in small-scale str
 The most striking differences between codes are due to small-scale features induced by the interaction between the shared piecewise constant parameterization of $200$ bins $0 < z < 2$ of Section~\ref{sec:metrics} and the smoothing conditions or lack thereof in each algorithm.
 The $\rm{d}z = 0.01$ redshift resolution is sufficient to capture the broad peaks of faint galaxies' \pzpdf s with large photometric errors but is too broad to resolve the narrow peaks for bright galaxies' \pzpdf s with small photometric errors.
 This observation is consistent with the findings of \citet[]{Malz:qp} that the piecewise constant parameterization underperforms in the presence of small-scale structures.
-However, the shared small-scale features of \annz, \metaphor, \cmnn, and \skynet\ are a smoking gun for overfitting of the training set, a result of various weighted sums of the limited number of training set galaxies with colors similar to those of the test set galaxy in question.
+However, the shared small-scale features of \annz, \metaphor, \cmnn, and \skynet\ are a result of various weighted sums of the limited number of training set galaxies with colors similar to those of the test set galaxy in question, with behavior closer to classification than regression in the case of \annz.
 The settings used on \gpz\ in this work forced broadening of the single Gaussian to cover the multimodal redshift solutions of the other codes.
 %Interestingly, while \textsc{ANNz2} shows an abundance of small scale structure in individual $p(z)$ measurements (see Fig.~\ref{fig:pz_examples}), the summed $\hat{N}(z)$ is rather smooth, where the small scale features average out.  This is not the case for the two other codes that show an abundance of substructure in their individual $p(z)$: both \textsc{CMNN} and \textsc{SkyNet} show small scale features both in $p(z)$ and $\hat{N}(z)$.
 %In contrast, FlexZBoost, for example, can return estimates on any grid without compression errors as it’s a basis expansion method where only the expansion coefficients need to be stored.
@@ -88,17 +88,9 @@ There is generally good agreement between these statistics, with differences cor
 
 Fig.~\ref{fig:pit_stats} displays the values of the KS, CvM, and AD test statistics between the PIT distribution and a uniform distribution $U(0, 1)$, highlighting the relative rather than absolute numbers.
 %\red{Can p-values be supplied for each statistic? The statistics themselves are difficult to interpret, other than ``lower is better'' (p-value in skgof was broken, having trouble finding 1-sample KS calculation for uniform distribution)}
-\textsc{ANNz2} and \textsc{FlexZBoost} score very well for the PIT metrics.
-\textsc{METAPhoR} and \textsc{LePhare} score very well in the PIT AD statistic, but both have a large number of catastrophic outliers, resulting in higher KS and CvM scores.
-
-Given the near-perfect training data, examining the individual codes for explanations for departures from the expected behaviour will be instructive in avoiding similar problems in future tests.
-\textsc{ANNz2} performs quite well in $p(z)$ based metrics.  In the specific implementation employed in this paper, the final $p(z)$ is a weighted average of five neural-nets.
-During the training process \textsc{ANNz2} compares the percentiles of the redshift training sample against the CDFs of the $p(z)$ sample.
-Distributions that more closely match are given extra weight, and the final weights are designed to produce accurate percentiles.
-Given that our metrics are focused on the percentile distributions, it is unsurprising that \textsc{ANNz2} performs well in the given metrics.
-The discreteness in the individual $p(z)$ estimated by \textsc{ANNz2} can be attributed to the fact that the code was run as a classifier, assigning weights to discrete bins of redshift.
-While multiple bins may receive weight, the bins themselves will still be discretized, and no additional smoothing was performed.
-Overall, \textsc{FlexZBoost} and \textsc{ANNz2} show the best ensemble agreement in their distribution of PIT values.
+\metaphor\ and \lephare\ perform well under the AD but poorly under the KS and CvM due to their high catastrophic outlier rates.
+\annz\ and \flexzboost\  are the top scorers under these metrics of the PIT distribution.
+\annz's strong performance can be attributed to an aspect of the training process in which training set galaxies with a PIT that more closely matches the percentiles of the DC1 training set's redshift distribution are upweighted; in effect, these quantile-based metrics were part of the algorithm itself.
 
 \subsection{Metrics of the stacked estimator of the redshift distribution}
 \label{sec:stackedmetrics}
