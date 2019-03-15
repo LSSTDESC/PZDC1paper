@@ -59,7 +59,9 @@ The work presented in this paper is only a first step in assessing \pzpdf\ appro
 Here we discuss the next steps for subsequent investigations.
 
 This initial paper explored code performance in idealized conditions with perfect catalog-based photometry and representative training data.
-A top priority for a follow-up study is to test realistic forms of incomplete and non-representative template libraries and training sets as well as the impact of other forms of external priors that must be ingested by the codes.
+A top priority for a follow-up study is to test realistic forms of incomplete, erroneous, and non-representative template libraries and training sets as well as the impact of other forms of external priors that must be ingested by the codes, major concerns in \citet{Newman:2015, Masters:2017}.
+We plan to perform a full sensitivity analysis on a realistically incomplete training set of spectroscopic galaxies, modeling the performance of spectrographs, emission-line properties, and expected signal-to-noise to determine which potential training set galaxies are most likely to be excluded.
+In addition to outright redshift failures we will model the inclusion of a small number of high-confidence yet false redshifts due to emission line misidentification or noise spikes.
 
 Appendix~\ref{sec:moments} only addresses the stacked estimator of the redshift distribution of the entire galaxy catalogue rather than subsets in bins, tomographic or otherwise.
 The effects of tomographic binning scheme will be explored in a dedicated future paper, including propagation of redshift uncertainties in a set of fiducial tomographic redshift bins in order to estimate impact on cosmological parameter estimation.
@@ -77,25 +79,8 @@ In light of the results of \citet[]{Malz:qp}, in future analyses we plan to swit
 \subsection{Realistic mock data}
 \label{sec:futuredata}
 
-We re-emphasize that the dataset tested was quite idealized, and discuss enhancements that will be added in future simulations to test photo-$z$ codes on increasingly realistic conditions in the following section.
-
-%\item \red{inclusion of incompleteness effects on training sample, ``wrong redshifts'', filter curves}
+The goals of future investigations will require a realistically complex data set of higher sophistication than the DC1 data set used here.
 %\item \red{inclusion of photometric errors, image based effects, blending, lensing, sky, mask, etc...}
-
-In future papers a focus of the \lsstdesc\ \Pz\ Working Group will be to add more and more complexity to our simulated data in order to test photo-$z$ algorithms in increasingly realistic conditions.
-The most pressing concern is the impact of incomplete spectroscopic training samples.
-The SEDs for the galaxy sample in this paper were constructed form linear combinations of five basis SED templates.
-Future simulations will also include more complex SED information, with a more realistic range of physical properties, and the inclusion of AGN effects, a more insidious problem, where AGN features may not be apparent, but the colors and other host galaxy properties are perturbed relative to galaxies with an inactive nucleus.
-In such cases, the presence of the AGN may induce a bias if the template SEDs or empirical datasets do not include low-level AGN counterparts.
-
-As discussed extensively in \citet{Newman:2015} a representative set of spectroscopically confirmed galaxies spanning the full range of both redshift and apparent magnitude is necessary as a training set to characterize the mapping from broad-band fluxes to photometric redshifts.
-%However, due to a combination of factors due to both the galaxy SEDs and limitations of spectrographic instruments, redshift samples are known to be systematically incomplete, where certain galaxy types and redshift intervals fail to yield a redshift even at the longest integration times on current and near-future instruments.  The more representative the training data, the better the performance of photo-$z$ algorithms will be.
-Current and upcoming surveys are putting significant effort into obtaining these training samples \citep[e.~g.\,][]{Masters:2017}, however we still expect significant incompleteness for LSST-like samples, particularly at faint magnitudes.
-We plan to produce a realistically incomplete training set of spectroscopic galaxies, modeling the performance of spectrographs, emission-line properties, and expected signal-to-noise to determine which galaxies will fail to yield a secure redshift.
-In addition to outright redshift failures we will model the inclusion of a small number of falsely identified secure redshifts where misidentified emission lines or noise spikes cause an incorrect redshift solution to be marked as a high quality identification.
-Even sub-per cent level contamination by false redshifts can impact \pz\ solutions at levels comparable to the stringent  requirements of some LSST science cases.
-We expect different systematics to occur in different \pzpdf\ codes in response to training on incomplete data, particularly some of the machine learning methods.
-The response of the codes will inform future directions of code development.
 
 The underlying dataset limited this work to a maximum redshift of $z=2$.
 LSST imaging after 10 years of observations will include a significant number of $z>2$ galaxies in expected cosmology samples, and their inclusion does have potential significant implications for photo-$z$ measures: the high redshift galaxies lie at fainter apparent magnitudes and can have anomalous colours due to evolution of stellar populations and the shift to rest-frame magnitudes probing UV features of the underlying SED.
@@ -106,6 +91,9 @@ Extending simulations to include the high-redshift galaxy population will be a p
 This initial paper explored a data set that was constructed at the catalog level, with no inclusion of the complications that come from measuring photometry from images.
 Future data challenges will move to catalogs constructed from mock images, including effects that will have great impact on \pz\ estimates, which will naturally include the complications of object blending, sensor effects, different observing conditions, amongst others.
 Object blending will be a major area of investigation, as the mixing of flux from multiple objects and the resultant change in measured colours is predicted to affect a large fraction of LSST galaxies \citep{Dawson:2016}, and will be one of the major contributing systematics for photo-$z$'s.
+
+The DC1 galaxy SEDs were linear combinations of just five basis SED templates, but a next generation of data for \pzpdf\ investigations must include a broader range of physical properties.
+A subsequent study must also have a data set that includes active galactic nuclei (AGN) features in the SEDs, which perturb colours and other host galaxy properties.
 
 In this study we have not accounted for the presence of Active Galactic Nuclei (AGN) contributions to galaxy fluxes.
 In some cases, AGN will be easily identified from the colors and morphologies, i.e. the case of the brightest quasars where the nuclear activity outshines the host galaxy, and numerous studies have utilized color selection to create large samples of quasars \citep[e.g.][]{Richards:06,Maddox:08,Richards:15}.
