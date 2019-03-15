@@ -97,22 +97,21 @@ Fig.~\ref{fig:pit_stats} displays the values of the KS, CvM, and AD test statist
 
 \begin{figure*}
 \centering
-\includegraphics[width=\textwidth]{fig/NZsumplot_12codes_scottsrule.jpg}
-\caption{The stacked $p(z)$ produced by each photo-$z$ code ($\hat{N}(z)$, red) compared to the spectroscopic redshift distribution ($N'(z)$, blue).
-Varying levels of agreement are seen in the codes.
-Both $\hat{N}(z)$ and $N'(z)$ in all codes are smoothed using a single bandwidth chosen via Scott's rule.}
+\includegraphics[width=0.74\textwidth]{fig/NZsumplot_12codes_scottsrule.jpg}
+\caption{The smoothed stacked estimator $\hat{N}(z)$ of the redshift distribution (red) produced by each code (panels) compared to the true redshift distribution $\tilde{N}(z)$ (blue).
+Varying levels of agreement are seen among the codes, with the smallest deviations for \cmnn, \flexzboost, \tpz, and \trainz.}
 \label{fig:nz}
 %\aim{Arguably this could also be clarified by showing the true $n'(z)$ once and then differences from it for each cod's stacked estimator\dots}\scc{what if we plot the difference between true and stacked rather than soverposing the two lines? Sam please do not hate me.}
 \end{figure*}
 
-\begin{figure*}
+\begin{figure}
 \centering
-\includegraphics[width=\textwidth]{fig/KSvsCvMvsAD_NZ_withnull_jpg.jpg}
-\caption{A visual representation of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the $\hat{N}(z)$ distributions.
-The statistics are correlated, the codes with the lowest KS statistics tend to have the lowest CvM and AD statistics.
-\textsc{CMNN} performs markedly better than the others in reconstructing the overall $N(z)$ distribution, while \textsc{SkyNet} scores poorly due to an overall bias in its redshift predictions.}
+\includegraphics[width=0.49\textwidth]{fig/KSvsCvMvsAD_NZ_withnull_jpg.jpg}
+\caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the $\hat{N}(z)$ distributions.
+We make the observation that these related statistics do not disagree significantly with one another.
+\cmnn\ performs comparably well to \trainz, the control case, while \textsc{SkyNet} scores poorly due to an overall bias in its redshift predictions.}
 \label{fig:nz_stats}
-\end{figure*}
+\end{figure}
 
 Fig.~\ref{fig:nz} shows the stacked $\hat{N}(z)$ distribution compared to the true redshift distribution $N'(z)$ for all tested codes.
 The red line indicates the summed $p(z)$ for each code, while the blue line shows the true redshift distribution.
