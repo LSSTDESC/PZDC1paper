@@ -134,7 +134,7 @@ We make the reassuring observation that these related statistics do not disagree
 It is, however, surprising that \tpz\ does well on $\hat{N}(z)$ given its poor performance on the ensemble \pzpdf s, especially knowing that \tpz\ was optimized for \pzpdf\ ensemble metrics rather than the stacked estimator of the redshift distribution.
 A possible explanation is the choice of smoothing parameter chosen during validation, which affects \pzpdf\ widths as well as overall redshift bias and could be modified to improve performance under the \pzpdf\ metrics.
 
-Table~\ref{tab:moments} lists the first three moments of the stacked $\hat{N}(z)$ distribution relative to the empirical estimate of the truth distribution.
+The first three moments of the stacked $\hat{N}(z)$ distribution relative to the empirical estimate of the truth distribution are given in Table~\ref{tab:moments}.
 Accuracy of the moments varies widely between codes, raising concerns about the propagation to cosmological analyses.
 %\red{[mention that we are calculating moments for the entire sample, will look at fiducial tomographic bins in a follow-up paper (unless group and reviewers realy think we should include in this paper.]}
 %\red{FlexZBoost has some of the best $n(z)$ statistics, but the moments are not good.  Why is this?  Is it the over/underprediction of the high redshift part of the distribution?  Discuss this after talking with Rafael.}
@@ -147,10 +147,8 @@ Accuracy of the moments varies widely between codes, raising concerns about the 
 \hline
  \multicolumn{4}{l}{Stacked $n(z)$ Moments} \\
 \hline
-              & 1st Moment & 2nd Moment & 3rd Moment \\
-Empirical estimate of truth & 0.701 & 0.630 & 0.671  \\
-\hline
-Photo-z Code       & 1st Moment & 2nd Moment & 3rd Moment\\
+              & mean & variance & skewness \\
+Empirical ``truth'' & 0.701 & 0.630 & 0.671  \\
 \hline
 \annz       & 0.702      & 0.625      & 0.653    \\
 \bpz        & 0.699      & 0.629      & 0.671    \\
@@ -167,13 +165,15 @@ Photo-z Code       & 1st Moment & 2nd Moment & 3rd Moment\\
 \end{tabular}
 \end{table}
 
-\skynet\ exhibits an obvious redshift bias, evident both visually in Figure~\ref{fig:nz} and in the first moment of N(z) listed in Table~\ref{tab:moments}, where it is clearly an outlier.
-\textsc{SkyNet} employed a method where a random sample of training galaxies was chosen, but there was no test that the subset was completely representative of the overall redshift distribution.
-Unlike the previous implementation of \textsc{SkyNet} in \citet{Bonnett:15}, no effort was made to add extra weight to more rare low and high redshift galaxies.
-Either of these decisions could be the cause of the bias seen in our results.
-Future runs of \textsc{SkyNet} will explore these implementation choices and their effects.
+\skynet\ exhibits redshift bias in Figure~\ref{fig:nz} and is a clear outlier in the first moment of $\hat{N}(z)$ in Table~\ref{tab:moments}.
+The \skynet\ algorithm employs a random subsampling of the training set without testing that the subset is representative of the full population, and the implementation used here does not upweight rarer low- and high-redshift galaxies, as in \citet{Bonnett:15}, suggesting a possible cause that may be addressed in future work.
 
 \subsection{Performance on individual \pzpdf s}
+\label{sec:cdelossresults}
+
+The values of the CDE loss statistic of individual \pzpdf\ accuracy are provided in Table~\ref{tab:cdeloss}.
+It is worth noting that strong performance on the CDE loss should imply strong performance on the other metrics, though the inverse is not necessarily true.
+Thus the CDE loss is the most effective metric for generic science cases.
 
 \begin{table}  %%% DATA TABLE %%%
 \centering
@@ -182,21 +182,21 @@ Future runs of \textsc{SkyNet} will explore these implementation choices and the
 \hline
 \bf Photo-$z$ Code & \bf CDE Loss \\
 \hline
-\textsc{ANNz2} 		& $-6.88$ \\
-\textsc{BPZ} 		& $-7.82$ \\
+\annz 		& $-6.88$ \\
+\bpz 		& $-7.82$ \\
 %\textsc{Delight} 	& $-4.06$ \\
-\textsc{Delight}    & $-8.33$\\
+\delight    & $-8.33$\\
 %\textsc{EAZY} 		& $-7.97$ \\
-\textsc{EAZY}       & $-7.07$ \\
+\eazy       & $-7.07$ \\
 %\textsc{FlexZBoost} & $-11.51$ \\
-\textsc{FlexZBoost} & $-10.60$\\
-\textsc{GPz} 		& $-9.93$ \\
-\textsc{LePhare} 	& $-1.66$ \\
-\textsc{METAPhoR} 	& $-6.28$ \\
+\flexzboost & $-10.60$\\
+\gpz		& $-9.93$ \\
+\lephare 	& $-1.66$ \\
+\metaphor 	& $-6.28$ \\
 %\textsc{CMNN} 		& $-$ \\
-\textsc{CMNN}         & $-10.43$ \\
-\textsc{SkyNet} 	& $-7.89$ \\
-\textsc{TPZ} 		& $-9.55$ \\
+\cmnn         & $-10.43$ \\
+\skynet 	& $-7.89$ \\
+\tpz 		& $-9.55$ \\
 \hline
 \trainz		& $-0.83$ \\
 %\textsc{Frankenz}	& $-$  \\
@@ -204,12 +204,8 @@ Future runs of \textsc{SkyNet} will explore these implementation choices and the
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:cdeloss} contains the CDE loss statistic for each code.
-Once again \textsc{FlexZBoost} and \textsc{CMNN} score very well for the stacked $\hat{N}(z)$ metrics, as do \textsc{GPz} and \textsc{TPZ}.
-The CDE loss measures how well individual PDFs are estimated, and codes with a low CDE loss tend to have good $\hat{N}(z)$ estimates (though the reverse is not necessarily true).
-\textsc{FlexZBoost} is optimized to minimize CDE loss which may explain why the method has good ensemble metrics as well.
-Note from Table~\ref{tab:cdeloss} that both \textsc{FlexZBoost} and \textsc{CMNN} have low CDE losses.  %Empirically, we have found that PIT RMSE is not as closely correlated to CDE loss as it is to the $N(z)$ statistics.
-As CDE loss is a better measure of individual redshift performance, rather than ensemble distribution performance, this statistic is a better indicator of which codes will be most likely to perform well for science cases where single objects are employed.
+This metric is the only one that can appropriately penalize \trainz\ and indicates strong performance for \cmnn\ and \flexzboost, the latter of which is optimized for this metric.
+%Empirically, we have found that PIT RMSE is not as closely correlated to CDE loss as it is to the $N(z)$ statistics.
 
 %\subsection{Response of Individual Codes}
 %\label{sec:res:pz_indiv_codes}
