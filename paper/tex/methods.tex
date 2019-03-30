@@ -227,7 +227,7 @@ Trees for \Pz \citep[\tpz\footnote{\url{https://github.com/mgckind/MLZ}},][]{Car
 The regions in each terminal leaf node correspond to a subsample of the training set with similar properties.
 Bootstrap samples from the training set photometry and errors are used to build a set of prediction trees.
 
-To run \tpz, we replaced nondetections with an approximation of the $1\sigma$ detection threshold based on the error forecast of the 10-year \lsst\ data, i.~e. $dm = 2.5 \log (1 + N/S)$ where $dm \sim 0.7526$ mag for $N/S = 1$.
+To run \tpz, we replaced nondetections with an approximation of the $1\sigma$ detection threshold based on the error forecast of the 10-year \lsst\ data, i.~e.~$dm = 2.5 \log (1 + N/S)$ where $dm \sim 0.7526$ mag for $N/S = 1$.
 We calibrated \tpz\ with the Out-of-Bag cross-validation technique \citep{Breiman:84,Carrasco_Kind:13} to evaluate its predictive validity and determine the relative importance of the different input attributes.
 We grew 100 trees to a minimum leaf size of 5 using the $ugri$ magnitudes, all $u-g, g-r, r-i, i-z, z-y$ colours, and the associated errors, as the $z$ and $y$ magnitudes did not show significant correlation with the redshift in our cross-validation.
 We partitioned our redshift space into 200 bins and smoothed each individual PDF with a smoothing scale of twice the bin size.
