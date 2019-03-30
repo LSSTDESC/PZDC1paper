@@ -51,13 +51,17 @@ We describe the algorithms and implementations of the model-based and data-drive
 \subsection{Template-based Approaches}
 \label{sec:templatecodes}
 
-We test three publicly available and commonly used template-based codes that share the standard physically motivated approach of calculating model fluxes for a set of template SEDs on a grid of redshift values and evaluating a \chisq\ merit function using the observed and model fluxes.
+We test three publicly available and commonly used template-based codes that share the standard physically motivated approach of calculating model fluxes for a set of template SEDs on a grid of redshift values and evaluating a \chisq\ merit function using the observed and model fluxes:
+\begin{equation} \label{eq_temp_chi}
+\chi^2(z,T,A) = \sum_i^{N_{\rm filt}}\left(\frac{F^i_{\rm{obs}} - A \, F^i_{\rm{pred}}(T,z)}{\sigma^i_{\rm{obs}}}\right)^2
+\end{equation}
+\noindent  where $A$ is a normalization factor, $F^i_{\rm{pred}}(T,z)$ is the flux predicted for a template $T$ at redshift $z$. $F^i_{\rm{obs}}$ is the observed flux in a given band $i$ and $\sigma^i_{\rm{obs}}$ is the observed flux error. $N_{\rm filt}$ is the total number of filters, in our case the six $ugrizy$ LSST filters.  Specific implementation details of each code, e.~g.~prior form and implementation, are described below.
 
 \subsubsection{LePhare}
 \label{sec:lephare}
 %(C\'ecile Roucelle, Eric Nuss, Johann Cohen-Tanugi)
 
-Photometric Analysis for Redshift Estimate \citep[\lephare\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}},][]{Arnouts:99,Ilbert:06} matches observed colors with those predicted from a template set, which can be semi-empirical or entirely synthetic, directly according to the likelihood $\chi^{2}(z, T, A) \equiv \sum_{b}^{N_{\rm{filt}}} \left((F^{\rm{obs}}_{b} - A F^{\rm{mod}}_{b}(T, z)) / \sigma^{\rm{obs}}_{b}\right)^{2}$ of normalization factor $A$, template $T$, and redshift $z$.
+Photometric Analysis for Redshift Estimate \citep[\lephare\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}},][]{Arnouts:99,Ilbert:06} matches observed colors with those predicted from a template set, which can be semi-empirical or entirely synthetic, directly according to the $\chi^2$ form given in Equation~\ref{eq_temp_chi}.
 In words, the likelihood is a sum of observed flux error $\sigma_{b}^{\rm{obs}}$-weighted squared differences between the observed flux $F^{\rm{obs}}_{b}$ and the normalized predicted flux $F^{\rm{mod}}_{b}(T, z)$ in $N_{\rm{filt}}$ photometric filters $b$, which is the \lsst\ $ugrizy$ filters in this case.
 The reported \pzpdf\ is an arbitrary normalization of the likelihood evaluated on the output redshift grid.
 %\textsc{LePhare} has been used to produce the COSMOS2015 photo-$z$ catalogue \citep{Laigle:16}.
@@ -70,12 +74,12 @@ Here we use \lephare-v 2.2 with the DC1 template set of Section~\ref{sec:buzztem
 
 Bayesian Photometric Redshift \citep[\bpz\footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}},][]{Benitez:00} determines the likelihood $p(C \vert z, T)$ of a galaxy's observed colours $C$ for a set of SED templates $T$ at redshifts $z$.
 The \bpz\ likelihood is related to the \chisq\ likelihood by $p(C \vert z, T) \propto \exp[- \chi^{2} / 2]$.
-Given a Bayesian prior $p(z, T \vert m_{0})$ over apparent magnitude $m_0$ and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \vert C, m_0)$ by marginalizing over all SED templates as in \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
+Given a Bayesian prior $p(z, T \vert m_{0})$ over apparent magnitude $m_0$ and type $T$, and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \vert C, m_0)$ by marginalizing over all SED templates as in \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
 The \bpz\ prior is the product of an SED template proportion that varies with apparent magnitude $p(T \vert m_{0})$ and a prior $p(z \vert T, m_{0})$ over the expected redshift as a function of apparent magnitude and SED template.
 
 Here we test \bpz-v 1.99.3 with the DC1 template set of Section~\ref{sec:buzztemplates}.
 To keep the number of free parameters manageable, the DC1 template set is pre-sorted by the rest-frame $u-g$ colour and split into three broad classes of SED template, equivalent to the E, Sp and Im/SB types in .
-The Bayesian prior term $p(T \vert m_{0})$ was derived directly from the DC1 training set, and the other term $p(z \vert T, m_{0})$ was chosen to be the best fit for the eleven free parameters of the functional form of \citet{Benitez:00}.
+The Bayesian prior term $p(T \vert m_{0})$ was derived directly from the DC1 training set, and the other term $p(z \vert T, m_{0})$ was chosen to be the best fit for the eleven free parameters of the functional form of \citet{Benitez:00}.  We use template interpolation, creating two linearly interpolated templates between each basis SED (sorted by rest-frame $u-g$ colour) by setting the parameter \texttt{INTERP=2}.
 %For photo-$z$ point estimates we use the \texttt{Z\_B} output parameter.
 Prior to running the code, the non-detection placeholder magnitude was replaced with an estimate of the one-$\sigma$ detection limit for the undetected band as a proxy for a value close to the estimated sky noise threshold.
 
