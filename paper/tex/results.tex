@@ -22,29 +22,21 @@ This observation is consistent with the findings of \citet[]{Malz:qp} that the p
 
 However, the shared small-scale features of \annz, \metaphor, \cmnn, and \skynet\ are a result of various weighted sums of the limited number of training set galaxies with colors similar to those of the test set galaxy in question, with behavior closer to classification than regression in the case of \annz.
 The settings used on \gpz\ in this work forced broadening of the single Gaussian to cover the multimodal redshift solutions of the other codes.
-%Interestingly, while \textsc{ANNz2} shows an abundance of small scale structure in individual $p(z)$ measurements (see Fig.~\ref{fig:pz_examples}), the summed $\hat{N}(z)$ is rather smooth, where the small scale features average out.  This is not the case for the two other codes that show an abundance of substructure in their individual $p(z)$: both \textsc{CMNN} and \textsc{SkyNet} show small scale features both in $p(z)$ and $\hat{N}(z)$.
-%In contrast, FlexZBoost, for example, can return estimates on any grid without compression errors as it’s a basis expansion method where only the expansion coefficients need to be stored.
-%Codes with a native output format other than the shared piecewise constant binning scheme (or one that can be losslessly converted to it) may suffer from loss of information when converting to it, which could artificially favor some codes over others in a limited number of cases, for example bright galaxies with very narrow $p(z)$ where the true peak falls between grid points.  We will discuss PDF storage in Section~\ref{sec:discussion}.
-%Furthermore, the fidelity of photo-$z$ interim posteriors in this format varies with the quality of the photometry.
-%Switching to a quantile based parameterization may be more costly computationally, for example template-based codes would need to test more grid point in order to resolve the quantiles for bright galaxies.  However, the computational time for template based codes scales roughly linearly with the number of grid points, so this may be a reasonable thing to implement.
-% We will discuss this further in Section~\ref{sec:discussion}.
-% \red{someone review this statement to make sure that I'm saying this correctly!}
 
 \subsection{Performance on \pzpdf\ ensembles}
 \label{sec:pitqq}
 
 The histogram of PIT values, QQ plot, and QQ difference plot relative to the ideal diagonal are provided in Figure~\ref{fig:pitqq}, showcasing the biases and trends in the average accuracy of the \pzpdf s for each code.
-The high QQ values (more high than low PIT values) of \bpz, \cmnn, \delight, \eazy, and \gpz\ indicate \pzpdf s biased low, and the low QQ values (more low than high PIT values) of \skynet\ and \tpz\ indicate \pzpdf s biased high.
+The high QQ values (more high than low PIT values) of \bpz, \cmnn, \delight, \eazy, and \gpz\ indicate \pzpdf s biased low, and the low QQ values (more low than high PIT values) of \skynet\ and \tpz\ indicate \pzpdf s biased high.  The gray shaded band marks the $2\sigma$ variance in PIT values found using the \trainz\ algorithm with a bootstrap resampling of the training set and a sample size of 30,000 galaxies.  This represents a very conservative estimate of the representative training sample size, and thus an approximate minimal error significance compared to ideal performance.  Deviations in the PIT histograms outside of this range show that significant biases are present for some codes.
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.74\textwidth]{fig/PITANDQQplot_12codes_crop.jpg}
-\caption{The QQ plot (red) and PIT histogram (blue) of the \pzpdf\ codes (panels) along with the ideal QQ (black dashed diagonal) and ideal PIT (gray horizontal) curves, as well as a difference plot for the QQ difference from the ideal diagonal (lower inset).
-The twelve codes exhibit varying degrees of four deviations from perfection: an overabundance of PIT values at the centre of the distribution indicate a catalogue of overly broad \pzpdf s, an excess of PIT values at the extrema indicates a catalogue of overly narrow \pzpdf s, catastrophic outliers manifest as overabundances at PIT values of 0 and 1, and asymmetry indicates systematic bias, a form of model misspecification.}
+\includegraphics[width=0.74\textwidth]{fig/PITANDQQplot_12codes_withsigmaband_crop.jpg}
+\caption{The QQ plot (red) and PIT histogram (blue) of the \pzpdf\ codes (panels) along with the ideal QQ (black dashed diagonal) and ideal PIT (gray horizontal) curves, as well as a difference plot for the QQ difference from the ideal diagonal (lower inset).  The gray shaded region indicates the $2 \sigma$ range from a bootstrap resampling of the training set with a size of 30,000 galaxies using \trainz.  The twelve codes exhibit varying degrees of four deviations from perfection: an overabundance of PIT values at the centre of the distribution indicate a catalogue of overly broad \pzpdf s, an excess of PIT values at the extrema indicates a catalogue of overly narrow \pzpdf s, catastrophic outliers manifest as overabundances at PIT values of 0 and 1, and asymmetry indicates systematic bias, a form of model misspecification.  Values in excess of the $2\sigma$ shaded region show that for some codes these errors will be significant given expected training sample sizes.}
 \label{fig:pitqq}
 \end{figure*}
 
-The PIT histograms of \delight, \cmnn, \skynet, and \tpz\ feature an underrepresentation of extreme values, indicative of overly broad \pzpdf s, while the overrepresentation of extreme values for for \metaphor indicate overly narrow \pzpdf s.
+The PIT histograms of \delight, \cmnn, \skynet, and \tpz\ feature an underrepresentation of extreme values, indicative of overly broad \pzpdf s, while the overrepresentation of extreme values for \metaphor\ indicate overly narrow \pzpdf s.
 These five codes in particular have a free parameter for bandwidth, which may be responsible for this vulnerability, in spite of the opportunity for fine-tuning with perfect prior information.
 \flexzboost's ``sharpening'' parameter (described in Section~\ref{sec:flexzboost}) played a key role in diagonalizing the QQ plot, indicating a common avenue for improvement in the approaches that share this type of parameter.
 On the other hand, the three purely template-based codes, \bpz, \eazy, and \lephare, do not exhibit much systematic broadening or narrowing, which may indicate that complete template coverage effectively defends from these effects.
@@ -77,23 +69,23 @@ An excess over this small value indicates true redshifts that fall outside the n
 \end{tabular}
 \end{table}
 
-Though the spikes in the first and last bin of the PIT histogram were cut off in Figure~\ref{fig:pitqq} for visualization, the catastrophic outlier rates are provided in Table~\ref{tab:pitoutlier}.
+Close inspection of the extremes at PIT values of 0 and 1 reveal spikes in the first and last bin of the PIT histogram for some codes in Figure~\ref{fig:pitqq}, corresponding to ``catastrophic outliers'' where the true redshift lies outside of the support of the $p(z)$.  The catastrophic outlier rates are provided in Table~\ref{tab:pitoutlier}.
 As expected, \trainz\ achieves precisely the 0.0002 value expected of an ideal PIT distribution.
 \annz, \flexzboost, \lephare, and \metaphor\ have notably high catastrophic outlier rates $> 0.02$, exceeding 100 times the ideal PIT rate, meriting further investigation.
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_PIT_withnull_jpg.jpg}
+\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_PIT_withbootstrap.jpg}
 \caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the PIT distributions.
-There is generally good agreement between these statistics, with differences corresponding to the codes with outstanding catastrophic outlier rates, a reflection in the differences in how each statistic weights the tails of the distribution.}
+There is generally good agreement between these statistics, with differences corresponding to the codes with outstanding catastrophic outlier rates, a reflection in the differences in how each statistic weights the tails of the distribution.  Horizontal lines indicate the level of uncertainty found by bootstrapping a training set sample of 30,000 galaxies using \trainz, none of the codes reach this conservative ideal floor in expected uncertainty.}
 \label{fig:pit_stats}
 \end{figure*}
 
-Figure~\ref{fig:pit_stats} displays the values of the KS, CvM, and AD test statistics between the PIT distribution and a uniform distribution $U(0, 1)$, highlighting the relative rather than absolute numbers.
-%\red{Can p-values be supplied for each statistic? The statistics themselves are difficult to interpret, other than ``lower is better'' (p-value in skgof was broken, having trouble finding 1-sample KS calculation for uniform distribution)}
+Figure~\ref{fig:pit_stats} displays the values of the KS, CvM, and AD test statistics calculated by comparing the PIT distribution and a uniform distribution $U(0, 1)$.  This plot highlights the relative rather than absolute numbers.  
 \metaphor\ and \lephare\ perform well under the AD but poorly under the KS and CvM due to their high catastrophic outlier rates.
 \annz\ and \flexzboost\  are the top scorers under these metrics of the PIT distribution.
 \annz's strong performance can be attributed to an aspect of the training process in which training set galaxies with a PIT that more closely matches the percentiles of the DC1 training set's redshift distribution are upweighted; in effect, these quantile-based metrics were part of the algorithm itself that may or may not serve it well under more realistic experimental conditions.
+Similar to what was done for the PIT histograms in Figure~\ref{fig:pitqq} we create bootstrap training samples of 30,000 galaxies for use with \trainz\ in order to estimate a conservative statistical floor that we would expect in real data.  No code reaches this idealized floor, indicating that all codes suffer some degradation from the ideal when employing their implicit priors, though \annz, \flexzboost, and \gpz\ are within a factor of two.
 
 \subsection{Performance on individual \pzpdf s}
 \label{sec:cdelossresults}
@@ -134,13 +126,3 @@ Photo-$z$ Code & CDE Loss \\
 \end{table}
 
 This metric is the only one that can appropriately penalize \trainz\ and indicates strong performance for \cmnn\ and \flexzboost, the latter of which is optimized for this metric.
-%Empirically, we have found that PIT RMSE is not as closely correlated to CDE loss as it is to the $N(z)$ statistics.
-
-%\subsection{Response of Individual Codes}
-%\label{sec:res:pz_indiv_codes}
-%\red{this may be incorporated in to 5.1 and 5.2 rather than live in its own section!}
-
-
-%\red{HOW CODES deal with negative fluxes, and magnitude uncertainties}
-
-%\red{overall conclusions of the Results section}
