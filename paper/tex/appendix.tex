@@ -54,17 +54,16 @@ As expected, \trainz\ perfectly recovers the true redshift distribution: as the 
 Our metrics, however, cannot discern whether these four approaches, as well as \delight, are spared the $z \sim 1.4$ degeneracy in $\hat{N}(z)$ because they have more effectively used information in the data or if the impact is simply washed out by the stacked estimator's effective average over the test set galaxy sample.
 See Appendix~\ref{sec:pointmetrics} for further discussion of the $z \sim 1.4$ issue.
 
-Figure~\ref{fig:nz_stats} shows the quantitative Kolmogorov-Smirnoff (KS), Cramer-Von Mises (CvM), and Anderson Darling (AD) test statistics for each of the codes for the $\hat{N}(z)$ based measures.
-%\red{Can p-values be supplied for each statistic? The statistics themselves are difficult to interpret, other than ``lower is better'' (no, p-values are very difficult to compute for non-uniform distributions)}
-The stacked estimators of the redshift distribution for \cmnn\ and \trainz\ best estimate $\tilde{N}(z)$ under these metrics, and the only codes that do especially poorly are \eazy, \lephare, \metaphor, and \skynet.
+Figure~\ref{fig:nz_stats} shows the quantitative Kolmogorov-Smirnoff (KS), Cramer-Von Mises (CvM), and Anderson Darling (AD) test statistics for each of the codes for the $\hat{N}(z)$ based measures.  The horizontal lines show the the result of a bootstrap resampling of the training set using 30,000 samples for \trainz.  As mentioned in Section~\ref{sec:pitqq} this represents a conservative idealized limit on expected performance for a modest-sized representative training set of galaxies.  The AD bootstrap statistic is elevated due to this statistic's sensitivity to distribution tails.
+The stacked estimators of the redshift distribution for \cmnn\ and \trainz\ best estimate $\tilde{N}(z)$ under these metrics, and \bpz, \gpz, and \tpz\ are within a factor of two of the conservative limit for all statistics.  The only codes that do especially poorly are \eazy, \lephare, \metaphor, and \skynet.
 It is unsurprising that \cmnn\ scores well, as with a near perfectly representative training set means that choosing neighbouring points in color/magnitude space should lead to excellent agreement in the final $\hat{N}(z)$ estimate.
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_NZ_withnull_jpg.jpg}
-\caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the $\hat{N}(z)$ distributions.
+\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_NZ_withbootstrap.jpg}
+\caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the $\hat{N}(z)$ distributions.  Horizontal lines indicate the statistic values (including uncertainty) achieved using \trainz\ via bootstrap resampling a training set containing 30,000 redshifts.
 We make the reassuring observation that these related statistics do not disagree significantly with one another.
-\cmnn\ performs comparably well to \trainz, the control case, while \skynet\ scores poorly due to an overall bias in its redshift predictions.}
+\cmnn\ actually outperforms the control case, \trainz, and several codes are within a factor of two of this conservative idealized limit.  \skynet\ scores poorly due to an overall bias in its redshift predictions.}
 \label{fig:nz_stats}
 \end{figure*}
 
