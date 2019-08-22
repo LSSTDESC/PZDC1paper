@@ -2,7 +2,7 @@
 \label{sec:pzcodes}
 
 Here we summarize the twelve \pzpdf\ codes compared in this study, summarized in Table~\ref{tab:list_of_codes}, which include both established and emerging approaches in template fitting and machine learning.
-Though not exhaustive, this sample represents codes for which there was sufficient expertise within the \lsstdesc\ Photometric Redshifts Working Group; the authors welcome interest from those outside \lsstdesc\ to have their codes assessed in future investigations that build upon this one.
+Though not exhaustive, this sample represents codes for which there was sufficient expertise within the \lsstdesc\ Photometric Redshifts Working Group.  Some aspects of data treatment were left to the individual code runners, for example, whether/how to split the available data with known redshifts into separate training and validation sets. Another key difference is the treatment of non-detections in one or more bands: some codes choose to ignore a band, others replace the value with either an estimate for the detection limit, the mean of other values in the training set, or another default value. There are varying conventions among machine learning based codes for treatment of non-detections, and no one prescription dominates in the photo-z literature. The specific choices for each code affect the results, and contribute to the implicit prior influencing their output. However, we remind the reader that only 2.0 per cent of our sample has non-detections, almost exclusively in the u-band, and thus should not dominate the code performance differences.  The authors welcome interest from those outside \lsstdesc\ to have their codes assessed in future investigations that build upon this one.
 
 \begin{table*}  %%% DATA TABLE %%%
 \caption{List of \pzpdf\ codes featured in this study} \label{tab:list_of_codes}\resizebox{\textwidth}{!}{
@@ -99,7 +99,7 @@ The \eazy\ architecture cannot accept a template set other than the same five ba
 However, \eazy\ does feature a flexible \texttt{all-templates} mode, which fits the photometric data with a linear combination of the five basis templates.
 We set the template error to zero since the same templates were in fact used to produce the DC1 photometry.
 
-\subsection{Training-based Approaches}
+\subsection{Machine Learning-based Approaches}
 \label{sec:trainingcodes}
 
 We compared nine data-driven \pz\ estimation approaches, eight of which are described in this section and one of which is discussed in Section~\ref{sec:trainz}.
@@ -141,7 +141,7 @@ Undetected bands are dropped, thereby reducing the effective $N_{\rm{filt}}$ for
 The \pzpdf\ of a given test set galaxy is the normalized distribution of redshifts of its colour-matched subset of training set galaxies.
 
 Here, we make two modifications to the implementation of \citet{Graham:17} to comply with the controlled experimental conditions.
-First, we do not impose nondetections on galaxies fainter than the expected \lsst\ 10-year limiting magnitude or bright enough to saturate with \lsst's CCDs, instead using all of the photometry for the DC1 test and training sets.
+First, we do not impose non-detections on galaxies fainter than the expected \lsst\ 10-year limiting magnitude or bright enough to saturate with \lsst's CCDs, instead using all of the photometry for the DC1 test and training sets.
 Second, we apply the initial colour cut to the training set before calculating the Mahalanobis distance in order to accelerate processing and use a magnitude pseudo-prior as in \citet{Graham:17}, but for both we use cut-off values corresponding to the DC1 training set galaxies' colours and magnitudes.
 
 We make an additional adaptation to enable the \cmnn\ algorithm to yield accurate \pzpdf s for all galaxies, as the original \citet{Graham:17} algorithm is optimized for \pz\ point estimates and is susceptible to less accurate \pzpdf s for bright galaxies or those with few matches in colour-space.
@@ -188,7 +188,7 @@ To smooth the long tail in the distribution of magnitude errors, we use the log 
 % WHAT IS BEING DECORRELATED HERE?
 Unobserved magnitudes $x_{\rm u} = \mu_{\rm u} + \Sigma_{\rm uo}\Sigma_{\rm oo}^{-1}(x_{\rm o} - \mu_{\rm o})$ were imputed from observed magnitudes $x_{\rm o}$ and the training set mean $\mu$ and covariance $\Sigma$ using a linear model.
 This is the optimal expected value of the unobserved variables given the observed ones under the assumption that the distribution is jointly Gaussian; note that this reduces to a simple average if the covariates are independent with $\Sigma_{\rm uo} = 0$.
-We reserved for validation 20\% of the training set and used the Variable Covariance option in \textsc{GPz} with 200 basis functions, neglecting to apply cost-sensitive learning options.
+We reserved for validation 20\% of the training set and used the Variable Covariance option in \textsc{GPz} with 200 basis functions (see \citet{Almosallam:15b} for details), neglecting to apply cost-sensitive learning options.
 
 \subsubsection{METAPhoR}
 \label{sec:metaphor}
@@ -201,8 +201,8 @@ Upon regression of the test set, the photometry $m_{ij}$ of each test set galaxy
 % At a higher level, the pipeline mainly consists of three modules: (i) \textit{data pre-processing}, including a catalogue cross-matching sub-module \citep[based on the tool C3, ][]{Riccio:17}, a sub-module for photometric evaluation and error estimation of the multi-band catalogue used as Knowledge Base (KB), and a sub-module dedicated to the perturbation of the photometric KB, propaedeutic to the PDF estimation; (ii) \textit{photo-$z$ prediction}, which is the training/validation/test phase, producing the photo-$z$'s point estimates, based on a pre-selected ML method; (iii) \textit{PDF estimation}, specifically designed to calculate the PDF of the photo-$z$ estimation errors.
 % The last module includes also a post-processing tool, providing some statistics on the produced point estimates and PDFs.
 
-In this work, we used a hierarchical KNN to replace nondetections with values based on their neighbors.
-The usual cross-validation step was also omitted for this study.
+In this work, we used a hierarchical KNN to replace non-detections with values based on their neighbors.
+The usual cross-validation of redshift estimates and PDFs was also omitted for this study.
 
 \subsubsection{SkyNet}
 \label{sec:skynet}
@@ -231,7 +231,7 @@ Trees for \Pz \citep[\tpz\footnote{\url{https://github.com/mgckind/MLZ}},][]{Car
 The regions in each terminal leaf node correspond to a subsample of the training set with similar properties.
 Bootstrap samples from the training set photometry and errors are used to build a set of prediction trees.
 
-To run \tpz, we replaced nondetections with an approximation of the $1\sigma$ detection threshold based on the error forecast of the 10-year \lsst\ data, i.~e.~$dm = 2.5 \log (1 + N/S)$ where $dm \sim 0.7526$ mag for $N/S = 1$.
+To run \tpz, we replaced non-detections with an approximation of the $1\sigma$ detection threshold based on the error forecast of the 10-year \lsst\ data, i.~e.~$dm = 2.5 \log (1 + N/S)$ where $dm \sim 0.7526$ magnitudes for $N/S = 1$.
 We calibrated \tpz\ with the Out-of-Bag cross-validation technique \citep{Breiman:84,Carrasco_Kind:13} to evaluate its predictive validity and determine the relative importance of the different input attributes.
 We grew 100 trees to a minimum leaf size of 5 using the $ugri$ magnitudes, all $u-g, g-r, r-i, i-z, z-y$ colours, and the associated errors, as the $z$ and $y$ magnitudes did not show significant correlation with the redshift in our cross-validation.
 We partitioned our redshift space into 200 bins and smoothed each individual PDF with a smoothing scale of twice the bin size.

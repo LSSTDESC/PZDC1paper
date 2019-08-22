@@ -35,7 +35,7 @@ We present the metrics of \pzpdf s that address our goals in the sections below.
 Section~\ref{sec:qualmet} outlines aggregate metrics of a catalogue of \pzpdf s, and Section~\ref{sec:CDE_loss} presents a metric of individual \pzpdf s in the absence of true \pzpdf s.
 Though the outmoded practices should not be encouraged, those seeking a connection to previous comparison studies will find metrics of redshift point estimate reductions of \pzpdf s in Appendix~\ref{sec:pointmetrics} and metrics of a science-specific summary statistics heuristically derived from \pzpdf s in Appendix~\ref{sec:moments}.
 
-\subsection{Metrics of an ensemble of \pzpdf s}
+\subsection{Metrics of \pzpdf ensembles}
 \label{sec:qualmet}
 %(Rongpu Zhou, Jeffrey Newman, Alex Malz)
 %(Alex Malz, Peter Freeman, Sam Schmidt)
@@ -50,7 +50,7 @@ Because we have the true redshifts but not true \pzpdf s for comparison, we remi
 of a generic univariate PDF $f(z)$, which is used as the basis for several of our metrics.
 
 A quantile of a distribution is the value $q$ at which the CDF of the distribution is equal to $Q$; percentiles and quartiles are familiar examples of linearly spaced sets of 100 and 4 quantiles, respectively.
-The quantile-quantile (QQ) plot serves as a graphical visualization for comparing two distributions, where the quantiles of one distribution are plotted against the quantiles of the other distribution, providing an easy way to qualitatively assess the consistency between an estimating distribution and a true distribution.
+The quantile-quantile (QQ) plot serves as a graphical visualization for comparing two distributions, where the quantiles of one distribution are plotted against the quantiles of the other distribution, providing an easy way to qualitatively assess the consistency between an estimated distribution and a true distribution.
 The closer the QQ plot is to diagonal, the closer the match between the distributions.
 % In this paper, QQ plots are used for two purposes: (1) for comparing $N(z)$ from \pzpdf s (estimated using Eq.~\ref{eq:stacked}) with the true $N(z)$, and (2) for assessing the overall consistency of an ensemble of \pzpdf s with their true redshifts on a population level, where the distribution of the PIT values (see previous section) is compared to a uniform distribution between $0$ and $1$.
 %\red{is this enough reason to include both?--SJS}

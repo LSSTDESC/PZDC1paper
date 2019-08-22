@@ -18,7 +18,7 @@ Though alternatives exist \citep{Malz:chippr}, ``stacking'' according to
   \hat{N}^{H}(z) \equiv \frac{1}{N_{tot}}\ \sum_{i}^{N_{tot}}\ \hat{p}^{H}_{i}(z)
 \end{equation}
 is the most widely accepted method for obtaining $\hat{N}^{H}(z)$ as an estimator of the redshift distribution from \pzpdf s derived by a method $H$.
-Though we do not endorse the use of the stacked estimator of the redshift distribution, we use it under the untested assumption that the response of our metrics of $\hat{N}^{H}(z)$ will be analogous to the same metrics applied to a principled estimator of the redshift distribution.
+Though the use of the stacked estimator of the redshift distribution is not formally correct, we use it under the untested assumption that the response of our metrics of $\hat{N}^{H}(z)$ will be analogous to the same metrics applied to a principled estimator of the redshift distribution.
 
 As $N(z)$ is itself a univariate PDF, we apply the metrics of the previous sections to it as well.
 We additionaly calculate the first three moments
@@ -46,7 +46,7 @@ Varying levels of agreement are seen among the codes, with the smallest deviatio
 Many of the codes, including all the model-fitting approaches and \annz, \gpz, \metaphor, and \skynet\ from the data-driven camp, overestimate the redshift density at $z \sim 1.4$.
 This behavior is a consequence of the $4000\ {\rm \AA}$ break passing through the gap between the $z$ and $y$ filters, which induces a genuine discontinuity in the $z - y$ colour as a function of redshift that can sway the \pzpdf\ estimates in the absence of bluer spectral features.
 
-\annz, \gpz, and \metaphor\ show signs of overtraining, estimating enhanced peaks and diminished troughs relative to the training set, an obstacle that may be overcome with adjustment of the implementation.
+\annz, \gpz, and \metaphor\ show possible signs of overtraining: showing exaggerated peaks and troughs relative to the training set.  Further investigation on overtraining is needed, if present this is an obstacle that may be overcome with adjustment of the implementation.
 
 As expected, \trainz\ perfectly recovers the true redshift distribution: as the training sample is selected from the same underlying distribution as the test set, the redshift distributions are identical, up to Poisson fluctuations due to the finite number of sample galaxies.
 \cmnn\ is also in excellent agreement for similar reasons: with a representative training sample of galaxies spanning the colour-space, the sum of the colour-matched neighbour redshifts should return the true redshift distribution.
@@ -56,7 +56,7 @@ See Appendix~\ref{sec:pointmetrics} for further discussion of the $z \sim 1.4$ i
 
 Figure~\ref{fig:nz_stats} shows the quantitative Kolmogorov-Smirnoff (KS), Cramer-Von Mises (CvM), and Anderson Darling (AD) test statistics for each of the codes for the $\hat{N}(z)$ based measures.  The horizontal lines show the the result of a bootstrap resampling of the training set using 30,000 samples for \trainz.  As mentioned in Section~\ref{sec:pitqq} this represents a conservative idealized limit on expected performance for a modest-sized representative training set of galaxies.  The AD bootstrap statistic is elevated due to this statistic's sensitivity to distribution tails.
 The stacked estimators of the redshift distribution for \cmnn\ and \trainz\ best estimate $\tilde{N}(z)$ under these metrics, and \bpz, \gpz, and \tpz\ are within a factor of two of the conservative limit for all statistics.  The only codes that do especially poorly are \eazy, \lephare, \metaphor, and \skynet.
-It is unsurprising that \cmnn\ scores well, as with a near perfectly representative training set means that choosing neighbouring points in color/magnitude space should lead to excellent agreement in the final $\hat{N}(z)$ estimate.
+It is unsurprising that \cmnn\ scores well, as with a nearly complete and representative training set choosing neighbouring points in color/magnitude space to construct an estimator should lead to excellent agreement in the final $\hat{N}(z)$.
 
 \begin{figure*}
 \centering

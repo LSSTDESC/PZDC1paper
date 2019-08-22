@@ -7,15 +7,14 @@ The experimental conditions shared among all codes are motivated by the \lsst\ S
 \subsection{The \textsc{Buzzard-v1.0} simulation}
 \label{sec:buzzard}
 
-Our mock catalogue is derived from the \textsc{Buzzard}-highres-v1.0  of De Rose et al., in prep, Wechsler et al., in prep) catalogue.
-% UPDATE THIS CITATION NOW THAT THE PAPER IS OUT
+Our mock catalogue is derived from the \textsc{Buzzard}-highres-v1.0 catalogue  \citep[][Wechsler et al., in prep]{DeRose:19}.
 \textsc{Buzzard} is built on a dark matter-only N-body simulation of $2048^{3}$ particles in a $400$ Mpc h$^{-1}$ box.
 The lightcone was constructed from smoothing and interpolation between a set of time snapshots.
 Dark matter halos were identified using the \texttt{Rockstar} software package \citep{Behroozi:13} and then populated with galaxies with a stellar mass and absolute $r$-band magnitude in the \sdss\ system determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep{Reddick:13}.
 
 To assign a spectrum to each galaxy, the Adding Density Dependent Spectral Energy Distributions (SEDs) procedure (\texttt{ADDSEDS}, deRose in prep.)\footnote{\url{https://github.com/vipasu/addseds}} was used.
 \texttt{ADDSEDS} uses a sample of $\sim 5\times 10^{5}$ galaxies from the magnitude-limited \sdss\ Data Release 6 Value Added Galaxy Catalogue \citep{Blanton:05} to train an empirical relation between absolute $r$-band magnitude, local galaxy density, and SED.
-Each \sdss\ spectrum is parameterized by five weights corresponding to a weighted sum of five basis SED components using the \texttt{k-correct \red{v4\_3?}} software package\footnote{\url{http://kcorrect.org}} \citep{Blanton:07}.
+Each \sdss\ spectrum is parameterized by five weights corresponding to a weighted sum of five basis SED components using the \texttt{k-correct} software package\footnote{\url{http://kcorrect.org}} \citep{Blanton:07}.
 
 Correlations between SED and galaxy environment were included so as to preserve the colour-density relation of galaxy environment.
 The distance to the spatially projected fifth-nearest neighbour was used as a proxy for local density in the \sdss\ training sample.
