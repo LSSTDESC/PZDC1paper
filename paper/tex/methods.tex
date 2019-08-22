@@ -74,7 +74,8 @@ Here we use \lephare-v 2.2 with the DC1 template set of Section~\ref{sec:buzztem
 
 Bayesian Photometric Redshift \citep[\bpz\footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}},][]{Benitez:00} determines the likelihood $p(C \vert z, T)$ of a galaxy's observed colours $C$ for a set of SED templates $T$ at redshifts $z$.
 The \bpz\ likelihood is related to the \chisq\ likelihood by $p(C \vert z, T) \propto \exp[- \chi^{2} / 2]$.
-Given a Bayesian prior $p(z, T \vert m_{0})$ over apparent magnitude $m_0$ and type $T$, and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \vert C, m_0)$ by marginalizing over all SED templates as in \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
+Given a Bayesian prior $p(z, T \vert m_{0})$ over apparent magnitude $m_0$ and type $T$, and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \vert C, m_0)$ by marginalizing over all SED templates with the form $p(z|C,m_0)\,\propto\, \sum_{T}p(C|z,T)\,p(z,T|m_0)$
+ \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
 The \bpz\ prior is the product of an SED template proportion that varies with apparent magnitude $p(T \vert m_{0})$ and a prior $p(z \vert T, m_{0})$ over the expected redshift as a function of apparent magnitude and SED template.
 
 Here we test \bpz-v 1.99.3 with the DC1 template set of Section~\ref{sec:buzztemplates}.
