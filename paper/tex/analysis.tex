@@ -7,7 +7,8 @@ The overloaded ``$p(z)$'' is a widespread abuse of notation that obfuscates this
 Galaxies have redshifts $z$ and photometric data $d$ drawn from a joint probability space $p(z, d)$ in nature.
 As a result, each observed galaxy $i$ has a \textit{true posterior \pzpdf}\ $p(z \vert d_{i})$ as well as a true likelihood $p(d \vert z_{i})$.
 There are a number of metrics that can be used to test the accuracy of a \pz\ posterior as an estimator of a true \pz\ posterior if the true \pzpdf\ is known.
-However, the true \pzpdf\ is in general not accessible unless the photometry is in fact drawn from the true \pz\ likelihoods, a mock catalogue generation procedure that has not yet appeared in the literature and was not performed for this work.
+However, the true \pzpdf\ is in general not accessible unless the photometry is in fact drawn from the true \pz\ likelihoods, which is not how most existing datasets have been constructed.  Instead, data is often taken from actual observations, or generated from mock catalogs derived from N-body simulations of the Universe (as is the case in this study).  In these cases there is no ``true PDF'' for an individual object, and most measures of PDF fidelity will need to rely on ensemble properties of the similar objects, or the entire sample.  We mention a potential project addressing this issue in \S\,\ref{sec:futureexperiments}.
+%a mock catalogue generation procedure that has not yet appeared in the literature and was not performed for this work.
 
 Before describing the metrics appropriate to the DC1 data set, we outline the philosophy behind our choices.
 A \pzpdf\ estimator derived by method $H$ must be understood as a posterior probability distribution

@@ -27,9 +27,7 @@ Early template-based methods such as \citet{Fernandezsoto:99} approximated the l
 Not long after, Bayesian adaptations of template-based approaches such as \citet{Benitez:00} combined the estimated likelihoods with a prior to yield a posterior PDF of redshift conditioned on photometry.
 While the first data-driven \pz\ algorithms yielded a point estimate, \citet{Firth:03} estimated a \pzpdf\ using a neural net with realizations scattered within the photometric errors.
 
-There are numerous techniques for deriving \pzpdf s, yet no one method has been established as clearly superior.
-Quantitative comparisons of \pz\ methods have been made before.
-The \Pz\ Accuracy And Testing \citep[\textsc{PHAT},][]{Hildebrandt:10} effort focused on \pz\ point estimates derived from many photometric bands.
+There are numerous techniques for deriving \pzpdf s, yet no one method has been established as clearly superior.  In fact, in the absence of simulated data drawn from known redshift distributions, the very concept of a ``true PDF'' for an individual galaxy is somewhat ill-defined, and we must instead rely on measures of ensemble behaviour to characterize PDF quality (see \S\,\ref{sec:metrics} for further discussion).  This caveat aside, quantitative comparisons of \pz\ methods have been made before; the \Pz\ Accuracy And Testing \citep[\textsc{PHAT},][]{Hildebrandt:10} effort focused on \pz\ point estimates derived from many photometric bands.
 \citet{Rau:2015} introduced a new method for improving \pzpdf s using an ordinal classification algorithm.
 \textsc{DES} compared several codes for \pz\ point estimates and a subset with \pzpdf\ information \citep{Sanchez:14} and examined summary statistics of \pzpdf s for tomographically binned galaxy subsamples \citep{Bonnett:16}.
 
