@@ -17,8 +17,8 @@ In Section~\ref{sec:futuredata}, we discuss the enhancements of the mock data se
 We remind the reader that contributed codes were given a goal of obtaining accurate \pzpdf s, not an accurate stacked estimator of the redshift distribution, so we do not expect the same codes to necessarily perform well for both classes of metrics.
 Indeed, the codes were optimized for their interpretation of our request for ``accurate \pzpdf s,'' and we expect that the implementations would have been adjusted had we requested optimization of the traditional metrics of Appendices~\ref{sec:moments} and~\ref{sec:pointmetrics}.
 
-Furthermore, our metrics are not necessarily able to assess the fidelity of individual \pzpdf s relative to true posteriors.
-Metric-specific performance implies that we may need multiple \pzpdf\ approaches tuned to each metric in order to maximize returns over all science cases in large upcoming surveys.
+Furthermore, our metrics are not necessarily able to assess the fidelity of individual \pzpdf s relative to true posteriors: in the absence of a ``true PDF'' from which redshifts are drawn, it is difficult to construct metrics to measure performance for individual galaxies rather than ensembles, with the exception of the CDE Loss metric of section~\ref{sec:CDE_loss}, where knowledge of the true densities is not required in computing the Loss function for an individual galaxy.  A lack of appropriate metrics more sophisticated than the CDE Loss remains an open issue for science cases requiring accurate individual galaxy PDFs.
+The metric-specific performance demonstrated in this paper implies that we may need multiple \pzpdf\ approaches tuned to each metric in order to maximize returns over all science cases in large upcoming surveys.
 
 The \trainz\ estimator of Section~\ref{sec:trainz}, which assigns every galaxy a \pzpdf\ equal to $N(z)$ of the training set, is introduced as an experimental control or null test to demonstrate this point via \textit{reductio ad absurdum}.
 Because our training set is perfectly representative of the test set, $N(z)$ should be identical for both sets down to statistical noise.
