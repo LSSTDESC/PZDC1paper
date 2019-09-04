@@ -1,8 +1,15 @@
 \section{Methods}
 \label{sec:pzcodes}
 
-Here we summarize the twelve \pzpdf\ codes compared in this study, summarized in Table~\ref{tab:list_of_codes}, which include both established and emerging approaches in template fitting and machine learning.
-Though not exhaustive, this sample represents codes for which there was sufficient expertise within the \lsstdesc\ Photometric Redshifts Working Group.  Some aspects of data treatment were left to the individual code runners, for example, whether/how to split the available data with known redshifts into separate training and validation sets. Another key difference is the treatment of non-detections in one or more bands: some codes choose to ignore a band, others replace the value with either an estimate for the detection limit, the mean of other values in the training set, or another default value. There are varying conventions among machine learning based codes for treatment of non-detections, and no one prescription dominates in the photo-z literature. The specific choices for each code affect the results, and contribute to the implicit prior influencing their output. However, we remind the reader that only 2.0 per cent of our sample has non-detections, almost exclusively in the u-band, and thus should not dominate the code performance differences.  The authors welcome interest from those outside \lsstdesc\ to have their codes assessed in future investigations that build upon this one.
+Here we summarize the twelve \pzpdf\ codes compared in this study, also in Table~\ref{tab:list_of_codes}, which include both established and emerging approaches in template fitting and machine learning.
+Though not exhaustive, this sample represents codes for which there was sufficient expertise within the \lsstdesc\ Photometric Redshifts Working Group.
+Some aspects of data treatment were left to the individual code runners, for example, whether/how to split the available data with known redshifts into separate training and validation sets.
+
+Another key difference is the treatment of non-detections in one or more bands: some codes ignore incomplete bands, while others replace the value with either an estimate for the detection limit, the mean of other values in the training set, or another default value.
+There are varying conventions among machine learning based codes for treatment of non-detections, and no one prescription dominates in the \pz\ literature.
+The specific choices for each code affect the results and contribute to the implicit prior influencing their output.
+However, we remind the reader that only 2.0 per cent of our sample has non-detections, almost exclusively in the $u$-band, and thus should not dominate the code performance differences.
+The authors welcome interest from those outside \lsstdesc\ to have their codes assessed in future investigations that build upon this one.
 
 \begin{table*}  %%% DATA TABLE %%%
 \caption{List of \pzpdf\ codes featured in this study} \label{tab:list_of_codes}\resizebox{\textwidth}{!}{
@@ -55,14 +62,15 @@ We test three publicly available and commonly used template-based codes that sha
 \begin{equation} \label{eq_temp_chi}
 \chi^2(z,T,A) = \sum_i^{N_{\rm filt}}\left(\frac{F^i_{\rm{obs}} - A \, F^i_{\rm{pred}}(T,z)}{\sigma^i_{\rm{obs}}}\right)^2
 \end{equation}
-\noindent  where $A$ is a normalization factor, $F^i_{\rm{pred}}(T,z)$ is the flux predicted for a template $T$ at redshift $z$. $F^i_{\rm{obs}}$ is the observed flux in a given band $i$ and $\sigma^i_{\rm{obs}}$ is the observed flux error. $N_{\rm filt}$ is the total number of filters, in our case the six $ugrizy$ LSST filters.  Specific implementation details of each code, e.~g.~prior form and implementation, are described below.
+\noindent where $A$ is a normalization factor, $F^i_{\rm{pred}}(T,z)$ is the flux predicted for a template $T$ at redshift $z$, $F^i_{\rm{obs}}$ is the observed flux in a given band $i$, $\sigma^i_{\rm{obs}}$ is the observed flux error, and $N_{\rm filt}$ is the total number of filters, in our case the six $ugrizy$ LSST filters.
+In words, the likelihood is a sum of observed flux error $\sigma_{b}^{\rm{obs}}$-weighted squared differences between the observed flux $F^{\rm{obs}}_{b}$ and the normalized predicted flux $F^{\rm{mod}}_{b}(T, z)$ in $N_{\rm{filt}}$ photometric filters $b$, which is the \lsst\ $ugrizy$ filters in this case.
+Specific implementation details of each code, e.~g.~prior form and implementation, are described below.
 
 \subsubsection{LePhare}
 \label{sec:lephare}
 %(C\'ecile Roucelle, Eric Nuss, Johann Cohen-Tanugi)
 
-Photometric Analysis for Redshift Estimate \citep[\lephare\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}},][]{Arnouts:99,Ilbert:06} matches observed colors with those predicted from a template set, which can be semi-empirical or entirely synthetic, directly according to the $\chi^2$ form given in Equation~\ref{eq_temp_chi}.
-In words, the likelihood is a sum of observed flux error $\sigma_{b}^{\rm{obs}}$-weighted squared differences between the observed flux $F^{\rm{obs}}_{b}$ and the normalized predicted flux $F^{\rm{mod}}_{b}(T, z)$ in $N_{\rm{filt}}$ photometric filters $b$, which is the \lsst\ $ugrizy$ filters in this case.
+Photometric Analysis for Redshift Estimate \citep[\lephare\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}},][]{Arnouts:99,Ilbert:06} uses the $\chi^2$ of Equation~\ref{eq_temp_chi} to match observed colors with those predicted from a template set, which can be semi-empirical or entirely synthetic, directly according to the
 The reported \pzpdf\ is an arbitrary normalization of the likelihood evaluated on the output redshift grid.
 %\textsc{LePhare} has been used to produce the COSMOS2015 photo-$z$ catalogue \citep{Laigle:16}.
 
@@ -74,13 +82,13 @@ Here we use \lephare-v 2.2 with the DC1 template set of Section~\ref{sec:buzztem
 
 Bayesian Photometric Redshift \citep[\bpz\footnote{\url{http://www.stsci.edu/~dcoe/BPZ/}},][]{Benitez:00} determines the likelihood $p(C \vert z, T)$ of a galaxy's observed colours $C$ for a set of SED templates $T$ at redshifts $z$.
 The \bpz\ likelihood is related to the \chisq\ likelihood by $p(C \vert z, T) \propto \exp[- \chi^{2} / 2]$.
-Given a Bayesian prior $p(z, T \vert m_{0})$ over apparent magnitude $m_0$ and type $T$, and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \vert C, m_0)$ by marginalizing over all SED templates with the form $p(z|C,m_0)\,\propto\, \sum_{T}p(C|z,T)\,p(z,T|m_0)$
- \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
+Given a Bayesian prior $p(z, T \vert m_{0})$ over apparent magnitude $m_0$ and type $T$, and assuming that the SED templates are spanning and exclusive, \bpz\ constructs the redshift posterior $p(z \vert C, m_0)$ by marginalizing over all SED templates with the form $p(z|C,m_0)\,\propto\, \sum_{T}p(C|z,T)\,p(z,T|m_0)$ \citep[Eq.~3 from][]{Benitez:00}, corresponding to setting the parameter \texttt{PROBS\_LITE=TRUE} in the \bpz\ parameter file.
 The \bpz\ prior is the product of an SED template proportion that varies with apparent magnitude $p(T \vert m_{0})$ and a prior $p(z \vert T, m_{0})$ over the expected redshift as a function of apparent magnitude and SED template.
 
 Here we test \bpz-v 1.99.3 with the DC1 template set of Section~\ref{sec:buzztemplates}.
-To keep the number of free parameters manageable, the DC1 template set is pre-sorted by the rest-frame $u-g$ colour and split into three broad classes of SED template, equivalent to the E, Sp and Im/SB types in .
-The Bayesian prior term $p(T \vert m_{0})$ was derived directly from the DC1 training set, and the other term $p(z \vert T, m_{0})$ was chosen to be the best fit for the eleven free parameters of the functional form of \citet{Benitez:00}.  We use template interpolation, creating two linearly interpolated templates between each basis SED (sorted by rest-frame $u-g$ colour) by setting the parameter \texttt{INTERP=2}.
+To keep the number of free parameters manageable, the DC1 template set is pre-sorted by the rest-frame $u-g$ colour and split into three broad classes of SED template, equivalent to the E, Sp and Im/SB types.
+The Bayesian prior term $p(T \vert m_{0})$ was derived directly from the DC1 training set, and the other term $p(z \vert T, m_{0})$ was chosen to be the best fit for the eleven free parameters of the functional form of \citet{Benitez:00}.
+We use template interpolation, creating two linearly interpolated templates between each basis SED (sorted by rest-frame $u-g$ colour) by setting the parameter \texttt{INTERP=2}.
 %For photo-$z$ point estimates we use the \texttt{Z\_B} output parameter.
 Prior to running the code, the non-detection placeholder magnitude was replaced with an estimate of the one-$\sigma$ detection limit for the undetected band as a proxy for a value close to the estimated sky noise threshold.
 
@@ -120,7 +128,7 @@ Because the algorithms differ more from one another and the techniques are relat
 
 \annz \footnote{\url{https://github.com/IftachSadeh/ANNZ}} \citep{Sadeh:16} employs several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree, and k-nearest neighbour (KNN) regression.
 In addition to accounting for errors on the input photometry, \annz\ uses the KNN-uncertainty estimate of \citet{Oyaizu:08} to quantify uncertainty in the choice of method over multiple runs.
-Using the Toolkit for Multivariate Data Analysis with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, it can return the results of running a single machine learning algorithm, a ``best'' choice of the results from simultaneously running multiple algorithms (based on evaluation the cumulative distribution functions of validation set objects), or a combination of the results of multiple algorithms weighted by their method uncertainties averaged over multiple runs.
+Using the Toolkit for Multivariate Data Analysis with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, \annz\ can return the results of running a single machine learning algorithm, a ``best'' choice of the results from simultaneously running multiple algorithms (based on evaluation the cumulative distribution functions of validation set objects), or a combination of the results of multiple algorithms weighted by their method uncertainties averaged over multiple runs.
 %\textsc{ANNz2} is capable of producing both photo-$z$ point estimates and redshift posterior probability distributions $p(z)$.
 % It can also perform classifications, and supports reweighting between samples.
 % \annz\ propagates the intrinsic uncertainty on the input parameters and the uncertainty in the machine learning method to the expected photo-$z$ solution, averaged over multiple runs weighted based on the performance of each run.
@@ -142,7 +150,7 @@ Undetected bands are dropped, thereby reducing the effective $N_{\rm{filt}}$ for
 The \pzpdf\ of a given test set galaxy is the normalized distribution of redshifts of its colour-matched subset of training set galaxies.
 
 Here, we make two modifications to the implementation of \citet{Graham:17} to comply with the controlled experimental conditions.
-First, we do not impose non-detections on galaxies fainter than the expected \lsst\ 10-year limiting magnitude or bright enough to saturate with \lsst's CCDs, instead using all of the photometry for the DC1 test and training sets.
+First, we do not impose non-detections on galaxies fainter than the expected \lsst\ 10-year limiting magnitude nor galaxies bright enough to saturate with \lsst's CCDs, instead using all of the photometry for the DC1 test and training sets.
 Second, we apply the initial colour cut to the training set before calculating the Mahalanobis distance in order to accelerate processing and use a magnitude pseudo-prior as in \citet{Graham:17}, but for both we use cut-off values corresponding to the DC1 training set galaxies' colours and magnitudes.
 
 We make an additional adaptation to enable the \cmnn\ algorithm to yield accurate \pzpdf s for all galaxies, as the original \citet{Graham:17} algorithm is optimized for \pz\ point estimates and is susceptible to less accurate \pzpdf s for bright galaxies or those with few matches in colour-space.
@@ -189,7 +197,7 @@ To smooth the long tail in the distribution of magnitude errors, we use the log 
 % WHAT IS BEING DECORRELATED HERE?
 Unobserved magnitudes $x_{\rm u} = \mu_{\rm u} + \Sigma_{\rm uo}\Sigma_{\rm oo}^{-1}(x_{\rm o} - \mu_{\rm o})$ were imputed from observed magnitudes $x_{\rm o}$ and the training set mean $\mu$ and covariance $\Sigma$ using a linear model.
 This is the optimal expected value of the unobserved variables given the observed ones under the assumption that the distribution is jointly Gaussian; note that this reduces to a simple average if the covariates are independent with $\Sigma_{\rm uo} = 0$.
-We reserved for validation 20\% of the training set and used the Variable Covariance option in \textsc{GPz} with 200 basis functions (see \citet{Almosallam:15b} for details), neglecting to apply cost-sensitive learning options.
+We reserved for validation 20\% of the training set and used the Variable Covariance option in \gpz\ with 200 basis functions (see \citet{Almosallam:15b} for details), neglecting to apply cost-sensitive learning options.
 
 \subsubsection{METAPhoR}
 \label{sec:metaphor}

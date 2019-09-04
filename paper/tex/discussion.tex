@@ -17,7 +17,9 @@ In Section~\ref{sec:futuredata}, we discuss the enhancements of the mock data se
 We remind the reader that contributed codes were given a goal of obtaining accurate \pzpdf s, not an accurate stacked estimator of the redshift distribution, so we do not expect the same codes to necessarily perform well for both classes of metrics.
 Indeed, the codes were optimized for their interpretation of our request for ``accurate \pzpdf s,'' and we expect that the implementations would have been adjusted had we requested optimization of the traditional metrics of Appendices~\ref{sec:moments} and~\ref{sec:pointmetrics}.
 
-Furthermore, our metrics are not necessarily able to assess the fidelity of individual \pzpdf s relative to true posteriors: in the absence of a ``true PDF'' from which redshifts are drawn, it is difficult to construct metrics to measure performance for individual galaxies rather than ensembles, with the exception of the CDE Loss metric of section~\ref{sec:CDE_loss}, where knowledge of the true densities is not required in computing the Loss function for an individual galaxy.  A lack of appropriate metrics more sophisticated than the CDE Loss remains an open issue for science cases requiring accurate individual galaxy PDFs.
+Furthermore, our metrics are not necessarily able to assess the fidelity of individual \pzpdf s relative to true posteriors: in the absence of a ``true PDF'' from which redshifts are drawn, it is difficult to construct metrics to measure performance for individual galaxies rather than ensembles.
+(The CDE Loss metric of section~\ref{sec:CDE_loss} is an exception to this rule.)
+A lack of appropriate metrics more sophisticated than the CDE Loss remains an open issue for science cases requiring accurate individual galaxy PDFs.
 The metric-specific performance demonstrated in this paper implies that we may need multiple \pzpdf\ approaches tuned to each metric in order to maximize returns over all science cases in large upcoming surveys.
 
 The \trainz\ estimator of Section~\ref{sec:trainz}, which assigns every galaxy a \pzpdf\ equal to $N(z)$ of the training set, is introduced as an experimental control or null test to demonstrate this point via \textit{reductio ad absurdum}.
@@ -60,8 +62,8 @@ Here we discuss the next steps for subsequent investigations.
 
 This initial paper explored code performance in idealized conditions with perfect catalog-based photometry and representative training data.
 A top priority for a follow-up study is to test realistic forms of incomplete, erroneous, and non-representative template libraries and training sets as well as the impact of other forms of external priors that must be ingested by the codes, major concerns in \citet{Newman:2015, Masters:2017}.
+Outright redshift failures due to emission line misidentification or noise spikes may be modeled by the inclusion of a small number of high-confidence yet false redshifts.
 We plan to perform a full sensitivity analysis on a realistically incomplete training set of spectroscopic galaxies, modeling the performance of spectrographs, emission-line properties, and expected signal-to-noise to determine which potential training set galaxies are most likely to be excluded.
-In addition to outright redshift failures we will model the inclusion of a small number of high-confidence yet false redshifts due to emission line misidentification or noise spikes.  Section~\ref{sec:metrics} discussed the difficulty in evaluating PDF accuracy for individual objects.  We are planning a project to generate ``true PDF'' distributions using generative adversarial networks\citep[(GANs)][]{Goodfellow:14} trained on the simulation data.  This dataset will enable a test of PDF accuracy for individual galaxies rather than resorting to ensembles, as required for many tests in the current work.
 
 Appendix~\ref{sec:moments} only addresses the stacked estimator of the redshift distribution of the entire galaxy catalogue rather than subsets in bins, tomographic or otherwise.
 The effects of tomographic binning scheme will be explored in a dedicated future paper, including propagation of redshift uncertainties in a set of fiducial tomographic redshift bins in order to estimate impact on cosmological parameter estimation.
@@ -75,6 +77,11 @@ Sequels to this study will also address some shortcomings of our experimental pr
 The fixed redshift grid shared between the codes may have unfairly penalized codes with a different native parameterization, as precision is lost when converting between formats.
 Performance on sharply peaked \pzpdf s may have been suppressed across all codes due to the insufficient resolution of the redshift grid.
 In light of the results of \citet[]{Malz:qp}, in future analyses we plan to switch from a fixed grid to the quantile parameterization or to permit each code to use its native storage format under a shared number of parameters.
+
+Section~\ref{sec:metrics} discussed the difficulty in evaluating PDF accuracy for individual objects.
+In a follow-up study, we will
+ % use generative adversarial networks\citep[(GANs)][]{Goodfellow:14} trained on the simulation data to
+generate ``true PDF'' distributions, yielding a dataset that enables a test of PDF accuracy for individual galaxies rather than solely ensembles.
 
 \subsection{Realistic mock data}
 \label{sec:futuredata}
