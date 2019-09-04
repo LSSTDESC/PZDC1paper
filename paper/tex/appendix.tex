@@ -44,7 +44,7 @@ Varying levels of agreement are seen among the codes, with the smallest deviatio
 \end{figure*}
 
 Many of the codes, including all the model-fitting approaches and \annz, \gpz, \metaphor, and \skynet\ from the data-driven camp, overestimate the redshift density at $z \sim 1.4$.
-This behavior is a consequence of the $4000\ {\rm \AA}$ break passing through the gap between the $z$ and $y$ filters, which induces a genuine discontinuity in the $z - y$ colour as a function of redshift that can sway the \pzpdf\ estimates in the absence of bluer spectral features.
+This behavior is a consequence of the $4000$ \AA break passing through the gap between the $z$ and $y$ filters, which induces a genuine discontinuity in the $z - y$ colour as a function of redshift that can sway the \pzpdf\ estimates in the absence of bluer spectral features.
 
 \annz, \gpz, and \metaphor\ feature exaggerated peaks and troughs relative to the training set, a potential sign of overtraining.
 Further investigation on overtraining is needed, if present this is an obstacle that may be overcome with adjustment of the implementation.
@@ -115,28 +115,28 @@ The \skynet\ algorithm employs a random subsampling of the training set without 
 \section{\Pz\ point estimation and metrics}
 \label{sec:pointmetrics}
 
-While this work assumes that science applications value the information of the full \pzpdf, we present conventional metrics of \pz\ point estimates as a quick and dirty diagnostic tool and to facilitate direct comparisons to historical studies.
+While this work assumes that science applications value the information of the full \pzpdf, we present conventional metrics of \pz\ point estimates as a quick and dirty visual diagnostic tool and to facilitate direct comparisons to historical studies.
 
 \subsection{Reduction of \pzpdf s to point estimates}
 \label{sec:pointest}
 
 Though we acknowledge that many of the codes can also return a native \pz\ point estimate, we put all codes on equal footing by considering two generic \pz\ point estimators, the mode $z_{PEAK}$ and main-peak-mean $z_{WEIGHT}$ \citep{Dahlen:13}, a weighted mean within the bounds of the main peak, as identified by the roots of $p(z) - 0.05 \times z_{PEAK}$.
-Though $z_{WEIGHT}$ neglects information in a secondary peak of a, say, bimodal distribution, it avoids the pitfall of reducing the \pzpdf\ to a redshift between peaks where there is low probability.
+Though $z_{WEIGHT}$ neglects information in a secondary peak of e.~g.~ a bimodal distribution, it avoids the pitfall of reducing the \pzpdf\ to a redshift between peaks where there is low probability.
 
 \subsection{Metrics of \pz\ point estimates}
 \label{sec:point_metrics}
 
-We calculate the commonly used point estimate metrics of the overall intrinsic scatter, bias, and catastrophic outlier rate, defined in terms of the standard error $e_{z} \equiv (z_{PEAK} - z_{\rm true}) / (1 + z_{\rm true})$.
-Because the standard deviation of the \pz\ residuals is sensitive to outliers, we define the scatter in terms of the Interquartile Range (IQR), the difference between the 75th and 25th percentiles of the distribution of $e_{z}$, imposing the scaling $\sigma_{\rm IQR} = \rm{IQR} / 1.349$ to ensure that the area within $\sigma_{\rm IQR}$ is the same as that within one standard deviation from a standard Normal distribution.
+We calculate the commonly used point estimate metrics of the overall intrinsic scatter, bias, and catastrophic outlier rate, defined in terms of the standard error $e_{z} \equiv (z_{PEAK} - z_{\mathrm{true}}) / (1 + z_{\mathrm{true}})$.
+Because the standard deviation of the \pz\ residuals is sensitive to outliers, we define the scatter in terms of the Interquartile Range (IQR), the difference between the 75th and 25th percentiles of the distribution of $e_{z}$, imposing the scaling $\sigma_{\mathrm{IQR}} = \mathrm{IQR} / 1.349$ to ensure that the area within $\sigma_{\mathrm{IQR}}$ is the same as that within one standard deviation from a standard Normal distribution.
 We also resist the effect of catastrophic outliers by defining the bias $b_{z}$ as the median rather than mean value of $e_{z}$.
-The catastrophic outlier rate $f_{\rm out}$ is defined as the fraction of galaxies with $e_{z}$ greater than $\max(3 \sigma_{\rm IQR}, 0.06)$.
+The catastrophic outlier rate $f_{\mathrm{out}}$ is defined as the fraction of galaxies with $e_{z}$ greater than $\max(3 \sigma_{\mathrm{IQR}}, 0.06)$.
 
 For reference, Section 3.8 of the \lsst\ Science Book \citep{Abell:09} uses the standard definitions of these parameters in requiring
 \begin{itemize}
-\item RMS scatter $\sigma < 0.02 (1 + z_{\rm true})$
+\item RMS scatter $\sigma < 0.02 (1 + z_{\mathrm{true}})$
 %\scc{actually the SB reports in page 75 that the goal of 0.02 is for the RMS of $\frac{\sigma_{z}}{(1+z)}$ while we are using IQR}
 \item bias $b_{z} < 0.003$ %\scc{in page 518 of the SB is clearly reported that the mean is expected to be less than 0.003 in our case we have defined as bias the median and not the mean }
-\item catastrophic outlier rate $f_{\rm out} < 10\%$ %\scc{clearly the number of outliers since are defined above $3\sigma$ strictly depends on the sigma definition, in the science book it seems to refer to the RMS of the $e_z$ distribution even ef it could be the standard deviation, but again I don't think it refers to IQR, therefore we could not consider exactly this numbers as reference.}
+\item catastrophic outlier rate $f_{\mathrm{out}} < 10\%$ %\scc{clearly the number of outliers since are defined above $3\sigma$ strictly depends on the sigma definition, in the science book it seems to refer to the RMS of the $e_z$ distribution even ef it could be the standard deviation, but again I don't think it refers to IQR, therefore we could not consider exactly this numbers as reference.}
 %\red{I am going off of conversations with Zeljko and how we {\it actually} computed the metrics in the Science Book (I have the scripts).  You are correct that several of these are slightly different than actually stated in the Science Book, or where the Science Book does not use very precise language as to what was done to compute the RMS or define the bias.  We can also cut out those specifics, or maybe say Ivezic private communication, maybe?  Also $\sigma_{z}$ defined in terms of IQR is exactly equivalent to the standard deviation when scaled by 1.349 for a Gaussian distribution, so the numbers are appropriate to cite in this context.  IQR is just a more robust way of calculating sigma for a distribution with outliers.--SJS }
 %\scc{I am very sorry I am not saying that IQR is not fine, I want to keep the IQR my concerns are related to the notation and the \textit{reader understanding}, if I wrote $\sigma$ somewhere in a table the reader will understand for sure that is the traditional standard deviation (a lot of people skips the indicators definition for the \textit{obvious} ones), I am suggesting to replace the notation $\sigma$ with the notation $\sigma_{IQR}$ (or something like this) to avoid any confusion, and also to change from $bias$ to $median$ for the same reason. I agree that say Ivezic private communication could be better.}
 .
@@ -145,7 +145,7 @@ For reference, Section 3.8 of the \lsst\ Science Book \citep{Abell:09} uses the 
 \subsection{Comparison of \pz\ point estimate metrics}
 \label{sec:pointmetrics_results}
 
-Figure~\ref{fig:pz_pointestimates} shows both point estimates forall codes  both $z_{PEAK}$ and $z_{WEIGHT}$.
+Figure~\ref{fig:pz_pointestimates} shows both point estimates for all codes  both $z_{PEAK}$ and $z_{WEIGHT}$.
 Point density is shown with mixed contours to emphasize that most of the galaxies do fall close to the $z_{phot} = z_{spec}$ line, while points trace the details of the catastrophic outlier populations.
 
 \begin{figure*}
@@ -157,8 +157,10 @@ The \trainz\ estimator (lower right sub-panels) has a shared $z_{PEAK}$ and $z_{
 \label{fig:pz_pointestimates}
 \end{figure*}
 
-The finite grid spacing of the \pzpdf s induces some discretization in $z_{PEAK}$.%, particularly for \skynet.
-The features perpendicular to the $z_{phot} = z_{spec}$ line are due to the $4000 \rm{\AA}$ break passing through the gaps between adjacent filters.% and logically are more prominent for template-based codes
+The finite grid spacing of the \pzpdf s induces some discretization in $z_{PEAK}$.
+%, particularly for \skynet.
+The features perpendicular to the $z_{phot} = z_{spec}$ line are due to the $4000$ \AA break passing through the gaps between adjacent filters.
+% and logically are more prominent for template-based codes
 Even the strongest codes feature populations far from the $z_{phot} = z_{spec}$ line representing a degeneracy in the space of colours and redshifts.
 % While use of the full information available via $p(z)$ mitigates their impact, a full understanding of the outlier population is critical for LSST science, particularly in tomographic applications.
 %\red{I forget what exactly I was trying to say here, if someone else wants to take a crack at this it might be helpful --SJS}
@@ -193,6 +195,6 @@ Even the strongest codes feature populations far from the $z_{phot} = z_{spec}$ 
 
 The intrinsic scatter, bias, and catastrophic outlier rate are given in Table~\ref{tab:pointestimates}.
 Perhaps unsurprisingly, performance under these metrics largely tracks that of the metrics of Section~\ref{sec:metrics} of the \pzpdf s from which the point estimates were derived.
-All twelve codes perform at or near the goals of the \lsst\ Science Requirements Document\footnote{available at: \url{http://ls.st/srd}} and \citet{Graham:17}, which is encouraging if not unexpected for $i < 25$.
+All twelve codes perform at or near the goals of the \lsst\ Science Requirements Document\footnote{available at: \url{http://ls.st/srd}} and \citet{Graham:17}, which is encouraging if not unexpected for $i < 25.3$.
 % But, it is still an encouraging sign, given an updated mock galaxy simulation and the expanded set of photo-$z$ codes tested.
 %\red{maybe say consistent with expectations, and a reference to Melissa's paper in here?  What else to say about nearly meeting point goals?}

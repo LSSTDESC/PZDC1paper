@@ -19,17 +19,17 @@ Each \sdss\ spectrum is parameterized by five weights corresponding to a weighte
 Correlations between SED and galaxy environment were included so as to preserve the colour-density relation of galaxy environment.
 The distance to the spatially projected fifth-nearest neighbour was used as a proxy for local density in the \sdss\ training sample.
 For each simulated galaxy, a galaxy with similar absolute $r$-band magnitude and local galaxy density was chosen from the training set, and that training galaxy's SED was assigned to the simulated galaxy.
-In Section~\ref{sec:buzzlimitations}, we critique the realism of this mock data.
+In Section~\ref{sec:buzzlimitations}, we discuss the limited realism of this mock data.
 
 \subsubsection{Caveats}
 \label{sec:buzzlimitations}
 
-By necessity, \textsc{Buzzard} does not contain all of the complicating factors present in real data, and here we discuss the most pertinent ways that this limitation affects our experiment.
+By necessity, \textsc{Buzzard} does not contain all of the complicating factors present in real data, and here we discuss the most pertinent ways that these limitations affect our experiment.
 % In several cases, the simplification is done with a purpose, with potentially confounding effects excluded in order to better isolate the differences between current-generation photo-$z$ codes and their causes.
-\textsc{Buzzard} includes only galaxies, not stars of AGN.
+\textsc{Buzzard} includes only galaxies, not stars nor AGN.
 The catalogue-based construction excludes image-level effects, such as deblending errors, photometric measurement issues, contamination from sky background (Zodiacal light, scattered light, etc.), lensing magnification, and Galactic reddening.
 
-The SEDs are five-component linear combinations of $\sim 5 \times 10^{5}$ \sdss\ galaxies, so the sample contains only galaxies that resemble linear combinations of those for which \sdss\ obtained spectra.
+The \textsc{Buzzard} SEDs are drawn from a set of $\sim 5 \times 10^{5}$ SEDs, which themselves are derived from a five-component linear combination fit to $\sim 5 \times 10^{5}$ \sdss\ galaxies; thus the sample contains only galaxies that resemble linear combinations of those for which \sdss\ obtained spectra, and there are necessarily duplicates.
 The linear combination SEDs also restrict the properties of the galaxy population to linear combinations of the properties corresponding to five basis templates, precluding the modeling of non-linear features such as the full range of emission line fluxes relative to the continuum.
 The only form of intrinsic dust reddening comes from what is already present in the five basis SEDs via the training set used to create the basis templates, and linear combinations thereof do not span the full range of realistic dust extinction observed in galaxy populations.
 
@@ -47,7 +47,7 @@ We deem such negative fluxes \textit{non-detections} and assign a placholder mag
 
 The full dataset thus covers $400$ square degrees and contains $238$ million galaxies of redshift $0 < z \leq 8.7$ down to $r = 29$.
 Systematic inconsistencies with galaxy colors at $z > 2$ were observed, so the catalogue was limited to $0 < z \leq 2.0$.
-To obtain a catalogue matching the \lsst\ Gold Sample, we imposed an cut of $i < 25.3$, which gives a signal-to-noise ratio $\sim 30$ for most galaxies.
+To obtain a catalogue matching the \lsst\ Gold Sample, we imposed an cut of $i < 25.3$, which gives a signal-to-noise ratio $\gtrsim 30$ for most galaxies.
 In order for statistical errors to be subdominant to the systematic errors we aim to probe, we further reduced the sample size to $<10^{7}$ galaxies by isolating $\sim 16.8$ square degrees selected from five separate spatial regions of the simulation.
 We refer to this final set of galaxies as DC1, for the first \lsstdesc\ Data Challenge.
 
@@ -67,7 +67,7 @@ We outline the equivalent ways of providing all codes perfect prior information 
 Following the findings of \citet{Bernstein:10}, \citet{Masters:2017} that only $~10^{4}$ spectra are necessary to calibrate \pz s to Stage IV requirements, we aimed to set aside a randomly selected training set of $3-5\times 10^{4}$ galaxies, $\sim 10\%$ of the full sample.
 After all cuts described above, we designated the \textit{DC1 training set} of $44\,404$ galaxies for which observed photometry, true SEDs, and true redshifts would be provided to all codes codes and the blinded \textit{DC1 test set} of $399\,356$ galaxies for which photometry alone would be provided to all codes and \pzpdf s would be requested.
 %The resulting catalogues contain $111\,171$ training galaxies and $1\,000\,883$ test galaxies.
-The \lsst\ photometric filter transmission curves were also considered public information that could be used by any code.
+The exact form of \lsst\ photometric filter transmission curves were also considered public information that could be used by any code.
 
 \subsubsection{Template library construction}
 \label{sec:buzztemplates}
@@ -75,5 +75,5 @@ The \lsst\ photometric filter transmission curves were also considered public in
 We aimed to provide template-fitting codes with complete yet manageable library of templates spanning the space of SEDs of the DC1 galaxies.
 We constructed $K=100$ representative templates from the $\sim 5 \times 10^{5}$ SEDs of the \sdss\ DR6 NYU-VAGC by using the five-dimensional vectors of SED weight coefficients described above.
 After regularizing the SED weight coefficients $\in [0, 1]$, we ran a simple K-means clustering algorithm on the five-dimensional space of regularized SED weight coefficients of the \sdss\ galaxy sample.
-The resulting clusters were used to define Voronoi cells in the space of weight coefficients, with centre positions corresponding to weights for the \texttt{k-correct} SED components, yielding the 100 \textit{DC1 template set} to be provided to all template-based codes.
+The resulting clusters were used to define Voronoi cells in the space of weight coefficients, with centre positions corresponding to weights for the \texttt{k-correct} SED components, yielding the 100 SEDs that comprise the \textit{DC1 template set} provided to all template-based codes.
 We did not, however, exclude from consideration template-based codes that made modifications in their use of these templates due to architecture limitations (as opposed to knowledge of the experimental conditions that could artificially boost the code's apparent performance), with deviations noted in Section~\ref{sec:pzcodes}.

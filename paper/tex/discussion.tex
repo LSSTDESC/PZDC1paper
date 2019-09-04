@@ -24,7 +24,9 @@ The metric-specific performance demonstrated in this paper implies that we may n
 
 The \trainz\ estimator of Section~\ref{sec:trainz}, which assigns every galaxy a \pzpdf\ equal to $N(z)$ of the training set, is introduced as an experimental control or null test to demonstrate this point via \textit{reductio ad absurdum}.
 Because our training set is perfectly representative of the test set, $N(z)$ should be identical for both sets down to statistical noise.
-\textit{We make the alarming observation that \trainz\ outperforms all codes on the PIT-based metrics, and all but one code on the $N(z)$ based statistics.}
+\textbf{We make the alarming observation that \trainz, the experimental control, outperforms all codes on the CDF-based metrics, and all but one code on the $N(z)$ based statistics.}
+The PIT and other CDF-based metrics upon which modern \pzpdf\ comparisons are built can be gamed by a trivial estimator that yields only an affirmation of prior knowledge uninformed by the data.
+In other words, such ensemble metrics are not appropriate for the task of selecting \pzpdf\ codes for analysis pipelines.
 %\textit{Explain the connection between \trainz\ and these metrics.}
 
 The CDE loss and point estimate metrics appropriately penalize \trainz's naivete.
@@ -33,7 +35,7 @@ The explicit dependence on the individual posteriors in the calculation of the C
 
 % While looking at one, or even most of our metrics would have given the impression that this estimator was nearly optimal, red flags in CDE loss and point estimates reveal the problems.
 %[more caution on over-reliance on metrics, and making sure that metrics test all of what you want] \red{this definitely still needs work}
-In summary, context is crucial to defending against deceptively strong performers such as \trainz; \textbf{the best \pzpdf\ method is the one that most effectively achieves our science goals}, not the one that performs best on a metric that does not reflect those goals.
+In summary, context is crucial to defend against deceptively strong performers such as \trainz; \textbf{the best \pzpdf\ method is the one that most effectively achieves our science goals}, not the one that performs best on a metric that does not reflect those goals.
 In the absence of a single scientific motivation or the information necessary for a principled metric definition, we must consider many metrics and be critical of the information transmitted by each.
 % As stated earlier, science applications may be sensitive to individual \pzpdf s, \pzpdf\ ensembles, \pz\ point estimates, or science-specific statistics like $\hat{N}(z)$.
 % We must be aware of that the optimal method for one is not necessarily optimal for the other, and in fact several photo-$z$ algorithms may be necessary in the final cosmological analysis in order to satisfy the requirements of all science use cases.
@@ -60,7 +62,7 @@ In the absence of a single scientific motivation or the information necessary fo
 The work presented in this paper is only a first step in assessing \pzpdf\ approaches and moving toward an improved photometric redshift estimator.
 Here we discuss the next steps for subsequent investigations.
 
-This initial paper explored code performance in idealized conditions with perfect catalog-based photometry and representative training data.
+This initial paper explores \pzpdf\ code performance in idealized conditions with perfect catalog-based photometry and representative training data, but the resilience of each code to such realistic imperfections in prior information has not yet been evaluated.
 A top priority for a follow-up study is to test realistic forms of incomplete, erroneous, and non-representative template libraries and training sets as well as the impact of other forms of external priors that must be ingested by the codes, major concerns in \citet{Newman:2015, Masters:2017}.
 Outright redshift failures due to emission line misidentification or noise spikes may be modeled by the inclusion of a small number of high-confidence yet false redshifts.
 We plan to perform a full sensitivity analysis on a realistically incomplete training set of spectroscopic galaxies, modeling the performance of spectrographs, emission-line properties, and expected signal-to-noise to determine which potential training set galaxies are most likely to be excluded.
@@ -75,8 +77,8 @@ The effects of tomographic binning scheme will be explored in a dedicated future
 
 Sequels to this study will also address some shortcomings of our experimental procedure.
 The fixed redshift grid shared between the codes may have unfairly penalized codes with a different native parameterization, as precision is lost when converting between formats.
-Performance on sharply peaked \pzpdf s may have been suppressed across all codes due to the insufficient resolution of the redshift grid.
-In light of the results of \citet[]{Malz:qp}, in future analyses we plan to switch from a fixed grid to the quantile parameterization or to permit each code to use its native storage format under a shared number of parameters.
+Performance on the (admittedly small) population of sharply peaked \pzpdf s may have been suppressed across all codes due to the insufficient resolution of the redshift grid.
+In light of the results of \citet[]{Malz:2018}, in future analyses we plan to switch from a fixed grid to the quantile parameterization or to permit each code to use its native storage format under a shared number of parameters.
 
 Section~\ref{sec:metrics} discussed the difficulty in evaluating PDF accuracy for individual objects.
 In a follow-up study, we will
@@ -86,7 +88,7 @@ generate ``true PDF'' distributions, yielding a dataset that enables a test of P
 \subsection{Realistic mock data}
 \label{sec:futuredata}
 
-To make optimal use of the \lsst\ data for cosmological and other astrophysical analyses of the Science Roadmap, future investigations that build upon this one will require a more sophisticated set of galaxy photometry and redshifts.
+To make optimal use of the \lsst\ data for cosmological and other astrophysical analyses of the \lsstdesc\ Science Roadmap, future investigations that build upon this one will require a more sophisticated set of galaxy photometry and redshifts.
 %\item \red{inclusion of photometric errors, image based effects, blending, lensing, sky, mask, etc...}
 This initial paper explored a data set that was constructed at the catalog level, with no inclusion of the complications that come from measuring photometry from images.
 Future data challenges will move to catalogs constructed from mock images, including the complications of deblending, sensor inefficiencies, and heterogeneous observing conditions, all anticipated to affect the measured colours of \lsst's galaxy sample \citep{Dawson:2016}.

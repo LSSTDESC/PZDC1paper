@@ -22,12 +22,12 @@ conditioned not only on the photometric data $d_{i}$ for that galaxy but also on
 Because of this, direct comparison of \pzpdf s produced by different methods is in some sense impossible; even if they share the same external prior information $I_{D}$, by definition they cannot be conditioned on the same assumptions $I_{H}$, otherwise they would not be distinct methods at all.
 We call $I_{H}$ the \textit{implicit prior} specific to the method, though some aspects of its nature may be discerned.
 
-In this study, we isolate the effect of differences in prior information $I_{H}$ specific to each method by using a single training set $I_{D}^{\rm ML}$ for all machine learning-based codes and a single template library $I_{D}^{\rm T}$ for all template-based codes.
-These sets of prior information are carefully constructed to be representative and complete, so we have $I_{D} \equiv I_{D}^{\rm ML} \equiv I_{D}^{\rm T}$ for every method $H$.
+In this study, we isolate the effect of differences in prior information $I_{H}$ specific to each method by using a single training set $I_{D}^{\mathrm{ML}}$ for all machine learning-based codes and a single template library $I_{D}^{\mathrm{T}}$ for all template-based codes.
+These sets of prior information are carefully constructed to be representative and complete, so we have $I_{D} \equiv I_{D}^{\mathrm{ML}} \equiv I_{D}^{\mathrm{T}}$ for every method $H$.
 Under this assumption, a ratio of posteriors of codes is in effect a ratio of the implicit posteriors $p(z \vert d_{i}, I_{H'})$ since the external prior information $I_{D}$ is present in the numerator and denominator.
 Thus comparisons of $\hat{p}_{i}^{H}(z)$ isolate the effect of the method used to obtain the estimator, which should enable interpretation of the differences between estimated PDFs in terms of the specifics of the method implementations.
 
-The exact implementation of the metrics theoretically depends on the parametrization of the \pzpdf s, which may differ across codes and can affect the precision of the estimator \citep{Malz:qp}.
+The exact implementation of the metrics theoretically depends on the parametrization of the \pzpdf s, which may differ across codes and can affect the precision of the estimator \citep{Malz:2018}.
 Even considering a single method under the same parametrization, such as the 200-bin $0 < z < 2$ piecewise constant function used here, the exact bin definitions will affect the result.
 %\red{Note: Let's address how the gridding (endpoints and spacing) affects the metrics, from the email correspondence Re: [LSST-DESC-MEMBERS] Summary of Nov 29 PZ Telecon. (AIM)}
 The piecewise constant format is chosen because of its established presence in the literature, and the choice of 200 bins was motivated by the approximate number of columns expected to be available for storage of \pzpdf s for the final \lsst\ Project tables.\footnote{See, e.~g.~the \lsst\ Data Products Definition Document, available at: \url{https://ls.st/dpdd}}
@@ -48,7 +48,7 @@ Because \lsst's \pzpdf s will be used for many scientific applications, some of 
 Because we have the true redshifts but not true \pzpdf s for comparison, we remind the reader of the Cumulative Distribution Function (CDF)
 \begin{equation}
   \label{eq:cdf}
-  \rm{CDF}[f, q] \equiv \int_{-\infty}^{q} f(z) dz,
+  \mathrm{CDF}[f, q] \equiv \int_{-\infty}^{q} f(z) dz,
 \end{equation}
 of a generic univariate PDF $f(z)$, which is used as the basis for several of our metrics.
 
@@ -62,7 +62,7 @@ The closer the QQ plot is to diagonal, the closer the match between the distribu
 The probability integral transform (PIT)
 \begin{align}
 \label{eq:pit}
-\mathrm{PIT} &\equiv \rm{CDF}[\hat{p}, z_{\rm true}]
+\mathrm{PIT} &\equiv \mathrm{CDF}[\hat{p}, z_{\mathrm true}]
 \end{align}
 is the CDF of a \pzpdf\ evaluated at its true redshift, and the distribution of PIT values probes the average accuracy of the \pzpdf s of an ensemble of galaxies.
 The distribution of PIT values is effectively the derivative of the QQ plot.
@@ -73,7 +73,7 @@ The PIT distribution has been used to quantify the performance of \pzpdf\ method
 \citet{Tanaka:17} use the histogram of PIT values as a diagnostic indicator of overall code performance, while \citet{Freeman:17} independently define the PIT and demonstrate how its individual values may be used both to perform hypothesis testing (via, e.~g.~ the KS, CvM, and AD tests; see below) and to construct quantile-quantile plots.
 %\red{We might want to divide this by redshift to get trends, as the overall PIT could be impacted by true n(z).
 %For example, a PIT with nontrivial shape could be due to that behavior being uniform as a function of redshift or significant inaccuracy only in a small range of redshifts where $n(z)$ is large and a flat PIT elsewhere.}
-Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlier rate as the fraction of galaxies with $\rm{PIT} < 0.0001$ or $\rm{PIT} > 0.9999$, which should total 0.0002 for an ideal uniform distribution.
+Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlier rate as the fraction of galaxies with $\mathrm{PIT} < 0.0001$ or $\mathrm{PIT} > 0.9999$, which should total 0.0002 for an ideal uniform distribution.
 
 %\subsubsection{Continuous Ranked Probability Score (CRPS)}
 %\label{sec:crps}
@@ -93,9 +93,9 @@ Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlie
 We evaluate a number of quantitative metrics derived from the visually interpretable QQ plot and PIT histogram, built on the Kolmogorov-Smirnov (KS) statistic
 \begin{equation}
   \label{eq:ks}
-  \rm{KS} \equiv \max_{z} \left( \left| \rm{CDF}[\hat{f}, z] - \rm{CDF}[\tilde{f}, z] \right| \right),
+  \mathrm{KS} \equiv \max_{z} \left( \left| \mathrm{CDF}[\hat{f}, z] - \mathrm{CDF}[\tilde{f}, z] \right| \right),
 \end{equation}
-interpretable as the maximum difference between the CDFs of an approximating univariate distribution $\hat{f}(z)$ and a reference distribution $\tilde{f}(z)$.
+interpretable as the maximum difference between the CDFs of an approximating univariate distribution $\hat{f}(z)$ and a reference distribution $\tilde{f}(z)$, in this case $U(0,1)$.
 % $CDF_{\rm phot}(z)$ and $CDF_{\rm spec}(z)$, the CDFs of the photo-$z$ and spectroscopic redshift respectively:
 %The KS test quantifies whether the two redshift distributions are drawn from a similar distribution, independent of binning.
 % The KS test quantifies the similarity between two distributions, independent of binning.
@@ -108,12 +108,12 @@ We also consider two variants of the KS statistic.
 A cousin of the KS statistic, the Cramer-von Mises (CvM) statistic
 \begin{equation}
 \label{eq:cvm}
-  \rm{CvM}^{2} \equiv \int_{-\infty}^{+\infty} \big(\rm{CDF}[\hat{f}, z] - \rm{CDF}[\tilde{f}, z]\big)^2 \mathrm{d}\rm{CDF}[\tilde{f}, z]
+  \mathrm{CvM}^{2} \equiv \int_{-\infty}^{+\infty} \big(\mathrm{CDF}[\hat{f}, z] - \mathrm{CDF}[\tilde{f}, z]\big)^2 \mathrm{d}\mathrm{CDF}[\tilde{f}, z]
 \end{equation}
 is the mean-squared difference between the CDFs of an approximate and true PDF.
 The Anderson-Darling (AD) statistic
 \begin{equation} \label{eq:ad}
-  \rm{AD}^2 \equiv N_{tot}\int_{-\infty}^{+\infty} \frac{\big(\rm{CDF}[\hat{f}, z] - \rm{CDF}[\tilde{f}, z]\big)^2} {\rm{CDF}[\tilde{f}, z] (1 -\rm{CDF}[\tilde{f}, z]} \mathrm{d}\rm{CDF}[\tilde{f}, z]
+  \mathrm{AD}^2 \equiv N_{tot}\int_{-\infty}^{+\infty} \frac{\big(\mathrm{CDF}[\hat{f}, z] - \mathrm{CDF}[\tilde{f}, z]\big)^2} {\mathrm{CDF}[\tilde{f}, z] (1 -\mathrm{CDF}[\tilde{f}, z]} \mathrm{d}\mathrm{CDF}[\tilde{f}, z]
 \end{equation}
 is a weighted mean-squared difference featuring enhanced sensitivity to discrepancies in the tails of the distribution.
 %The KS statistic and the CvM and AD statistics related to it are all used to evaluate the performance of both $\hat{n}(z)$ and the QQ and PIT of the CDFs of the ensemble of photo-$z$ interim posteriors.
@@ -132,12 +132,12 @@ In anticipation of a substantial fraction of galaxies having PIT of 0 or 1, a co
 \label{sec:CDE_loss}
 %(Alex Malz, Ann Lee)
 
-The \buzz\ simulation process precludes testing the degree to which samples from our \pz\ posteriors reconstruct the space of $p(z, {\rm data})$.
+The \buzz\ simulation process precludes testing the degree to which samples from our \pz\ posteriors reconstruct the space of $p(z, \mathrm{data})$.
 To the knowledge of the authors, there is only one metric that can be used to evaluate the performance of individual \pzpdf\ estimators in the absence of true \pz\ posteriors.
 Using the notation introduced in Section~\ref{sec:flexzboost}, the conditional density estimation (CDE) loss is defined as
 \begin{equation}
   \label{eq:cde-loss}
-  L(f, \widehat{f}) \equiv \int \int (f(z \vert \x) - \widehat{f}(z \vert \x))^{2} dz dP(\x)
+  L(f, \widehat{f}) \equiv \int \int (f(z \vert \x) - \widehat{f}(z \vert \x))^{2} \mathrm{d}z \mathrm{d}P(\x)
 \end{equation}
 in terms of the photometry $\x$, an analogue to the familiar root-mean-square-error used in conventional regression.
 We estimate the CDE loss via

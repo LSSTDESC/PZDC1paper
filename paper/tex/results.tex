@@ -16,9 +16,9 @@ The diverse algorithms and implementations induce differences in small-scale str
 \label{fig:pz_examples}
 \end{figure*}
 
-The most striking differences between codes are due to small-scale features induced by the interaction between the shared piecewise constant parameterization of $200$ bins $0 < z < 2$ of Section~\ref{sec:metrics} and the smoothing conditions or lack thereof in each algorithm.
-The $\rm{d}z = 0.01$ redshift resolution is sufficient to capture the broad peaks of faint galaxies' \pzpdf s with large photometric errors but is too broad to resolve the narrow peaks for bright galaxies' \pzpdf s with small photometric errors.
-This observation is consistent with the findings of \citet[]{Malz:qp} that the piecewise constant parameterization underperforms in the presence of small-scale structures.
+The most striking differences between codes are the small-scale features induced by the interaction between the shared piecewise constant parameterization of $200$ bins $0 < z < 2$ of Section~\ref{sec:metrics} and the smoothing conditions or lack thereof in each algorithm.
+The $\mathrm{d}z = 0.01$ redshift resolution is sufficient to capture the broad peaks of faint galaxies' \pzpdf s with large photometric errors but is too broad to resolve the narrow peaks for bright galaxies' \pzpdf s with small photometric errors.
+This observation is consistent with the findings of \citet[]{Malz:2018} that the piecewise constant parameterization underperforms in the presence of small-scale structures.
 
 However, the shared small-scale features of \annz, \metaphor, \cmnn, and \skynet\ are a result of various weighted sums of the limited number of training set galaxies with colors similar to those of the test set galaxy in question, with behavior closer to classification than regression in the case of \annz.
 The settings used on \gpz\ in this work forced broadening of the single Gaussian to cover the multimodal redshift solutions of the other codes.
@@ -99,7 +99,7 @@ No code reaches this idealized floor, indicating that all codes suffer some degr
 \label{sec:cdelossresults}
 
 The values of the CDE loss statistic of individual \pzpdf\ accuracy are provided in Table~\ref{tab:cdeloss}.
-It is worth noting that strong performance on the CDE loss should imply strong performance on the other metrics, though the inverse is not necessarily true.
+It is worth noting that strong performance on the CDE loss, corresponding to lower values of the metric, should imply strong performance on the other metrics, though the inverse is not necessarily true.
 Thus the CDE loss is the most effective metric for generic science cases.
 
 \begin{table}  %%% DATA TABLE %%%
@@ -133,4 +133,5 @@ Photo-$z$ Code & CDE Loss \\
 \end{tabular}
 \end{table}
 
-This metric is the only one that can appropriately penalize \trainz\ and indicates strong performance for \cmnn\ and \flexzboost, the latter of which is optimized for this metric.
+Of the metrics we were able to consider in this experiment, \textbf{the CDE Loss is the only metric that can appropriately penalize the pathological\trainz}.
+Additionally, it favors \cmnn\ and \flexzboost, the latter of which is optimized for this metric.
