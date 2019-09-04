@@ -28,7 +28,7 @@ Under this assumption, a ratio of posteriors of codes is in effect a ratio of th
 Thus comparisons of $\hat{p}_{i}^{H}(z)$ isolate the effect of the method used to obtain the estimator, which should enable interpretation of the differences between estimated PDFs in terms of the specifics of the method implementations.
 
 The exact implementation of the metrics theoretically depends on the parametrization of the \pzpdf s, which may differ across codes and can affect the precision of the estimator \citep{Malz:2018}.
-Even considering a single method under the same parametrization, such as the 200-bin $0 < z < 2$ piecewise constant function used here, the exact bin definitions will affect the result.
+Even considering a single method under the same parametrization, such as the 200-bin $0 < z < 2$ piecewise constant function used here, the exact bin definitions must affect the result.
 %\red{Note: Let's address how the gridding (endpoints and spacing) affects the metrics, from the email correspondence Re: [LSST-DESC-MEMBERS] Summary of Nov 29 PZ Telecon. (AIM)}
 The piecewise constant format is chosen because of its established presence in the literature, and the choice of 200 bins was motivated by the approximate number of columns expected to be available for storage of \pzpdf s for the final \lsst\ Project tables.\footnote{See, e.~g.~the \lsst\ Data Products Definition Document, available at: \url{https://ls.st/dpdd}}
 We will discuss the choice of \pzpdf\ parameterization further in Section~\ref{sec:discussion}.
@@ -45,12 +45,16 @@ Though the outmoded practices should not be encouraged, those seeking a connecti
 %(John Soo, Rongpu Zhou)
 
 Because \lsst's \pzpdf s will be used for many scientific applications, some of which require accuracy of each individual catalog entry, we consider several metrics that probe the population-level performance of the \pzpdf s.
-Because we have the true redshifts but not true \pzpdf s for comparison, we remind the reader of the Cumulative Distribution Function (CDF)
+As we have the true redshifts but not true \pzpdf s for comparison, we remind the reader of the Cumulative Distribution Function (CDF)
 \begin{equation}
   \label{eq:cdf}
   \mathrm{CDF}[f, q] \equiv \int_{-\infty}^{q} f(z) dz,
 \end{equation}
 of a generic univariate PDF $f(z)$, which is used as the basis for several of our metrics.
+We describe metrics based on the CDF in Section~\ref{sec:qqpit} and metrics of summary statistics thereof in Section~\ref{sec:summqqpit}.
+
+\subsubsection{CDF-based metrics}
+\label{sec:qqpit}
 
 A quantile of a distribution is the value $q$ at which the CDF of the distribution is equal to $Q$; percentiles and quartiles are familiar examples of linearly spaced sets of 100 and 4 quantiles, respectively.
 The quantile-quantile (QQ) plot serves as a graphical visualization for comparing two distributions, where the quantiles of one distribution are plotted against the quantiles of the other distribution, providing an intuitive way to qualitatively assess the consistency between an estimated distribution and a true distribution.
@@ -89,6 +93,9 @@ Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlie
 %%may be used for two purposes in this analysis.
 %%We calculate it between the true redshift distribution $N'(z)$ and each estimator $\hat{N}(z)$ (derived by Eq.~\ref{eq:stacked}) as well as between the ideal QQ and PIT curves from each method studied and the ideal curves.
 %Though this metric does not account for the fact that the redshift distribution function is, in fact, a probability distribution, it can still be interpreted as a measure of the integrated difference between the estimated distribution and the true distribution.%, and it can be used to quantify the otherwise qualitative metrics.
+
+\subsubsection{Summary statistics of CDF-based metrics}
+\label{sec:summqqpit}
 
 We evaluate a number of quantitative metrics derived from the visually interpretable QQ plot and PIT histogram, built on the Kolmogorov-Smirnov (KS) statistic
 \begin{equation}
@@ -134,12 +141,13 @@ In anticipation of a substantial fraction of galaxies having PIT of 0 or 1, a co
 
 The \buzz\ simulation process precludes testing the degree to which samples from our \pz\ posteriors reconstruct the space of $p(z, \mathrm{data})$.
 To the knowledge of the authors, there is only one metric that can be used to evaluate the performance of individual \pzpdf\ estimators in the absence of true \pz\ posteriors.
-Using the notation introduced in Section~\ref{sec:flexzboost}, the conditional density estimation (CDE) loss is defined as
+The conditional density estimation (CDE) loss is an analogue to the familiar root-mean-square-error used in conventional regression, defined as
 \begin{equation}
   \label{eq:cde-loss}
-  L(f, \widehat{f}) \equiv \int \int (f(z \vert \x) - \widehat{f}(z \vert \x))^{2} \mathrm{d}z \mathrm{d}P(\x)
+  L(f, \widehat{f}) \equiv \int \int (f(z \vert \x) - \widehat{f}(z \vert \x))^{2} \mathrm{d}z \mathrm{d}P(\x) ,
 \end{equation}
-in terms of the photometry $\x$, an analogue to the familiar root-mean-square-error used in conventional regression.
+where $f(z \vert \x)$ is the true \pzpdf\ that we do not have and $\widehat{f}(z \vert \x)$ is an estimate thereof, in terms of the photometry $\x$.
+(See Section~\ref{sec:flexzboost} for a review of the notation.)
 We estimate the CDE loss via
 \begin{equation}
   \label{eq:estimated-cde-loss}

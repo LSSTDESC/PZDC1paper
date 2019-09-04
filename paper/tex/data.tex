@@ -19,7 +19,6 @@ Each \sdss\ spectrum is parameterized by five weights corresponding to a weighte
 Correlations between SED and galaxy environment were included so as to preserve the colour-density relation of galaxy environment.
 The distance to the spatially projected fifth-nearest neighbour was used as a proxy for local density in the \sdss\ training sample.
 For each simulated galaxy, a galaxy with similar absolute $r$-band magnitude and local galaxy density was chosen from the training set, and that training galaxy's SED was assigned to the simulated galaxy.
-In Section~\ref{sec:buzzlimitations}, we discuss the limited realism of this mock data.
 
 \subsubsection{Caveats}
 \label{sec:buzzlimitations}
@@ -38,7 +37,7 @@ While these idealized conditions limit the realism of our mock data, they are ir
 \subsection{\lsst-like mock observations}
 \label{sec:observations}
 
-Given the SED, absolute $r$-band magnitude, and redshift, we computed apparent magnitudes in the six \lsst\ filter passbands, $ugrizy$.
+Given the SED, absolute $r$-band magnitude, and true redshift of each simulated galaxy, we computed apparent magnitudes in the six \lsst\ filter passbands, $ugrizy$.
 We assigned magnitude errors in the six bands using the simple model of \citet{Ivezic:08}, assuming achievement of the full 10-year depth, with a modification of fiducial \lsst\ total numbers of 30-second visits for photometric error generation: we assume 60 visits in $u$-band, 80 visits in $g$-band, 180 visits in $r$-band, 180 visits in $i$-band, 160 visits in $z$-band, and 160 visits in $y$-band.
 %numbers taken from Alex Abate's photErrorModel.py script in PhotoZDC1 repository, which was used with nYrObs=10.
 
@@ -65,7 +64,7 @@ We outline the equivalent ways of providing all codes perfect prior information 
 \label{sec:buzztraining}
 
 Following the findings of \citet{Bernstein:10}, \citet{Masters:2017} that only $~10^{4}$ spectra are necessary to calibrate \pz s to Stage IV requirements, we aimed to set aside a randomly selected training set of $3-5\times 10^{4}$ galaxies, $\sim 10\%$ of the full sample.
-After all cuts described above, we designated the \textit{DC1 training set} of $44\,404$ galaxies for which observed photometry, true SEDs, and true redshifts would be provided to all codes codes and the blinded \textit{DC1 test set} of $399\,356$ galaxies for which photometry alone would be provided to all codes and \pzpdf s would be requested.
+After all cuts described above, we designated the \textit{DC1 training set} of $44\,404$ galaxies for which observed photometry, true SEDs, and true redshifts would be provided to all codes and the blinded \textit{DC1 test set} of $399\,356$ galaxies for which photometry alone would be provided to all codes and \pzpdf s would be requested.
 %The resulting catalogues contain $111\,171$ training galaxies and $1\,000\,883$ test galaxies.
 The exact form of \lsst\ photometric filter transmission curves were also considered public information that could be used by any code.
 

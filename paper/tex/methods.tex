@@ -63,7 +63,7 @@ We test three publicly available and commonly used template-based codes that sha
 \chi^{2}(z,T,A) = \sum_{i}^{N_{\mathrm{filt}}}\left(\frac{F^{i}_{\mathrm{obs}} - A \, F^{i}_{\mathrm{pred}}(T,z)}{\sigma^{i}_{\mathrm{obs}}}\right)^2
 \end{equation}
 \noindent where $A$ is a normalization factor, $F^i_{\mathrm{pred}}(T,z)$ is the flux predicted for a template $T$ at redshift $z$, $F^i_{\mathrm{obs}}$ is the observed flux in a given band $i$, $\sigma^i_{\mathrm{obs}}$ is the observed flux error, and $N_{\mathrm filt}$ is the total number of filters, in our case the six $ugrizy$ LSST filters.
-In words, the likelihood is a sum of observed flux error $\sigma_{b}^{\mathrm{obs}}$-weighted squared differences between the observed flux $F^{\mathrm{obs}}_{b}$ and the normalized predicted flux $F^{\mathrm{mod}}_{b}(T, z)$ in $N_{\mathrm{filt}}$ photometric filters $b$, which is the \lsst\ $ugrizy$ filters in this case.
+The likelihood is a sum of observed flux error $\sigma_{b}^{\mathrm{obs}}$-weighted squared differences between the observed flux $F^{\mathrm{obs}}_{b}$ and the normalized predicted flux $F^{\mathrm{mod}}_{b}(T, z)$ in $N_{\mathrm{filt}}$ photometric filters $b$, which is the \lsst\ $ugrizy$ filters in this case.
 Specific implementation details of each code, e.~g.~prior form and implementation, are described below.
 
 \subsubsection{BPZ}
@@ -101,7 +101,8 @@ Though \eazy\ can account for uncertainty in the template set by adding in quadr
 \label{sec:lephare}
 %(C\'ecile Roucelle, Eric Nuss, Johann Cohen-Tanugi)
 
-Photometric Analysis for Redshift Estimate \citep[\lephare\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}},][]{Arnouts:99,Ilbert:06} uses the $\chi^2$ of Equation~\ref{eq_temp_chi} to match observed colors with those predicted from a template set, which can be semi-empirical or entirely synthetic, directly according to the
+Photometric Analysis for Redshift Estimate \citep[\lephare\footnote{\url{http://www.cfht.hawaii.edu/~arnouts/lephare.html}},][]{Arnouts:99,Ilbert:06} uses the $\chi^2$ of Equation~\ref{eq_temp_chi} to match observed colors with those predicted from a template set.
+The template set can be semi-empirical or entirely synthetic.
 The reported \pzpdf\ is an arbitrary normalization of the likelihood evaluated on the output redshift grid.
 %\textsc{LePhare} has been used to produce the COSMOS2015 photo-$z$ catalogue \citep{Laigle:16}.
 
@@ -187,7 +188,7 @@ By the orthogonality property, the expansion coefficients $\beta_{i}(\x) = \math
 The expectation value $\mathbb{E}\left[\phi_i(z) \vert \x\right]$ of the expansion coefficients conditioned on the data is equivalent to the regression of the space of possible redshifts on the space of possible photometry.
 Thus the expansion coefficients $\beta_{i}(\x)$ can be estimated from the data via regression to yield the conditional density estimate $\widehat{f}(z \vert \x)$.
 
-In this paper, we used \texttt{xgboost} \citep{Chen:16} for the regression; it should however be noted that \texttt{FlexCode-RF}\footref{flexzboost_github}, based on Random Forests, generally performs better for smaller datasets.
+In this paper, we used \texttt{xgboost} \citep{Chen:16} for the regression; it should, however, be noted that \texttt{FlexCode-RF}\footref{flexzboost_github}, based on Random Forests, generally performs better on smaller datasets.
 As our basis $\phi_{i}(z)$, we choose a standard Fourier basis.
 The two tuning parameters in our \pzpdf\ estimate are the number $I$ of terms in the series expansion and an exponent $\alpha$ that we use to sharpen the computed density estimates $\widetilde{f}(z \vert \x) \propto \widehat{f}(z \vert \x)^{\alpha}$.
 Both $I$ and $\alpha$ were chosen in an automated way by minimizing the weighted $L_2$-loss function \citep[Eq. 5 in][]{Izbicki:17} on a validation set comprised of a randomly selected 15\% of the DC1 training set.
