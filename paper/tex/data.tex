@@ -1,39 +1,78 @@
-\section{The simulation and mock galaxy catalog}
+\section{Data}
 \label{sec:sims}
-%(Sam Schmidt, Eve Kovacs, Tina Peters)
 
-In order to test the current generation codes, we employ an existing simulated galaxy catalogue. The simulation is completely catalogue-based, with no image construction or mock measurements made. We describe these in detail below.
+In order to test the current generation of \pzpdf\ codes, we employ an existing simulated galaxy catalogue, described in detail in Section~\ref{sec:buzzard}.
+The experimental conditions shared among all codes are motivated by the \lsst\ SRD requirements and implemented for machine learning and template-based \pzpdf\ codes according to the procedures of Sections~\ref{sec:buzztraining} and \ref{sec:buzztemplates} respectively.
 
-\subsection{Buzzard-v1.0 simulation}
+\subsection{The \textsc{Buzzard-v1.0} simulation}
 \label{sec:buzzard}
-The \textsc{Buzzard-highres-v1.0} (De Rose et al., in prep; Wechsler et al., in prep) catalogue construction started with a dark matter only simulation. This N-body simulation contained $2048^3$ particles in a $400$ Mpc h$^{-1}$ box. A set of time snapshots (with smoothing and interpolation between snapshots) were saved in order to construct a lightcone. Dark matter halos were identified using the \textsc{Rockstar} software package \citep{Behroozi:13}. These dark matter halos were populated with galaxies with a stellar mass and absolute $r$-band magnitude in the SDSS system determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep{Reddick:13}.
 
-To assign an SED to each galaxy, the {\it Adding Density Dependent Spectral Energy Distributions} (\textsc{ADDSEDS}, deRose in prep.)\footnote{\url{https://github.com/vipasu/addseds}} procedure was used. This consisted of training an empirical relation between absolute $r$-band magnitude, local galaxy density, and SED using a sample of $\sim 5\times 10^{5}$ galaxies from the magnitude-limited Sloan Digital Sky Survey Data Release 6 Value Added Galaxy Catalog \citep{Blanton:05}.  Each SDSS spectrum is fit with a sum of five SED components using the \textsc{k-correct \red{v4\_3?}} software package\footnote{\url{http://kcorrect.org}} \citep{Blanton:07}, thus each galaxy SED is parameterized as five weights for the basis SEDs. The distance to the spatial projected fifth-nearest neighbour was used as a proxy for local density in the SDSS training sample. For each simulated galaxy, a galaxy with similar absolute $r$-band magnitude and local galaxy density was chosen from the training set, and that training galaxy's SED was assigned to the simulated galaxy.  This process is done in such a way as to preserve the colour-density relation of galaxy environment.  Given the SED, absolute $r$-band magnitude and redshift, we computed apparent magnitudes in the six LSST filter passbands, $ugrizy$. We assigned magnitude errors in the six bands using the simple model described in \citet{Ivezic:08}, assuming full 10-year depth observations had been completed.  The number of total 30-second visits assumed when generating the photometric errors differs slightly from the fiducial numbers assumed for LSST: we assume 60 visits in u-band, 80 visits in g-band, 180 visits in r-band, 180 visits in i-band, 160 visits in z-band, and 160 visits in y-band.
-%numbers taken from Alex Abate's photErrorModel.py script in PhotoZDC1 repository, which was used with nYrObs=10.
-In the course of simulating Gaussian photometric errors, we add noise to objects fluxes, and some of these noisy fluxes will become negative in one or more bands.  We call such negative fluxes ``non-detections'' and signify them with a placholder magnitude of 99.0 in the catalog.  Thus, further mentions of ``non-detections'' refer to objects that would be ``looked at but not seen'' in multi-band forced photometry, and the photo-z codes will treat them as such.  Only 2.0 per cent of our sample galaxies contain a photometric band with a non-detection, the vast majority of which are in the $u$-band.
+Our mock catalogue is derived from the \textsc{Buzzard}-highres-v1.0 catalogue  \citep[][Wechsler et al., in prep]{DeRose:19}.
+\textsc{Buzzard} is built on a dark matter-only N-body simulation of $2048^{3}$ particles in a $400$ Mpc h$^{-1}$ box.
+The lightcone was constructed from smoothing and interpolation between a set of time snapshots.
+Dark matter halos were identified using the \texttt{Rockstar} software package \citep{Behroozi:13} and then populated with galaxies with a stellar mass and absolute $r$-band magnitude in the \sdss\ system determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep{Reddick:13}.
 
-\subsubsection{Selection of training and test sets}
-\label{sec:buzztraining}
-The total initial catalogue covered $400$ square degrees and contained $238$ million galaxies to an apparent magnitude limit of $r\!=\!29$ and spanning the redshift range $0\!<\!z\!\leq\!8.7$.  In order for statistical errors not to dominate, we need less than one million galaxies in our sample.  Several studies claim that only a few tens of thousands of spectra are necessary to calibrate photo-z surveys to Stage IV requirements (e.~g.~\citet{Bernstein:10}, \citet{Masters:2017}).  Therefore, we aim for a final number of training galaxies between $3\times 10^{4}$ and $5\times 10^{4}$ in our sample.
-%This catalogue contained two orders of magnitude more galaxies than were necessary to determine statistics for this study,
-In order to reduce our sample to a reasonable size, we limit our dataset to a subset of $\sim\!16.8$ square degrees selected from five separate spatial regions of the simulation. Systematic problems with galaxy colors above $z\!>\!2$ were observed, so the catalogue was limited to include only galaxies in the redshift range $0\!<\!z\!\leq\!2.0$. A random subset of the the remaining galaxies was chosen, and placed at random into either a ``training'' set ($10$ per cent of the sample), for which the galaxies true redshifts will be supplied, or a ``test'' set (the remaining $90$ per cent of the sample), for which each code will need to predict a redshift PDF for each galaxy.  
-%The resulting catalogues contain $111\,171$ training galaxies and $1\,000\,883$ test galaxies.
-Finally, we restrict our analysis to a sample with an apparent i-band magnitude limit $i<25.3$, which give a signal-to-noise $\sim\,30$ for most galaxies, a cut often referred to as the expected ``LSST Gold Sample''.  This magnitude cut results in a training set with $44\,404$ galaxies and a test set containing $399\,356$ galaxies.  All subsequent results will evaluate this ``gold sample'' test set.  In order to blind results, initially redshifts were not revealed for the ``test'' set, and were only supplied for the training sample galaxies.  This prevented code runners from tweaking results and fitting to the specific test set.
+To assign a spectrum to each galaxy, the Adding Density Dependent Spectral Energy Distributions (SEDs) procedure (\texttt{ADDSEDS}, deRose in prep.)\footnote{\url{https://github.com/vipasu/addseds}} was used.
+\texttt{ADDSEDS} uses a sample of $\sim 5\times 10^{5}$ galaxies from the magnitude-limited \sdss\ Data Release 6 Value Added Galaxy Catalogue \citep{Blanton:05} to train an empirical relation between absolute $r$-band magnitude, local galaxy density, and SED.
+Each \sdss\ spectrum is parameterized by five weights corresponding to a weighted sum of five basis SED components using the \texttt{k-correct} software package\footnote{\url{http://kcorrect.org}} \citep{Blanton:07}.
 
-\subsubsection{Templates}
-\label{sec:buzztemplates}
-As mentioned in Section~\ref{sec:buzzard}, the SEDs in the Buzzard simulation are drawn from an empirical set of SEDs taken from the SDSS DR6 NYU-VAGC, a sample of roughly $\sim5\times 10^{5}$ galaxies with spectra in SDSS. To determine a finite set of templates to use with template fitting codes we take the five SED weight coefficients for each of the galaxies in the SDSS sample and run a simple K-means clustering algorithm on this five dimensional space. Each dimension was normalized such that it spanned an interval $[0,1]$.  The K-means clusters partition the five-dimensional space of coefficients into Voronoi cells, spanning the space of coefficients in a way that properly reflects the underlying density in the coefficients. Thus, the resultant SEDs constructed using the cell centers as weight coefficients will provide a reasonable spanning SED set. An ad-hoc number of $K=100$ was chosen and the $100$ K-means centre positions are taken as the weights for the \textsc{k-correct} SED components to construct one hundred template SEDs. These $100$ templates were provided,
-%\red{(JS: if I remembered correctly, weren't there 150 templates given? Answer: no, initially I supplied a list of 150 that were drawn with a different algorithm, but once we switched to the final k-means set I only supplied 100 (the initial algorithm over-weighted outlier SEDs, which is why we needed the extra 50)--SJS)}
-and the templates were used by both \textsc{BPZ} and \textsc{LePhare}; however, because EAZY was designed and written to use the same five basis templates employed by \textsc{k-correct} when constructing our mock galaxies, EAZY was run using linear combinations of these five templates rather than using the 100 discrete templates.  The ability to fit for linear combinations of templates highlights an important implementation difference between similar photo-z codes.
+Correlations between SED and galaxy environment were included so as to preserve the colour-density relation of galaxy environment.
+The distance to the spatially projected fifth-nearest neighbour was used as a proxy for local density in the \sdss\ training sample.
+For each simulated galaxy, a galaxy with similar absolute $r$-band magnitude and local galaxy density was chosen from the training set, and that training galaxy's SED was assigned to the simulated galaxy.
 
-
-\subsubsection{Limitations}
+\subsubsection{Caveats}
 \label{sec:buzzlimitations}
-For our initial investigation of photometric redshift codes, we begin with a data set that is somewhat idealized, and does not contain all of the complicating factors present in real data.  In several cases, the simplification is done with a purpose, with potentially confounding effects excluded in order to better isolate the differences between current-generation photo-$z$ codes and their causes.  We list several of the simulation limitations in this section.
-As the simulation is catalogue-based, no image level effects, such as photometric measurement effects, object blending, contamination from sky background (Zodiacal light, scattered light, etc...), lensing magnification, or Galactic reddening are included.  No stars are included in the catalogue, nor are the effects of AGN.
-As all SEDs are constructed from only five basis templates, properties of the galaxy population will be restricted to follow linear combinations of the characteristics of the five basis templates, so certain non-linear features, for example the full range of emission line fluxes relative to the continuum, will not be included in the model galaxy population.  Moreover, the linear combinations of templates are modeled on the $\sim5\times 10^{5}$ SDSS galaxies discussed in Section~\ref{sec:buzzard}, and thus only galaxies that resemble those spectroscopically observed by the SDSS will be included in the sample.  No additional dust reddening intrinsic to the host galaxy is included, the only approximation of dust extinction comes in the form of dust encoded in the five basis SEDs via the training set used to create the basis templates.  Simple linear combinations of these basis templates will, once again, not explore the full range of realistic dust extinction observed in galaxy populations.
-While these idealized conditions limit the realism of our galaxy population, some are also by design.  We aim to test the photo-z codes at a very basic level, and a simplified model assures that differences in results seen between the codes are due to fundamental differences in their underlying assumptions and implementation details, rather than more nuanced properties.  
 
-%\subsection{ABC-Galacticus simulation}
-%\label{sec:galacticus}
-%\red{The Argonne-Berkeley-Carnegie (ABC) Galacticus cosmological simulation uses a semi-analytic model to simulate the galaxy properties and is not directly tuned to observations. Each simulated SED is replaced with a SED drawn from the distribution of empirical SEDs given by the SED Atlas of \citet{Brown:14} (diffusion maps method in development).}
+By necessity, \textsc{Buzzard} does not contain all of the complicating factors present in real data, and here we discuss the most pertinent ways that these limitations affect our experiment.
+% In several cases, the simplification is done with a purpose, with potentially confounding effects excluded in order to better isolate the differences between current-generation photo-$z$ codes and their causes.
+\textsc{Buzzard} includes only galaxies, not stars nor AGN.
+The catalogue-based construction excludes image-level effects, such as deblending errors, photometric measurement issues, contamination from sky background (Zodiacal light, scattered light, etc.), lensing magnification, and Galactic reddening.
+
+The \textsc{Buzzard} SEDs are drawn from a set of $\sim 5 \times 10^{5}$ SEDs, which themselves are derived from a five-component linear combination fit to $\sim 5 \times 10^{5}$ \sdss\ galaxies; thus the sample contains only galaxies that resemble linear combinations of those for which \sdss\ obtained spectra, and there are necessarily duplicates.
+The linear combination SEDs also restrict the properties of the galaxy population to linear combinations of the properties corresponding to five basis templates, precluding the modeling of non-linear features such as the full range of emission line fluxes relative to the continuum.
+The only form of intrinsic dust reddening comes from what is already present in the five basis SEDs via the training set used to create the basis templates, and linear combinations thereof do not span the full range of realistic dust extinction observed in galaxy populations.
+
+While these idealized conditions limit the realism of our mock data, they are irrelevant to the controlled experimental conditions of this study, if anything assuring that differentiation in the performance of the \pzpdf\ codes is due to the inferential techniques rather than nuances in the data.
+
+\subsection{\lsst-like mock observations}
+\label{sec:observations}
+
+Given the SED, absolute $r$-band magnitude, and true redshift of each simulated galaxy, we computed apparent magnitudes in the six \lsst\ filter passbands, $ugrizy$.
+We assigned magnitude errors in the six bands using the simple model of \citet{Ivezic:08}, assuming achievement of the full 10-year depth, with a modification of fiducial \lsst\ total numbers of 30-second visits for photometric error generation: we assume 60 visits in $u$-band, 80 visits in $g$-band, 180 visits in $r$-band, 180 visits in $i$-band, 160 visits in $z$-band, and 160 visits in $y$-band.
+%numbers taken from Alex Abate's photErrorModel.py script in PhotoZDC1 repository, which was used with nYrObs=10.
+
+As a consequence of adding Gaussian-distributed photometric errors, 2.0\% of our galaxies exhibit a negative flux in one or more bands, the vast majority of which are in the $u$-band.
+We deem such negative fluxes \textit{non-detections} and assign a placholder magnitude of 99.0 in the catalogue to indicate to the \pzpdf\ codes that such galaxies would be ``looked at but not seen'' in multi-band forced photometry.
+
+The full dataset thus covers $400$ square degrees and contains $238$ million galaxies of redshift $0 < z \leq 8.7$ down to $r = 29$.
+Systematic inconsistencies with galaxy colors at $z > 2$ were observed, so the catalogue was limited to $0 < z \leq 2.0$.
+To obtain a catalogue matching the \lsst\ Gold Sample, we imposed an cut of $i < 25.3$, which gives a signal-to-noise ratio $\gtrsim 30$ for most galaxies.
+In order for statistical errors to be subdominant to the systematic errors we aim to probe, we further reduced the sample size to $<10^{7}$ galaxies by isolating $\sim 16.8$ square degrees selected from five separate spatial regions of the simulation.
+We refer to this final set of galaxies as DC1, for the first \lsstdesc\ Data Challenge.
+
+\subsection{Shared prior information}
+\label{sec:controlled}
+
+% NOW MOTIVATE THE SHARED PRIOR INFORMATION
+For the purpose of performing a controlled experiment that compares \pzpdf\ codes on equal footing as a baseline for a future sensitivity analysis, we take care to provide each with maximally optimistic prior information.
+Redshift estimation approaches built upon physical modeling and machine learning alike have a notion of prior information considered beyond the photometry of the data for which redshift is to be constrained: that information is derived from a template library for a model-based code and a training set for a data-driven code.
+In this initial study, we seek to set a baseline for a later comparison of the performance of \pzpdf\ codes under incomplete and non-representative prior information that will propagate differently in the space of data-driven and model-based algorithms.
+However, for the baseline case of perfect prior information, physical modeling and machine learning codes can indeed be put on truly equal footing.
+We outline the equivalent ways of providing all codes perfect prior information below.
+
+\subsubsection{Training and test set division}
+\label{sec:buzztraining}
+
+Following the findings of \citet{Bernstein:10}, \citet{Masters:2017} that only $~10^{4}$ spectra are necessary to calibrate \pz s to Stage IV requirements, we aimed to set aside a randomly selected training set of $3-5\times 10^{4}$ galaxies, $\sim 10\%$ of the full sample.
+After all cuts described above, we designated the \textit{DC1 training set} of $44\,404$ galaxies for which observed photometry, true SEDs, and true redshifts would be provided to all codes and the blinded \textit{DC1 test set} of $399\,356$ galaxies for which photometry alone would be provided to all codes and \pzpdf s would be requested.
+%The resulting catalogues contain $111\,171$ training galaxies and $1\,000\,883$ test galaxies.
+The exact form of \lsst\ photometric filter transmission curves were also considered public information that could be used by any code.
+
+\subsubsection{Template library construction}
+\label{sec:buzztemplates}
+
+We aimed to provide template-fitting codes with complete yet manageable library of templates spanning the space of SEDs of the DC1 galaxies.
+We constructed $K=100$ representative templates from the $\sim 5 \times 10^{5}$ SEDs of the \sdss\ DR6 NYU-VAGC by using the five-dimensional vectors of SED weight coefficients described above.
+After regularizing the SED weight coefficients $\in [0, 1]$, we ran a simple K-means clustering algorithm on the five-dimensional space of regularized SED weight coefficients of the \sdss\ galaxy sample.
+The resulting clusters were used to define Voronoi cells in the space of weight coefficients, with centre positions corresponding to weights for the \texttt{k-correct} SED components, yielding the 100 SEDs that comprise the \textit{DC1 template set} provided to all template-based codes.
+We did not, however, exclude from consideration template-based codes that made modifications in their use of these templates due to architecture limitations (as opposed to knowledge of the experimental conditions that could artificially boost the code's apparent performance), with deviations noted in Section~\ref{sec:pzcodes}.

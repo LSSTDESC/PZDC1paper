@@ -42,21 +42,45 @@ mathlines]{lineno}
 \usepackage{graphicx}
 \usepackage{wasysym}
 \usepackage{amsmath}
+\usepackage{amssymb}
 \usepackage{amsfonts}
+\usepackage{footmisc}
 \graphicspath{{./}{./figures/}}
 \bibliographystyle{mnras}%mn2e
 
 % Add your own macros here:
-
-\newcommand{\lsst}{\textsc{LSST}}
-\newcommand{\lsstdesc}{\lsst\textsc{-DESC}}
-\newcommand{\pz}{photo-$z$}
-\newcommand{\pzpdf}{\pz\ PDF}% can easily change this to specify posterior throughout
-\newcommand{\qp}{\texttt{qp}}
-
-\newcommand{\trainz}{\textsc{trainZ}}
-
 \newcommand{\textul}{\underline}
+
+% projects
+\newcommand{\proj}[1]{\textsc{#1}}
+\newcommand{\lsst}{\proj{LSST}}
+\newcommand{\lsstdesc}{\lsst-\proj{DESC}}
+\newcommand{\sdss}{\proj{SDSS}}
+\newcommand{\buzz}{\proj{Buzzard}}
+
+% can easily change these to specify posterior throughout, etc
+\newcommand{\pz}{photo-$z$}
+\newcommand{\pzpdf}{\pz\ PDF}
+\newcommand{\Pz}{Photo-$z$}
+\newcommand{\Pzpdf}{\Pz\ PDF}
+\newcommand{\chisq}{$\chi^{2}$}
+
+% codes
+\newcommand{\pzcode}[1]{\texttt{#1}}
+\newcommand{\qp}{\pzcode{qp}}
+\newcommand{\annz}{\pzcode{ANNz2}}
+\newcommand{\bpz}{\pzcode{BPZ}}
+\newcommand{\cmnn}{\pzcode{CMNN}}
+\newcommand{\delight}{\pzcode{Delight}}
+\newcommand{\eazy}{\pzcode{EAZY}}
+\newcommand{\flexzboost}{\pzcode{FlexZBoost}}
+\newcommand{\gpz}{\pzcode{GPz}}
+\newcommand{\lephare}{\pzcode{LePhare}}
+\newcommand{\metaphor}{\pzcode{METAPhoR}}
+\newcommand{\skynet}{\pzcode{SkyNet}}
+\newcommand{\tpz}{\pzcode{TPZ}}
+\newcommand{\trainz}{\pzcode{trainZ}}
+
 \newcommand*\mathinhead[2]{\texorpdfstring{$\boldsymbol{#1}$}{#2}}
 
 \newcommand{\red}[1]{\textcolor{red}{#1}}
@@ -67,36 +91,30 @@ mathlines]{lineno}
 \newcommand{\scc}[1]{\textcolor{scc}{#1}}%Stefano Cavuoti Comments in dark green
 \definecolor{newpink}{rgb}{0.858, 0.188, 0.478}
 \newcommand{\erfan}[1]{\textcolor{newpink}{#1}} % Erfan Nourbakhsh comments in pink
-\newcommand{\jan}[1]{\textcolor{orange}{#1}}%Alex Malz comments in green
+\newcommand{\jan}[1]{\textcolor{orange}{#1}}%Jeff Newman comments in Orange
 
 \def\X{{\mathbf{X}}}
 \def\x{{\mathbf{x}}}
 \def\E{{\mathbb{E}}}
 
 % ======================================================================
-
+%\hypersetup{draft}
 \begin{document}
 \linenumbers
 
-\title{Implicit assumptions and their impact on photometric redshift PDF performance for LSST}
-% \title{Photometric redshift uncertainties for LSST \romannumeral{1}: A unified methodology for assessing photo-$z$ PDF performance}
+\title{Evaluation of probabilistic photometric redshift estimation approaches for \textsc{LSST}}
 
 \maketitlepre
 
 \begin{abstract}
 
-In order to maximize scientific returns of current and upcoming galaxy surveys, the photometric redshift (photo-$z$) posterior distributions produced by redshift estimation codes must be accurate probability distribution functions (PDFs).  However, the posteriors resulting from a number of current techniques are not, in general, consistent with each other, affected by implicit assumptions made by each code, and an optimal method for obtaining an accurate PDF estimate remains unclear.   We present the results of an initial study by the Large Synoptic Survey Telescope Dark Energy Science Collaboration (\textsc{LSST-DESC}) testing twelve photo-$z$ algorithms using complete and representative training data and evaluate multiple metrics to test how accurately the posteriors represent probability distributions.  We observe several trends, including systematic biases and an overall over/under-prediction in the broadness of the PDFs in many of the codes which may be symptomatic of implementation problems or problems in underlying algorithm design.  A careful accounting of all photo-$z$ systematics will be necessary for the codes employed in upcoming analyses in order to achieve unbiased cosmological measurements.
-  
-%  Photometric redshift (photo-$z$) probability distribution functions (PDFs) are a key data product of nearly all upcoming galaxy imaging surveys.  However, the photo-$z$ PDFs resulting from different techniques are not in general consistent with one another, and an optimal method for obtaining an accurate PDF remains unclear.  We present the results of an initial study of the Large Synoptic Survey Telescope Dark Energy Science Collaboration (\textsc{LSST-DESC}), the first in a planned series of papers testing multiple photo-$z$ codes on simulations of upcoming LSST galaxy photometry catalogues.  This initial test evaluates photo-$z$ algorithms in the presence of representative training data and in the absence of several common sources of systematic errors that affect the procedures by which photo-$z$ PDFs are derived.
-%%  The photo-$z$ PDFs are evaluated using multiple metrics including the Kolmogorov-Smirnoff statistic, Cramer-von Mises statistic, Anderson-Darling statistic, Kullback-Leibler divergence, $N(z)$ moments, quantile-quantile plots and probability integral transform.
-%  The photo-$z$ PDFs are evaluated using multiple metrics and we observe several trends, including an overall over/under-prediction in the broadness of the PDFs for several of the codes.  A careful accounting of all systematics discovered will be necessary for the codes employed in upcoming analyses in order to achieve unbiased cosmological measurements.
- %% Photometric redshift (photo-$z$) probability distribution functions (PDFs) more completely capture the complex nature of photo-$z$ uncertainties and are thus a key data product of nearly all upcoming galaxy imaging surveys, including the Large Synoptic Survey Telescope (LSST).
-  % Photo-$z$ PDFs produced by different algorithms do not in general agree with one another, and no one technique has yet been identified as optimal, leading to a proliferation of photo-$z$ PDF estimation codes.
-  % We present a unified comparison of twelve such codes using simulated LSST photometry, the first in a series of papers on photo-$z$ PDF performance for the LSST Dark Energy Science Collaboration (DESC).
-  % In this initial study, we isolate the effects of the estimation procedure by running each code using perfectly representative training data (for machine learning methods) or the true SED template library (for template-fitting methods) and confirm the mutual inconsistency of the resulting photo-$z$ PDF estimates.
-  % We apply a comprehensive suite of metrics to an the population of photo-$z$ PDFs as well as point estimates derived thereof and an accepted estimator of the redshift distribution $N(z)$.
-  % % The photo-$z$ PDFs are evaluated using multiple metrics including the Kolmogorov-Smirnoff statistic, Cramer-von Mises statistic, Anderson-Darling statistic, Kullback-Leibler divergence, $N(z)$ moments, quantile-quantile plots, and probability integral transform.
-  % We interpret the performance of the codes under each metric in terms of the assumptions underlying the overall approach of the methods and audit the sentivity of the metrics to the failure modes of different techniques, culminating in a discussion predicting the impact of introducing realistic systematics and the direction of attention to the choice of metric when identifying the most appropriate code for a given science use case.
+Many scientific investigations of photometric galaxy surveys require redshift estimates, whose uncertainty properties are best encapsulated by photometric redshift (photo-$z$) posterior probability distribution functions (PDFs).
+A plethora of photo-$z$ PDF estimation methodologies abound, producing discrepant results with no consensus on a preferred approach.
+We present the results of a comprehensive experiment comparing twelve photo-$z$ algorithms applied to mock data produced for the Large Synoptic Survey Telescope (\textsc{LSST}) Dark Energy Science Collaboration (\textsc{DESC}).
+By supplying perfect prior information, in the form of the complete template library and a representative training set as inputs to each code, we demonstrate the impact of the assumptions underlying each technique on the output photo-$z$ PDFs.
+In the absence of a notion of true, unbiased photo-$z$ PDFs, we evaluate and interpret multiple metrics of the ensemble properties of the derived photo-$z$ PDFs as well as traditional reductions to photo-$z$ point estimates.
+We report systematic biases and overall over/under-breadth of the photo-$z$ PDFs of many popular codes, which may indicate avenues for improvement in the algorithms or implementations.
+Furthermore, we raise attention to the limitations of established metrics for assessing photo-$z$ PDF accuracy; though we identify the conditional density estimate (CDE) loss as a promising metric of photo-$z$ PDF performance in the case where true redshifts are available but true photo-$z$ PDFs are not, we emphasize the need for science-specific performance metrics.
 
 \end{abstract}
 
@@ -120,7 +138,7 @@ In order to maximize scientific returns of current and upcoming galaxy surveys, 
 
 \input{./tex/discussion}
 
-%\input{./tex/conclusion}
+\input{./tex/conclusion}
 
 % ----------------------------------------------------------------------
 
@@ -137,29 +155,21 @@ In order to maximize scientific returns of current and upcoming galaxy surveys, 
 % Standard papers only: A.B.C. acknowledges support from grant 1234 from ...
 
 The authors would like to thank their LSST-DESC publication review committee for comments that improved the paper draft.
+% hack event acknowledgments are important
+%We thank Stony Brook University for hosting the Summer 2017 LSST-DESC Hack Day at which this work was partially completed.
 
 { \red{personal funding sources}}
-S.~Schmidt acknowledges support from DOE grant DE-SC0009999 and NSF/AURA grant N56981C.  AIM is advised by David W. Hogg and was supported by National Science Foundation grant AST-1517237.
+SJS acknowledges support from DOE grant DE-SC0009999 and NSF/AURA grant N56981C.
+AIM acknowledges support from the Max Planck Society and the Alexander von Humboldt Foundation in the framework of the Max Planck-Humboldt Research Award endowed by the Federal Ministry of Education and Research.
+During the completion of this work, AIM was advised by David W. Hogg and was supported by National Science Foundation grant AST-1517237.
+%JYHS is advised by Ofer Lahav and acknowledges support from the MyBrainSc Scholarship, provided by the Ministry of Education, Malaysia. JS would also like to thank Antonella Palmese and Boris Leistedt for guidance on the use of the algorithms ANNz2 and Delight respectively.
 
-In addition to packages cited in the text, analyses performed in this paper used the following software packages: \textsc{Numpy} and \textsc{Scipy} \citep{numpyscipy}, \textsc{Matplotlib} \citep{matplotlib}, \textsc{Seaborn} \citep{seaborn}, \textsc{minFunc} \citep{minfunc}, \textsc{pySkyNet} \citep{pyskynet}, and {\textsc photUtils} from the LSST simulations package \citep{lsstphotutils}.
+In addition to packages cited in the text, analyses performed in this paper used the following software packages: \code{Numpy} and \code{Scipy} \citep{numpyscipy}, \code{Matplotlib} \citep{matplotlib}, \code{Seaborn} \citep{seaborn}, \code{minFunc} \citep{minfunc}, \code{qp} \citep{Malz:qp, Malz:2018}, \code{pySkyNet} \citep{pyskynet}, and \code{photUtils} from the \lsst\ simulations package \citep{lsstphotutils}.
 
 \input{desc-tex/ack/standard} % also available: key standard_short
 
-% This work used some telescope which is operated/funded by some agency or consortium or foundation ...
-
-% The DESC acknowledges ongoing support from the Institut National de Physique Nucleaire et de Physique des Particules in France; the Science \& Technology Facilities Council in the United Kingdom; and the Department of Energy, the National Science Foundation, and the LSST Corporation in the United States.
-%
-% DESC uses resources of the IN2P3 Computing Center (CC-IN2P3--Lyon/Villeurbanne - France) funded by the Centre National de la Recherche Scientifique; the National Energy Research Scientific Computing Center, a DOE Office of Science User Facility supported by the Office of Science of the U.S. Department of Energy under Contract No. DE-AC02-05CH11231; STFC DiRAC HPC Facilities, funded by UK BIS National E-infrastructure capital grants; and the UK particle physics grid, supported by the GridPP Collaboration.
-%
-% This work was performed in part under DOE Contract DE-AC02-76SF00515.
-
-% We acknowledge the use of An-External-Tool-like-NED-or-ADS.
-
-%{\it Facilities:} \facility{LSST}
-
 \input{./tex/appendix}
 
-% Include both collaboration papers and external citations:
 \bibliography{main,lsstdesc}
 
 \end{document}
