@@ -18,10 +18,15 @@ A \pzpdf\ estimator derived by method $H$ must be understood as a posterior prob
   \label{eq:pzpdf}
 \hat{p}^{H}_{i}(z) \equiv p(z \vert d_{i}, I_{D}, I_{H}),
 \end{equation}
-conditioned not only on the photometric data $d_{i}$ for that galaxy but also on parameters encompassing a number of things that will differ depending on the method $H$ used to produce it, namely the often implicit assumptions $I_{H}$ necessary for the method to be valid and any inputs $I_{D}$ it takes as prior information, such as a template library or training set.
-Because of this, direct comparison of \pzpdf s produced by different methods is in some sense impossible; even if they share the same external prior information $I_{D}$, by definition they cannot be conditioned on the same assumptions $I_{H}$, otherwise they would not be distinct methods at all.
-We call $I_{H}$ the \textit{implicit prior} specific to the method, though some aspects of its nature may be discerned.
+conditioned not only on the photometric data $d_{i}$ for that galaxy but also on parameters encompassing prior information $I_{D}$ shared, in our experiment, among all \pzpdf\ codes and $I_{H}$ that will differ depending on the method $H$ used to produce it.
+To be concrete, $I_{D}$ takes the form of a training set for the machine learning codes and a template library for the model fitting codes. 
 
+The interpretation of the information $I_{H}$ is more subtle.
+This investigation is built upon the knowledge that two codes taking the same approach, among choices of model fitting or machine learning, are nonetheless expected to yield different results even if they take the same external prior information $I_{D}$.
+$I_{H}$ represents the projection of the code's architecture onto the estimated posteriors over redshift, specific to each code, and even the tunable parameters or random seeds of a specific run of a code with a random component.
+We thus refer to $I_{H}$ as the \textit{implicit prior}, in contrast with the training set or template library provided to a given code explicitly by the researcher.
+
+The presence of the implicit prior in some sense makes a direct comparison of \pzpdf s produced by different methods impossible; even if they share the same external prior information $I_{D}$, by definition they cannot be conditioned on the same assumptions $I_{H}$, otherwise they would not be distinct methods at all.
 In this study, we isolate the effect of differences in prior information $I_{H}$ specific to each method by using a single training set $I_{D}^{\mathrm{ML}}$ for all machine learning-based codes and a single template library $I_{D}^{\mathrm{T}}$ for all template-based codes.
 These sets of prior information are carefully constructed to be representative and complete, so we have $I_{D} \equiv I_{D}^{\mathrm{ML}} \equiv I_{D}^{\mathrm{T}}$ for every method $H$.
 Under this assumption, a ratio of posteriors of codes is in effect a ratio of the implicit posteriors $p(z \vert d_{i}, I_{H'})$ since the external prior information $I_{D}$ is present in the numerator and denominator.
