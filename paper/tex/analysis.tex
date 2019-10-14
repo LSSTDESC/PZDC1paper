@@ -4,11 +4,11 @@
 
 The goal of this study is to evaluate the degree to which \pzpdf s of each method can be trusted for a generic analysis.
 The overloaded ``$p(z)$'' is a widespread abuse of notation that obfuscates this goal, so we dedicate attention to dismantling it here.
+
 Galaxies have redshifts $z$ and photometric data $d$ drawn from a joint probability space $p(z, d)$ in nature.
 As a result, each observed galaxy $i$ has a \textit{true posterior \pzpdf}\ $p(z \vert d_{i})$ as well as a true likelihood $p(d \vert z_{i})$.
 There are a number of metrics that can be used to test the accuracy of a \pz\ posterior as an estimator of a true \pz\ posterior if the true \pzpdf\ is known.
-However, the true \pzpdf\ is in general not accessible unless the photometry is in fact drawn from a ground truth for the joint probability density of redshift and photometry $p(z, d)$.
-In contrast, existing mock catalogs produce redshift-photometry pairs $(z, d)$ by a deterministic algorithm that does not correspond to a joint probability density from which one can take samples.
+However, the true \pzpdf\ of observed data is not accessible, and existing mock catalogs produce redshift-photometry pairs $(z, d)$ by a deterministic algorithm that does not correspond to a joint probability density from which one can take samples.
 In these cases there is no ``true PDF'' for an individual object, and most measures of PDF fidelity will necessarily be restricted to probing the quality of the ensemble of \pzpdf s.
 (See \S,\ref{sec:futureexperiments} for a discussion of how one might circumvent this limitation.)
 
