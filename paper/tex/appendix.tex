@@ -63,7 +63,7 @@ It is unsurprising that \cmnn\ scores well, as with a nearly complete and repres
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_NZ_withbootstrap.jpg}
+\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_NZ_withnull_jpg.jpg}
 \caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the $\hat{N}(z)$ distributions.
 Horizontal lines indicate the statistic values (including uncertainty) achieved using \trainz\ via bootstrap resampling a training set containing 30,000 redshifts.
 We make the reassuring observation that these related statistics do not disagree significantly with one another.
@@ -75,41 +75,47 @@ We make the reassuring observation that these related statistics do not disagree
 It is, however, surprising that \tpz\ does well on $\hat{N}(z)$ given its poor performance on the ensemble \pzpdf s, especially knowing that \tpz\ was optimized for \pzpdf\ ensemble metrics rather than the stacked estimator of the redshift distribution.
 A possible explanation is the choice of smoothing parameter chosen during validation, which affects \pzpdf\ widths as well as overall redshift bias and could be modified to improve performance under the \pzpdf\ metrics.
 
-The first three moments of the stacked $\hat{N}(z)$ distribution relative to the empirical estimate of the truth distribution are given in Table~\ref{tab:moments}.
-Accuracy of the moments varies widely between codes, raising concerns about the propagation to cosmological analyses.
-%\red{[mention that we are calculating moments for the entire sample, will look at fiducial tomographic bins in a follow-up paper (unless group and reviewers realy think we should include in this paper.]}
-%\red{FlexZBoost has some of the best $n(z)$ statistics, but the moments are not good.  Why is this?  Is it the over/underprediction of the high redshift part of the distribution?  Discuss this after talking with Rafael.}
+\begin{figure*}
+\centering
+\includegraphics[width=0.75\textwidth]{fig/moments_figure.jpg}
+\caption{Residuals of the first three moments of the stacked $\hat{N}(z)$ distribution.  Red and blue horizontal lines indicate the Year 1 DESC SRD requirements on accuracy of the mean and variance respectively.  Only a small number of codes are able to meet these specifications even with perfect training data.   }
+\label{fig:moments}
+\end{figure*}
 
-\begin{table}
-\setlength{\tabcolsep}{2pt}
-\caption{Moments of the stacked estimator $\hat{N}(z)$ of the redshift distribution.
-Most of the codes considered recover the moments of $\tilde{N}(z)$}
-\label{tab:moments}
-\begin{tabular}{lccc}
-\hline
-\hline
- \multicolumn{4}{l}{Moments of $\hat{N}(z)$} \\
-\hline
-Estimator  & mean       & variance    & skewness \\
-Empirical ``truth'' & 0.701 & 0.630 & 0.671  \\
-\hline
-\annz       & 0.702      & 0.625      & 0.653    \\
-\bpz        & 0.699      & 0.629      & 0.671    \\
-\delight    & 0.692      & 0.609      & 0.638    \\
-\eazy       & 0.681      & 0.595      & 0.619    \\
-\flexzboost & 0.694      & 0.610      & 0.631    \\
-\gpz        & 0.696      & 0.615      & 0.639    \\
-\lephare    & 0.718      & 0.668      & 0.741    \\
-\metaphor   & 0.705      & 0.628      & 0.657    \\
-\cmnn       & 0.701      & 0.628      & 0.667    \\
-\skynet     & 0.743      & 0.708      & 0.797    \\
-\tpz        & 0.700      & 0.619      & 0.643    \\
-\hline
-\trainz	    & 0.699 		 & 0.627 	    & 0.666 \\
-\end{tabular}
-\end{table}
 
-\skynet\ exhibits redshift bias in Figure~\ref{fig:nz} and is a clear outlier in the first moment of $\hat{N}(z)$ in Table~\ref{tab:moments}.
+We calculated the first three moments of the stacked $\hat{N}(z)$ distribution of all galaxies and compared it to the moments of the true redshift distribution.  Figure~\ref{fig:moments} shows the residuals of the moments for all codes.  Accuracy of the moments varies widely between codes, raising concerns about the propagation to cosmological analyses.  The DESC SRD \citep{Mandelbaum:2018} lists stringent requirements on how well the mean and variance of tomographic redshift bins must be known for each of the main DESC science cases.  We indicate the Year 1 requirements assuming our true mean redshift of $z=0.701$ as dashed lines.  In this study with representative training data, \annz, \bpz, \cmnn, \tpz, and our pathological \trainz\ estimator meet the Y1 requirement on the mean redshift.  Only \annz, \bpz, \cmnn, and \trainz\ meet both requirements.  One should be concerned that many codes fail to meet this ambitious limit under perfect prior information because all codes are anticipated to do no better under realistically imperfect prior information, and indicates that additional calibration to remove these systematic offsets \citep[e.~g.~][]{Newman:2008} will likely be necessary in order to meet these stringent goals.
+
+
+%\begin{table}
+%\setlength{\tabcolsep}{2pt}
+%\caption{Moments of the stacked estimator $\hat{N}(z)$ of the redshift distribution.
+%Most of the codes considered recover the moments of $\tilde{N}(z)$}
+%\label{tab:moments}
+%\begin{tabular}{lccc}
+%\hline
+%\hline
+% \multicolumn{4}{l}{Moments of $\hat{N}(z)$} \\
+%\hline
+%Estimator  & mean       & variance    & skewness \\
+%Empirical ``truth'' & 0.701 & 0.630 & 0.671  \\
+%\hline
+%\annz       & 0.702      & 0.625      & 0.653    \\
+%\bpz        & 0.699      & 0.629      & 0.671    \\
+%\delight    & 0.692      & 0.609      & 0.638    \\
+%\eazy       & 0.681      & 0.595      & 0.619    \\
+%\flexzboost & 0.694      & 0.610      & 0.631    \\
+%\gpz        & 0.696      & 0.615      & 0.639    \\
+%\lephare    & 0.718      & 0.668      & 0.741    \\
+%\metaphor   & 0.705      & 0.628      & 0.657    \\
+%\cmnn       & 0.701      & 0.628      & 0.667    \\
+%\skynet     & 0.743      & 0.708      & 0.797    \\
+%\tpz        & 0.700      & 0.619      & 0.643    \\
+%\hline
+%\trainz	    & 0.699 		 & 0.627 	    & 0.666 \\
+%\end{tabular}
+%\end{table}
+
+\skynet\ exhibits redshift bias in Figure~\ref{fig:nz} and is a clear outlier in the first moment of $\hat{N}(z)$ in Figure~\ref{fig:moments}.
 The \skynet\ algorithm employs a random subsampling of the training set without testing that the subset is representative of the full population, and the implementation used here does not upweight rarer low- and high-redshift galaxies, as in \citet{Bonnett:15}, suggesting a possible cause that may be addressed in future work.
 
 \section{\Pz\ point estimation and metrics}

@@ -81,7 +81,7 @@ As expected, \trainz\ achieves precisely the 0.0002 value expected of an ideal P
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_PIT_withbootstrap.jpg}
+\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_PIT_withnull_jpg.jpg}
 \caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the PIT distributions.
 There is generally good agreement between these statistics, with differences corresponding to the codes with outstanding catastrophic outlier rates, a reflection in the differences in how each statistic weights the tails of the distribution.
 Horizontal lines indicate the level of uncertainty found by bootstrapping a training set sample of 30,000 galaxies using \trainz; none of the codes reach this conservative ideal floor in expected uncertainty.}
@@ -133,5 +133,5 @@ Photo-$z$ Code & CDE Loss \\
 \end{tabular}
 \end{table}
 
-Of the metrics we were able to consider in this experiment, \textbf{the CDE Loss is the only metric that can appropriately penalize the pathological\trainz}.
+Of the metrics we were able to consider in this experiment, \textbf{the CDE Loss is the only metric that can appropriately penalize the pathological \trainz}.
 Additionally, it favors \cmnn\ and \flexzboost, the latter of which is optimized for this metric.

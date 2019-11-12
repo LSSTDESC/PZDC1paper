@@ -4,11 +4,10 @@
 
 The goal of this study is to evaluate the degree to which \pzpdf s of each method can be trusted for a generic analysis.
 The overloaded ``$p(z)$'' is a widespread abuse of notation that obfuscates this goal, so we dedicate attention to dismantling it here.
-Galaxies have redshifts $z$ and photometric data $d$ drawn from a joint probability space $p(z, d)$ in nature.
-As a result, each observed galaxy $i$ has a \textit{true posterior \pzpdf}\ $p(z \vert d_{i})$ as well as a true likelihood $p(d \vert z_{i})$.
+
+Galaxies have redshifts $z$ and photometric data $d$ drawn from a joint probability space $p(z, d)$ in nature, and each observed galaxy $i$ has a \textit{true posterior \pzpdf}\ $p(z \vert d_{i})$.
 There are a number of metrics that can be used to test the accuracy of a \pz\ posterior as an estimator of a true \pz\ posterior if the true \pzpdf\ is known.
-However, the true \pzpdf\ is in general not accessible unless the photometry is in fact drawn from a ground truth for the joint probability density of redshift and photometry $p(z, d)$.
-In contrast, existing mock catalogs produce redshift-photometry pairs $(z, d)$ by a deterministic algorithm that does not correspond to a joint probability density from which one can take samples.
+However, the true \pzpdf\ of observed data is not accessible, and existing mock catalogs produce redshift-photometry pairs $(z, d)$ by a deterministic algorithm that does not correspond to a joint probability density from which one can take samples.
 In these cases there is no ``true PDF'' for an individual object, and most measures of PDF fidelity will necessarily be restricted to probing the quality of the ensemble of \pzpdf s.
 (See \S,\ref{sec:futureexperiments} for a discussion of how one might circumvent this limitation.)
 
@@ -18,10 +17,15 @@ A \pzpdf\ estimator derived by method $H$ must be understood as a posterior prob
   \label{eq:pzpdf}
 \hat{p}^{H}_{i}(z) \equiv p(z \vert d_{i}, I_{D}, I_{H}),
 \end{equation}
-conditioned not only on the photometric data $d_{i}$ for that galaxy but also on parameters encompassing a number of things that will differ depending on the method $H$ used to produce it, namely the often implicit assumptions $I_{H}$ necessary for the method to be valid and any inputs $I_{D}$ it takes as prior information, such as a template library or training set.
-Because of this, direct comparison of \pzpdf s produced by different methods is in some sense impossible; even if they share the same external prior information $I_{D}$, by definition they cannot be conditioned on the same assumptions $I_{H}$, otherwise they would not be distinct methods at all.
-We call $I_{H}$ the \textit{implicit prior} specific to the method, though some aspects of its nature may be discerned.
+conditioned not only on the photometric data $d_{i}$ for that galaxy but also on parameters encompassing prior information $I_{D}$ shared, in our experiment, among all \pzpdf\ codes and $I_{H}$ that will differ depending on the method $H$ used to produce it.
+To be concrete, $I_{D}$ takes the form of a training set for the machine learning codes and a template library for the model fitting codes. 
 
+The interpretation of the information $I_{H}$ is more subtle.
+This investigation is built upon the knowledge that two codes taking the same approach, among choices of model fitting or machine learning, are nonetheless expected to yield different results even if they take the same external prior information $I_{D}$.
+$I_{H}$ represents the projection of the code's architecture onto the estimated posteriors over redshift, specific to each code, and even the tunable parameters or random seeds of a specific run of a code with a random component.
+We refer to $I_{H}$ as the \textit{implicit prior}, in contrast with the training set or template library provided to a given code explicitly by the researcher.  In simple terms, the implicit prior is the collection of the many different assumptions, coding choices, algorithm selections, and other implementation details that are specific to each code, the ensemble of which results in differing estimates of redshift when combined with the data and prior information in common to all codes.
+
+The presence of the implicit prior in some sense makes a direct comparison of \pzpdf s produced by different methods impossible; even if they share the same external prior information $I_{D}$, by definition they cannot be conditioned on the same assumptions $I_{H}$, otherwise they would not be distinct methods at all.
 In this study, we isolate the effect of differences in prior information $I_{H}$ specific to each method by using a single training set $I_{D}^{\mathrm{ML}}$ for all machine learning-based codes and a single template library $I_{D}^{\mathrm{T}}$ for all template-based codes.
 These sets of prior information are carefully constructed to be representative and complete, so we have $I_{D} \equiv I_{D}^{\mathrm{ML}} \equiv I_{D}^{\mathrm{T}}$ for every method $H$.
 Under this assumption, a ratio of posteriors of codes is in effect a ratio of the implicit posteriors $p(z \vert d_{i}, I_{H'})$ since the external prior information $I_{D}$ is present in the numerator and denominator.
@@ -102,7 +106,7 @@ We evaluate a number of quantitative metrics derived from the visually interpret
   \label{eq:ks}
   \mathrm{KS} \equiv \max_{z} \left( \left| \mathrm{CDF}[\hat{f}, z] - \mathrm{CDF}[\tilde{f}, z] \right| \right),
 \end{equation}
-interpretable as the maximum difference between the CDFs of an approximating univariate distribution $\hat{f}(z)$ and a reference distribution $\tilde{f}(z)$, in this case $U(0,1)$.
+interpretable as the maximum difference between the CDFs of the empirical distribution of PIT values for the test sample $\hat{f}(z)$ and a reference distribution $\tilde{f}(z)$, in this case $U(0,1)$, for the ideal distribution of PIT values.
 % $CDF_{\rm phot}(z)$ and $CDF_{\rm spec}(z)$, the CDFs of the photo-$z$ and spectroscopic redshift respectively:
 %The KS test quantifies whether the two redshift distributions are drawn from a similar distribution, independent of binning.
 % The KS test quantifies the similarity between two distributions, independent of binning.
