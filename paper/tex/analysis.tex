@@ -18,7 +18,7 @@ A \pzpdf\ estimator derived by method $H$ must be understood as a posterior prob
 \hat{p}^{H}_{i}(z) \equiv p(z \vert d_{i}, I_{D}, I_{H}),
 \end{equation}
 conditioned not only on the photometric data $d_{i}$ for that galaxy but also on parameters encompassing prior information $I_{D}$ shared, in our experiment, among all \pzpdf\ codes and $I_{H}$ that will differ depending on the method $H$ used to produce it.
-To be concrete, $I_{D}$ takes the form of a training set for the machine learning codes and a template library for the model fitting codes. 
+To be concrete, $I_{D}$ takes the form of a training set for the machine learning codes and a template library for the model fitting codes.
 
 The interpretation of the information $I_{H}$ is more subtle.
 This investigation is built upon the knowledge that two codes taking the same approach, among choices of model fitting or machine learning, are nonetheless expected to yield different results even if they take the same external prior information $I_{D}$.
@@ -40,7 +40,7 @@ We will discuss the choice of \pzpdf\ parameterization further in Section~\ref{s
 This analysis is conducted using the \qp\footnote{\url{http://github.com/aimalz/qp/}}\ software package \citep{Malz:qp} for manipulating and calculating metrics of univariate PDFs.
 We present the metrics of \pzpdf s that address our goals in the sections below.
 Section~\ref{sec:qualmet} outlines aggregate metrics of a catalogue of \pzpdf s, and Section~\ref{sec:CDE_loss} presents a metric of individual \pzpdf s in the absence of true \pzpdf s.
-Though the outmoded practices should not be encouraged, those seeking a connection to previous comparison studies will find metrics of redshift point estimate reductions of \pzpdf s in Appendix~\ref{sec:pointmetrics} and metrics of a science-specific summary statistics heuristically derived from \pzpdf s in Appendix~\ref{sec:moments}.
+Those seeking a connection to previous comparison studies will find metrics of redshift point estimate reductions of \pzpdf s in Appendix~\ref{sec:pointmetrics} and metrics of a science-specific summary statistic heuristically derived from \pzpdf s in Appendix~\ref{sec:moments}.
 
 \subsection{Metrics of \pzpdf \ ensembles}
 \label{sec:qualmet}
