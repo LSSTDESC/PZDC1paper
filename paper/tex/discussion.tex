@@ -80,10 +80,11 @@ The fixed redshift grid shared between the codes may have unfairly penalized cod
 Performance on the (admittedly small) population of sharply peaked \pzpdf s may have been suppressed across all codes due to the insufficient resolution of the redshift grid.
 In light of the results of \citet[]{Malz:2018}, in future analyses we plan to switch from a fixed grid to the quantile parameterization or to permit each code to use its native storage format under a shared number of parameters.
 
-Section~\ref{sec:metrics} discussed the difficulty in evaluating PDF accuracy for individual objects.
+Section~\ref{sec:metrics} discussed the difficulty in evaluating PDF accuracy for individual objects with known $(z, d)$ information but without a known $p(z, d)$.
 In a follow-up study, we will
  % use generative adversarial networks\citep[(GANs)][]{Goodfellow:14} trained on the simulation data to
-generate ``true PDF'' distributions, yielding a dataset that enables a test of PDF accuracy for individual galaxies rather than solely ensembles.
+generate mock data probabilistically, yielding true PDFs in addition to true redshifts and photometric data.
+This future data set will enable tests of PDF accuracy for individual galaxies rather than solely ensembles.
 
 \subsection{Realistic mock data}
 \label{sec:futuredata}
