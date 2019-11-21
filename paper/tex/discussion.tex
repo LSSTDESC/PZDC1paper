@@ -1,10 +1,6 @@
 \section{Discussion and future work}
 \label{sec:discussion}
 %(Sam Schmidt, Ofer Lahav, Jeff Newman, Alex Malz, Eve Kovacs, Tony Tyson, Tina Peters)
-
-% If methods can not reach the goals on idealized data, then they will almost surely not meet those same goals when the more complex problems that we expect to arise from real LSST data are included.
-% The results presented in this paper enable an evaluation of which algorithms are the most promising moving forward, and potentially point to avenues for improvement.
-
 In contrast with other \pzpdf\ comparison papers that have aimed to identify the ``best'' code for a given survey, we have focused on the somewhat more philosophical questions of how to assess \pzpdf\ methods and how to interpret differences between codes in terms of \pzpdf\ performance.
 In Section~\ref{sec:caution}, we reframe the strong performance of our pathological \pzpdf\ technique, \trainz, as a cautionary tale about the importance of choosing appropriate comparison metrics.
 In Section~\ref{sec:futureexperiments}, we outline the experiments we intend to build upon this study
@@ -62,7 +58,7 @@ In the absence of a single scientific motivation or the information necessary fo
 The work presented in this paper is only a first step in assessing \pzpdf\ approaches and moving toward an improved photometric redshift estimator.
 Here we discuss the next steps for subsequent investigations.
 
-This initial paper explores \pzpdf\ code performance in idealized conditions with perfect catalog-based photometry and representative training data, but the resilience of each code to such realistic imperfections in prior information has not yet been evaluated.
+This initial paper explores \pzpdf\ code performance in idealized conditions with perfect catalogue-based photometry and representative training data, but the resilience of each code to such realistic imperfections in prior information has not yet been evaluated.
 A top priority for a follow-up study is to test realistic forms of incomplete, erroneous, and non-representative template libraries and training sets as well as the impact of other forms of external priors that must be ingested by the codes, major concerns in \citet{Newman:2015, Masters:2017}.
 Outright redshift failures due to emission line misidentification or noise spikes may be modeled by the inclusion of a small number of high-confidence yet false redshifts.
 We plan to perform a full sensitivity analysis on a realistically incomplete training set of spectroscopic galaxies, modeling the performance of spectrographs, emission-line properties, and expected signal-to-noise to determine which potential training set galaxies are most likely to be excluded.
@@ -91,8 +87,8 @@ This future data set will enable tests of PDF accuracy for individual galaxies r
 
 To make optimal use of the \lsst\ data for cosmological and other astrophysical analyses of the \lsstdesc\ Science Roadmap, future investigations that build upon this one will require a more sophisticated set of galaxy photometry and redshifts.
 %\item \red{inclusion of photometric errors, image based effects, blending, lensing, sky, mask, etc...}
-This initial paper explored a data set that was constructed at the catalog level, with no inclusion of the complications that come from measuring photometry from images.
-Future data challenges will move to catalogs constructed from mock images, including the complications of deblending, sensor inefficiencies, and heterogeneous observing conditions, all anticipated to affect the measured colours of \lsst's galaxy sample \citep{Dawson:2016}.
+This initial paper explored a data set that was constructed at the catalogue level, with no inclusion of the complications that come from measuring photometry from images.
+Future data challenges will move to catalogues constructed from mock images, including the complications of deblending, sensor inefficiencies, and heterogeneous observing conditions, all anticipated to affect the measured colours of \lsst's galaxy sample \citep{Dawson:2016}.
 
 The DC1 galaxy SEDs were linear combinations of just five basis SED templates, but a next generation of data for \pzpdf\ investigations must include a broader range of physical properties.
 Though we only considered $z < 2$ here, \lsst\ 10-year data will contain $z > 2$ galaxies, plagued by fainter apparent magnitudes and anomalous colours due to stellar evolution.

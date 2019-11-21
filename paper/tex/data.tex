@@ -10,13 +10,13 @@ The experimental conditions shared among all codes are motivated by the \lsst\ S
 Our mock catalogue is derived from the \textsc{Buzzard}-highres-v1.0 catalogue  \citep[][Wechsler et al., in prep]{DeRose:19}.
 \textsc{Buzzard} is built on a dark matter-only N-body simulation of $2048^{3}$ particles in a $400$ Mpc h$^{-1}$ box.
 The lightcone was constructed from smoothing and interpolation between a set of time snapshots.
-Dark matter halos were identified using the \texttt{Rockstar} software package \citep{Behroozi:13} and then populated with galaxies with a stellar mass and absolute $r$-band magnitude in the \sdss\ system determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep{Reddick:13}.
+Dark matter halos were identified using the \texttt{Rockstar} software package \citep{Behroozi:13} and then populated with galaxies with stellar masses and absolute $r$-band magnitudes in the \sdss\ system determined using a sub-halo abundance matching model constrained to match both projected two-point galaxy clustering statistics and an observed conditional stellar mass function \citep{Reddick:13}.
 
 To assign a spectrum to each galaxy, the Adding Density Dependent Spectral Energy Distributions (SEDs) procedure (\texttt{ADDSEDS}, deRose in prep.)\footnote{\url{https://github.com/vipasu/addseds}} was used.
-\texttt{ADDSEDS} uses a sample of $\sim 5\times 10^{5}$ galaxies from the magnitude-limited \sdss\ Data Release 6 Value Added Galaxy Catalogue \citep{Blanton:05} to train an empirical relation between absolute $r$-band magnitude, local galaxy density, and SED.
+\texttt{ADDSEDS} uses a sample of $\sim 5\times 10^{5}$ galaxies from the magnitude-limited \sdss\ Data Release 6 Value Added Galaxy Catalogue \citep[NYU-VAGC,][]{Blanton:05} to train an empirical relation between absolute $r$-band magnitude, local galaxy density, and SED.
 Each \sdss\ spectrum is parameterized by five weights corresponding to a weighted sum of five basis SED components using the \texttt{k-correct} software package\footnote{\url{http://kcorrect.org}} \citep{Blanton:07}.
 
-Correlations between SED and galaxy environment were included so as to preserve the colour-density relation of galaxy environment.
+Correlations between SED and galaxy environment were included so as to preserve the colour-density relation of galaxy environments.
 The distance to the spatially projected fifth-nearest neighbour was used as a proxy for local density in the \sdss\ training sample.
 For each simulated galaxy, a galaxy with similar absolute $r$-band magnitude and local galaxy density was chosen from the training set, and that training galaxy's SED was assigned to the simulated galaxy.
 
@@ -41,7 +41,7 @@ Given the SED, absolute $r$-band magnitude, and true redshift of each simulated 
 We assigned magnitude errors in the six bands using the simple model of \citet{Ivezic:08}, assuming achievement of the full 10-year depth, with a modification of fiducial \lsst\ total numbers of 30-second visits for photometric error generation: we assume 60 visits in $u$-band, 80 visits in $g$-band, 180 visits in $r$-band, 180 visits in $i$-band, 160 visits in $z$-band, and 160 visits in $y$-band.
 %numbers taken from Alex Abate's photErrorModel.py script in PhotoZDC1 repository, which was used with nYrObs=10.
 
-As a consequence of adding Gaussian-distributed photometric errors, 2.0\% of our galaxies exhibit a negative flux in one or more bands, the vast majority of which are in the $u$-band.
+As a consequence of adding Gaussian-distributed photometric errors, 2.0 per cent of our galaxies exhibit a negative flux in one or more bands, the vast majority of which are in the $u$-band.
 We deem such negative fluxes \textit{non-detections} and assign a placholder magnitude of 99.0 in the catalogue to indicate to the \pzpdf\ codes that such galaxies would be ``looked at but not seen'' in multi-band forced photometry.
 
 The full dataset thus covers $400$ square degrees and contains $238$ million galaxies of redshift $0 < z \leq 8.7$ down to $r = 29$.
@@ -54,7 +54,7 @@ We refer to this final set of galaxies as DC1, for the first \lsstdesc\ Data Cha
 \label{sec:controlled}
 
 % NOW MOTIVATE THE SHARED PRIOR INFORMATION
-For the purpose of performing a controlled experiment that compares \pzpdf\ codes on equal footing as a baseline for a future sensitivity analysis, we take care to provide each with maximally optimistic prior information.
+For the purpose of performing a controlled experiment that compares \pzpdf\ codes on equal footing as a baseline for a future sensitivity analysis, we take care to provide each with optimal prior information.
 Redshift estimation approaches built upon physical modeling and machine learning alike have a notion of prior information considered beyond the photometry of the data for which redshift is to be constrained: that information is derived from a template library for a model-based code and a training set for a data-driven code.
 In this initial study, we seek to set a baseline for a later comparison of the performance of \pzpdf\ codes under incomplete and non-representative prior information that will propagate differently in the space of data-driven and model-based algorithms.
 However, for the baseline case of perfect prior information, physical modeling and machine learning codes can indeed be put on truly equal footing.
@@ -63,7 +63,7 @@ We outline the equivalent ways of providing all codes perfect prior information 
 \subsubsection{Training and test set division}
 \label{sec:buzztraining}
 
-Following the findings of \citet{Bernstein:10}, \citet{Newman:2015}, and \citet{Masters:2017} that only $\sim\!10^{4}$ spectra are necessary to calibrate \pz s to Stage IV requirements, we aimed to set aside a randomly selected training set of $3-5\times 10^{4}$ galaxies, $\sim 10\%$ of the full sample.
+Following the findings of \citet{Bernstein:10}, \citet{Newman:2015}, and \citet{Masters:2017} that only $\sim\!10^{4}$ spectra are necessary to calibrate \pz s to Stage IV requirements, we aimed to set aside a randomly selected training set of $3-5\times 10^{4}$ galaxies, $\sim 10$ per cent of the full sample.
 After all cuts described above, we designated the \textit{DC1 training set} of $44\,404$ galaxies for which observed photometry, true SEDs, and true redshifts would be provided to all codes and the blinded \textit{DC1 test set} of $399\,356$ galaxies for which photometry alone would be provided to all codes and \pzpdf s would be requested.
 %The resulting catalogues contain $111\,171$ training galaxies and $1\,000\,883$ test galaxies.
 The exact form of \lsst\ photometric filter transmission curves were also considered public information that could be used by any code.

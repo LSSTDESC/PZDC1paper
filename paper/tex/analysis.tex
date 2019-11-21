@@ -7,7 +7,7 @@ The overloaded ``$p(z)$'' is a widespread abuse of notation that obfuscates this
 
 Galaxies have redshifts $z$ and photometric data $d$ drawn from a joint probability space $p(z, d)$ in nature, and each observed galaxy $i$ has a \textit{true posterior \pzpdf}\ $p(z \vert d_{i})$.
 There are a number of metrics that can be used to test the accuracy of a \pz\ posterior as an estimator of a true \pz\ posterior if the true \pzpdf\ is known.
-However, the true \pzpdf\ of observed data is not accessible, and existing mock catalogs produce redshift-photometry pairs $(z, d)$ by a deterministic algorithm that does not correspond to a joint probability density from which one can take samples.
+However, the true \pzpdf\ of observed data is not accessible, and existing mock catalogues produce redshift-photometry pairs $(z, d)$ by a deterministic algorithm that does not correspond to a joint probability density from which one can take samples.
 In these cases there is no ``true PDF'' for an individual object, and most measures of PDF fidelity will necessarily be restricted to probing the quality of the ensemble of \pzpdf s.
 (See \S,\ref{sec:futureexperiments} for a discussion of how one might circumvent this limitation.)
 
@@ -48,7 +48,7 @@ Those seeking a connection to previous comparison studies will find metrics of r
 %(Alex Malz, Peter Freeman, Sam Schmidt)
 %(John Soo, Rongpu Zhou)
 
-Because \lsst's \pzpdf s will be used for many scientific applications, some of which require accuracy of each individual catalog entry, we consider several metrics that probe the population-level performance of the \pzpdf s.
+Because \lsst's \pzpdf s will be used for many scientific applications, some of which require each individual catalogue entry to be accurate, we consider several metrics that probe the population-level performance of the \pzpdf s.
 As we have the true redshifts but not true \pzpdf s for comparison, we remind the reader of the Cumulative Distribution Function (CDF)
 \begin{equation}
   \label{eq:cdf}
@@ -78,7 +78,7 @@ A catalogue of accurate \pzpdf s should have a PIT distribution that is uniform 
 Catastrophic outliers with a true redshift outside the support of its \pzpdf\ have $\mathrm{PIT} \approx 0$ or $\mathrm{PIT} \approx 1$.
 
 The PIT distribution has been used to quantify the performance of \pzpdf\ methods in the past \citep[e.~g.~][]{Bordoloi:10,Polsterer:16,Tanaka:17}.
-\citet{Tanaka:17} use the histogram of PIT values as a diagnostic indicator of overall code performance, while \citet{Freeman:17} independently define the PIT and demonstrate how its individual values may be used both to perform hypothesis testing (via, e.~g.~ the KS, CvM, and AD tests; see below) and to construct quantile-quantile plots.
+\citet{Tanaka:17} use the histogram of PIT values as a diagnostic indicator of overall code performance, while \citet{Freeman:17} independently define the PIT and demonstrate how its individual values may be used both to perform hypothesis testing (via, e.~g.~ the KS, CvM, and AD tests; see below) and to construct QQ plots.
 %\red{We might want to divide this by redshift to get trends, as the overall PIT could be impacted by true n(z).
 %For example, a PIT with nontrivial shape could be due to that behavior being uniform as a function of redshift or significant inaccuracy only in a small range of redshifts where $n(z)$ is large and a flat PIT elsewhere.}
 Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlier rate as the fraction of galaxies with $\mathrm{PIT} < 0.0001$ or $\mathrm{PIT} > 0.9999$, which should total 0.0002 for an ideal uniform distribution.
