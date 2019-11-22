@@ -11,14 +11,15 @@ We reiterate that under our idealized experimental conditions, differences betwe
 \includegraphics[width=0.49\textwidth]{fig/pz_12codes_261931_noseaborn_crop.jpg}\includegraphics[width=0.49\textwidth]{fig/pz_12codes_471167_noseaborn_crop.jpg}\\
 \includegraphics[width=0.49\textwidth]{fig/pz_12codes_713178_noseaborn_crop.jpg}\includegraphics[width=0.49\textwidth]{fig/pz_12codes_982747_noseaborn_crop.jpg}
 \caption{The individual \pzpdf s (blue) distributions produced by the twelve codes (small panels) on four exemplary galaxies' photometry (large panels) with different true redshifts (red).
+All \pzpdf s have been scaled to the same peak value.
 The \pzpdf s of all codes share some features for the example galaxies due to physical colour degeneracies and photometric errors: tight unimodal $p(z)$ (upper left), broad unimodal $p(z)$ (upper right), bimodal $p(z)$ (lower right), and complex/multimodal $p(z)$ (lower left).
 The diverse algorithms and implementations induce differences in small-scale structure and sensitivity to physical systematics.}
 \label{fig:pz_examples}
 \end{figure*}
 
-The most striking differences between codes are the small-scale features induced by the interaction between the shared piecewise constant parameterization of $200$ bins $0 < z < 2$ of Section~\ref{sec:metrics} and the smoothing conditions or lack thereof in each algorithm.
+The most striking differences between codes are the small-scale features induced by the interaction between the shared piecewise constant parameterization of $200$ bins for $0 < z < 2$ of Section~\ref{sec:metrics} and the smoothing conditions or lack thereof in each algorithm.
 The $\mathrm{d}z = 0.01$ redshift resolution is sufficient to capture the broad peaks of faint galaxies' \pzpdf s with large photometric errors but is too broad to resolve the narrow peaks for bright galaxies' \pzpdf s with small photometric errors.
-This observation is consistent with the findings of \citet[]{Malz:2018} that the piecewise constant parameterization underperforms in the presence of small-scale structures.
+This observation is consistent with the findings of \citet[]{Malz:2018} that the piecewise constant form underperforms other parameterizations in the presence of small-scale structures.
 
 However, the shared small-scale features of \annz, \metaphor, \cmnn, and \skynet\ are a result of various weighted sums of the limited number of training set galaxies with colours similar to those of the test set galaxy in question, with behavior closer to classification than regression in the case of \annz.
 The settings used on \gpz\ in this work forced broadening of the single Gaussian to cover the multimodal redshift solutions of the other codes.
@@ -41,7 +42,7 @@ Values in excess of the $2\sigma$ shaded region show that for some codes these e
 \label{fig:pitqq}
 \end{figure*}
 
-The PIT histograms of \delight, \cmnn, \skynet, and \tpz\ feature an underrepresentation of extreme values, indicative of overly broad \pzpdf s, while the overrepresentation of extreme values for \metaphor\ indicate overly narrow \pzpdf s.
+The PIT histograms of \delight, \cmnn, \skynet, and \tpz\ feature an underrepresentation of extreme values, indicative of overly broad \pzpdf s, while the overrepresentation of extreme values for \metaphor\ indicates overly narrow \pzpdf s.
 These five codes in particular have a free parameter for bandwidth, which may be responsible for this vulnerability, in spite of the opportunity for fine-tuning with perfect prior information.
 \flexzboost's ``sharpening'' parameter (described in Section~\ref{sec:flexzboost}) played a key role in diagonalizing the QQ plot, indicating a common avenue for improvement in the approaches that share this type of parameter.
 On the other hand, the three purely template-based codes, \bpz, \eazy, and \lephare, do not exhibit much systematic broadening or narrowing, which may indicate that complete template coverage effectively defends from these effects.
@@ -77,13 +78,13 @@ An excess over this small value indicates true redshifts that fall outside the n
 Close inspection of the extremes at PIT values of 0 and 1 reveal spikes in the first and last bin of the PIT histogram for some codes in Figure~\ref{fig:pitqq}, corresponding to catastrophic outliers where the true redshift lies outside of the support of the $p(z)$.
 The catastrophic outlier rates are provided in Table~\ref{tab:pitoutlier}.
 As expected, \trainz\ achieves precisely the 0.0002 value expected of an ideal PIT distribution.
-\annz, \flexzboost, \lephare, and \metaphor\ have notably high catastrophic outlier rates $> 0.02$, exceeding 100 times the ideal PIT rate, meriting further investigation.
+\annz, \flexzboost, \lephare, and \metaphor\ have notably high catastrophic outlier rates $> 0.02$, exceeding 100 times the ideal PIT rate, meriting further investigation elsewhere.
 
 \begin{figure*}
 \centering
 \includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_PIT_withnull_jpg.jpg}
 \caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the PIT distributions.
-There is generally good agreement between these statistics, with differences corresponding to the codes with outstanding catastrophic outlier rates, a reflection in the differences in how each statistic weights the tails of the distribution.
+There is generally good agreement between these statistics, with differences corresponding to the codes with outstanding catastrophic outlier rates, a reflection of the differences in how each statistic weights the tails of the distribution.
 Horizontal lines indicate the level of uncertainty found by bootstrapping a training set sample of 30,000 galaxies using \trainz; none of the codes reach this conservative ideal floor in expected uncertainty.}
 \label{fig:pit_stats}
 \end{figure*}
@@ -91,7 +92,7 @@ Horizontal lines indicate the level of uncertainty found by bootstrapping a trai
 Figure~\ref{fig:pit_stats} highlights the relative values of the KS, CvM, and AD test statistics calculated by comparing the PIT distribution and a uniform distribution $U(0, 1)$.
 \metaphor\ and \lephare\ perform well under the AD but poorly under the KS and CvM due to their high catastrophic outlier rates.
 \annz\ and \flexzboost\  are the top scorers under these metrics of the PIT distribution.
-\annz's strong performance can be attributed to an aspect of the training process in which training set galaxies with a PIT that more closely matches the percentiles of the DC1 training set's redshift distribution are upweighted; in effect, these quantile-based metrics were part of the algorithm itself that may or may not serve it well under more realistic experimental conditions.
+\annz's strong performance can be attributed to an aspect of the training process in which training set galaxies with PIT values that more closely match the percentiles of the DC1 training set's redshift distribution are upweighted; in effect, these quantile-based metrics were part of the algorithm itself that may or may not serve it well under more realistic experimental conditions.
 Similar to what was done for the PIT histograms in Figure~\ref{fig:pitqq}, we create bootstrap training samples of 30,000 galaxies for use with \trainz\ in order to estimate a conservative statistical floor that we would expect in real data.
 No code reaches this idealized floor, indicating that all codes suffer some degradation from the ideal when employing their implicit priors, though \annz, \flexzboost, and \gpz\ are within a factor of two.
 
