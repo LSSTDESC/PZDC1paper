@@ -22,7 +22,7 @@ The \trainz\ estimator of Section~\ref{sec:trainz}, which assigns every galaxy a
 Because our training set is perfectly representative of the test set, $N(z)$ should be identical for both sets down to statistical noise.
 \textbf{We make the alarming observation that \trainz, the experimental control, outperforms all codes on the CDF-based metrics, and all but one code on the $N(z)$ based statistics.}
 The PIT and other CDF-based metrics upon which modern \pzpdf\ comparisons are built \citep{Bordoloi:10,Polsterer:16,Tanaka:17} can be gamed by a trivial estimator that yields only an affirmation of prior knowledge uninformed by the data.
-In other words, such ensemble metrics are not appropriate for the task of selecting \pzpdf\ codes for analysis pipelines.
+In other words, such ensemble metrics are insufficient for the task of selecting \pzpdf\ codes for analysis pipelines.
 %\textit{Explain the connection between \trainz\ and these metrics.}
 
 The CDE loss and point estimate metrics appropriately penalize \trainz's naivete.
@@ -61,7 +61,7 @@ Here we discuss the next steps for subsequent investigations.
 This initial paper explores \pzpdf\ code performance in idealized conditions with perfect catalogue-based photometry and representative training data, but the resilience of each code to realistic imperfections in prior information has not yet been evaluated.
 A top priority for a follow-up study is to test realistic forms of incomplete, erroneous, and non-representative template libraries and training sets as well as the impact of other forms of external priors that must be ingested by the codes, major concerns in \citet{Newman:2015, Masters:2017}.
 Outright redshift failures due to emission line misidentification or noise spikes may be modeled by the inclusion of a small number of high-confidence yet false redshifts.
-We plan to perform a full sensitivity analysis on a realistically incomplete training set of spectroscopic galaxies, modeling the performance of spectrographs, emission-line properties, and expected signal-to-noise to determine which potential training set galaxies are most likely to be excluded.
+We plan to perform a full sensitivity analysis on a realistically incomplete training set of spectroscopic galaxies, modeling the performance of spectrographs, emission-line properties, and expected signal-to-noise to determine which potential training set galaxies are most likely not to yield a secure redshift.
 
 Appendix~\ref{sec:moments} only addresses the stacked estimator of the redshift distribution of the entire galaxy catalogue rather than subsets in bins, tomographic or otherwise.
 The effects of tomographic binning schemes will be explored in a dedicated future paper, including propagation of redshift uncertainties in a set of fiducial tomographic redshift bins in order to estimate impact on cosmological parameter estimation.
