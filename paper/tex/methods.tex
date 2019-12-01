@@ -155,7 +155,7 @@ Second, we apply the initial colour cut to the training set before calculating t
 
 We make an additional adaptation to enable the \cmnn\ algorithm to yield accurate \pzpdf s for all galaxies, as the original \citet{Graham:17} algorithm is optimized for \pz\ point estimates and is susceptible to less accurate \pzpdf s for bright galaxies or those with few matches in colour-space.
 We use PPF$=0.95$ rather than PPF$=0.68$ to generate the subset of colour-matched training galaxies, whose redshifts are weighted by their inverse Mahalanobis distances when composing the \pzpdf\ rather than weighting all colour-matched training galaxies equally.
-Additionally, when the number of colour-matched training set galaxies is less than 20, the nearest 20 neighbours in colour-space are used instead, and the output \pzpdf\ is convolved with a Gaussian kernel of variance $\sigma_{\mathrm{ train}}^{2}(\mathrm{PPF}_{20}/0.95)^2 -1$ to account for the corresponding growth of the effective PPF to include 20 neighbors.
+Additionally, when the number of colour-matched training set galaxies is less than 20, the nearest 20 neighbours in colour-space are used instead, and the output \pzpdf\ is convolved with a Gaussian kernel of variance $\sigma_{\mathrm{ train}}^{2}(\mathrm{PPF}_{20}/0.95)^2 -1$ to account for the corresponding growth of the effective PPF to include 20 neighbours.
 
 \subsubsection{Delight}
 \label{sec:delight}
@@ -231,7 +231,7 @@ Upon regression of the test set, the photometry $m_{ij}$ of each test set galaxy
 % At a higher level, the pipeline mainly consists of three modules: (i) \textit{data pre-processing}, including a catalogue cross-matching sub-module \citep[based on the tool C3, ][]{Riccio:17}, a sub-module for photometric evaluation and error estimation of the multi-band catalogue used as Knowledge Base (KB), and a sub-module dedicated to the perturbation of the photometric KB, propaedeutic to the PDF estimation; (ii) \textit{photo-$z$ prediction}, which is the training/validation/test phase, producing the photo-$z$'s point estimates, based on a pre-selected ML method; (iii) \textit{PDF estimation}, specifically designed to calculate the PDF of the photo-$z$ estimation errors.
 % The last module includes also a post-processing tool, providing some statistics on the produced point estimates and PDFs.
 
-In this work, we used a hierarchical KNN to replace non-detections with values based on their neighbors.
+In this work, we used a hierarchical KNN to replace non-detections with values based on their neighbours.
 The usual cross-validation of redshift estimates and PDFs was also omitted for this study.
 
 \subsubsection{SkyNet}
