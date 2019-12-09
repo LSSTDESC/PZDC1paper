@@ -21,9 +21,10 @@ The metric-specific performance demonstrated in this paper implies that we may n
 
 The \trainz\ estimator of Section~\ref{sec:trainz}, which assigns every galaxy a \pzpdf\ equal to $N(z)$ of the training set, is introduced as an experimental control or null test to demonstrate this point via \textit{reductio ad absurdum}.
 Because our training set is perfectly representative of the test set, $N(z)$ should be identical for both sets down to statistical noise.
-\textbf{We make the alarming observation that \trainz, the experimental control, outperforms all codes on the CDF-based metrics, and all but one code on the $N(z)$ based statistics.}
+\textbf{We make the alarming observation that \trainz, the absurd experimental control, outperforms all codes on the CDF-based metrics, and all but one code on the $N(z)$ based statistics.}
 The PIT and other CDF-based metrics upon which modern \pzpdf\ comparisons are built \citep{Bordoloi:10,Polsterer:16,Tanaka:17} can be gamed by a trivial estimator that yields only an affirmation of prior knowledge uninformed by the data.
-In other words, such ensemble metrics are insufficient for the task of selecting \pzpdf\ codes for analysis pipelines.
+In other words, such ensemble metrics are insufficient for the task of selecting \pzpdf\ codes for analysis pipelines\footnote{That being said, we note that close relatives of \trainz\ have been employed by weak lensing surveys of the past and present \citep{Lima:08, Hildebrandt:17, Hoyle:18} to estimate $N(z)$ by assigning each test set galaxy the redshift distribution of a \emph{subset} of the training set, where the subset is defined as similar to the test set galaxy in the space of whose photometric data.
+The specific science goal naturally guides the choice of metric to focus on $N(z)$ rather than individual \pzpdf s, and on the basis of that metric such improvements upon \trainz\ are guaranteed to be more robust to training set imbalance.}.
 %\textit{Explain the connection between \trainz\ and these metrics.}
 
 The CDE loss and point estimate metrics appropriately penalize \trainz's naivete.
@@ -32,7 +33,8 @@ The explicit dependence on the individual posteriors in the calculation of the C
 
 % While looking at one, or even most of our metrics would have given the impression that this estimator was nearly optimal, red flags in CDE loss and point estimates reveal the problems.
 %[more caution on over-reliance on metrics, and making sure that metrics test all of what you want] \red{this definitely still needs work}
-In summary, context is crucial to defend against deceptively strong performers such as \trainz; \textbf{the best \pzpdf\ method is the one that most effectively achieves the science goals of a particular study}, not the one that performs best on a metric that does not reflect those goals.
+In summary, context is crucial to defend against deceptively strong performers such as \trainz;
+\textbf{the best \pzpdf\ method is the one that most effectively achieves the science goals of a particular study}, not the one that performs best on a metric that does not reflect those goals.
 In the absence of a single scientific motivation or the information necessary for a principled metric definition, we must consider many metrics and be critical of the information transmitted by each.
 % As stated earlier, science applications may be sensitive to individual \pzpdf s, \pzpdf\ ensembles, \pz\ point estimates, or science-specific statistics like $\hat{N}(z)$.
 % We must be aware of that the optimal method for one is not necessarily optimal for the other, and in fact several photo-$z$ algorithms may be necessary in the final cosmological analysis in order to satisfy the requirements of all science use cases.
