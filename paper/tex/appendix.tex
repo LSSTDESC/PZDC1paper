@@ -2,7 +2,6 @@
 
 \section{Evaluation of the redshift distribution}
 \label{sec:moments}
-%(Alex Malz)
 
 Perhaps the most popular application of \pzpdf s is the estimation of the overall redshift distribution $N(z)$, a quantity that enters some cosmological calculations and the true value of which is known for the DC1 data set and will be denoted as $\tilde{N}(z)$.
 In terms of the prior information provided to each method, the true redshift distribution satisfies the tautology $\tilde{N}(z) = p(z \vert I_{D})$ due to our experimental set-up; because the DC1 training and template sets are representative and complete, $I_{D}$ represents a prior that is also equal to the truth.
@@ -19,7 +18,6 @@ This is the exact estimator, \trainz, that we have described in Section~\ref{sec
 \end{equation}
  is the most widely used method for obtaining $\hat{N}^{H}(z)$ as an estimator of the redshift distribution from \pzpdf s derived by a method $H$. While the stacked estimator of the redshift distribution violates the mathematical definition of statistical independence and is thus not formally correct\footnote{Malz \& Hogg (in prep) shows how the stacking procedure can lead to bias in the estimate of $N(z)$ and presents a principled alternative to this commonly employed method.  See \url{https://github.com/aimalz/chippr} for details.}, we use it as a basis for comparison of \pzpdf\ methods under the untested assumption that the response of our metrics of $\hat{N}^{H}(z)$ will be analogous to the same metrics applied to a principled estimator of the redshift distribution.
 
-%is the most widely accepted method for obtaining $\hat{N}^{H}(z)$ as an estimator of the redshift distribution from \pzpdf s derived by a method $H$.  This procedure is not formally correct, basic statistics tells us that joint probabilities are not formed by adding probabilities.  \citet{Malz:chippr} shows how the stacking procedure can lead to bias in redshift estimates, and develop a principled alternative to this commonly employed method.  However, while  the use of the stacked estimator of the redshift distribution is not formally correct, we use it under the untested assumption that the response of our metrics of $\hat{N}^{H}(z)$ will be analogous to the same metrics applied to a principled estimator of the redshift distribution.
 
 As $N(z)$ is itself a univariate PDF, we apply the metrics of the previous sections to it as well.
 We additionaly calculate the first three moments
@@ -41,7 +39,6 @@ Figure~\ref{fig:nz} shows the stacked estimator $\hat{N}(z)$ of the redshift dis
 \caption{The smoothed stacked estimator $\hat{N}(z)$ of the redshift distribution (red) produced by each code (panels) compared to the true redshift distribution $\tilde{N}(z)$ (blue).
 Varying levels of agreement are seen among the codes, with the smallest deviations for \cmnn, \flexzboost, \tpz, and \trainz.}
 \label{fig:nz}
-%\aim{Arguably this could also be clarified by showing the true $n'(z)$ once and then differences from it for each cod's stacked estimator\dots}\scc{what if we plot the difference between true and stacked rather than soverposing the two lines? Sam please do not hate me.}
 \end{figure*}
 
 Many of the codes, including all the model-fitting approaches and \annz, \gpz, \metaphor, and \skynet\ from the data-driven camp, overestimate the redshift density at $z \sim 1.4$.
@@ -87,35 +84,6 @@ A possible explanation is the choice of smoothing parameter chosen during valida
 We calculated the first three moments of the stacked $\hat{N}(z)$ distribution of all galaxies and compared it to the moments of the true redshift distribution.  Figure~\ref{fig:moments} shows the residuals of the moments for all codes.  Accuracy of the moments varies widely between codes, raising concerns about the propagation to cosmological analyses.  The DESC SRD \citep{Mandelbaum:2018} lists stringent requirements on how well the mean and variance of tomographic redshift bins must be known for each of the main DESC science cases.  We indicate the Year 10 (Y10) requirements assuming our true mean redshift of $z=0.701$ as dashed lines.  In this study with representative training data, \annz, \cmnn, \tpz, and our pathological \trainz\ estimator meet the Y10 requirement on the mean redshift.  Only \annz, \cmnn, and \trainz\ meet both requirements.  One should be concerned that many codes fail to meet this ambitious limit under perfect prior information because all codes are anticipated to do no better under realistically imperfect prior information, and indicates that additional calibration to remove these systematic offsets \citep[e.~g.~][]{Newman:2008} will likely be necessary in order to meet these stringent goals.
 
 
-%\begin{table}
-%\setlength{\tabcolsep}{2pt}
-%\caption{Moments of the stacked estimator $\hat{N}(z)$ of the redshift distribution.
-%Most of the codes considered recover the moments of $\tilde{N}(z)$}
-%\label{tab:moments}
-%\begin{tabular}{lccc}
-%\hline
-%\hline
-% \multicolumn{4}{l}{Moments of $\hat{N}(z)$} \\
-%\hline
-%Estimator  & mean       & variance    & skewness \\
-%Empirical ``truth'' & 0.701 & 0.630 & 0.671  \\
-%\hline
-%\annz       & 0.702      & 0.625      & 0.653    \\
-%\bpz        & 0.699      & 0.629      & 0.671    \\
-%\delight    & 0.692      & 0.609      & 0.638    \\
-%\eazy       & 0.681      & 0.595      & 0.619    \\
-%\flexzboost & 0.694      & 0.610      & 0.631    \\
-%\gpz        & 0.696      & 0.615      & 0.639    \\
-%\lephare    & 0.718      & 0.668      & 0.741    \\
-%\metaphor   & 0.705      & 0.628      & 0.657    \\
-%\cmnn       & 0.701      & 0.628      & 0.667    \\
-%\skynet     & 0.743      & 0.708      & 0.797    \\
-%\tpz        & 0.700      & 0.619      & 0.643    \\
-%\hline
-%\trainz	    & 0.699 		 & 0.627 	    & 0.666 \\
-%\end{tabular}
-%\end{table}
-
 \skynet\ exhibits redshift bias in Figure~\ref{fig:nz} and is a clear outlier in the first moment of $\hat{N}(z)$ in Figure~\ref{fig:moments}.
 The \skynet\ algorithm employs a random subsampling of the training set without testing that the subset is representative of the full population, and the implementation used here does not upweight rarer low- and high-redshift galaxies, as in \citet{Bonnett:15}, suggesting a possible cause that may be addressed in future work.
 
@@ -141,12 +109,8 @@ The catastrophic outlier rate $f_{\mathrm{out}}$ is defined as the fraction of g
 For reference, Section 3.8 of the \lsst\ Science Book \citep{Abell:09} uses the standard definitions of these parameters in requiring
 \begin{itemize}
 \item RMS scatter $\sigma < 0.02 (1 + z_{\mathrm{true}})$
-%\scc{actually the SB reports in page 75 that the goal of 0.02 is for the RMS of $\frac{\sigma_{z}}{(1+z)}$ while we are using IQR}
-\item bias $b_{z} < 0.003$ %\scc{in page 518 of the SB is clearly reported that the mean is expected to be less than 0.003 in our case we have defined as bias the median and not the mean }
-\item catastrophic outlier rate $f_{\mathrm{out}} < 10$ per cent %\scc{clearly the number of outliers since are defined above $3\sigma$ strictly depends on the sigma definition, in the science book it seems to refer to the RMS of the $e_z$ distribution even ef it could be the standard deviation, but again I don't think it refers to IQR, therefore we could not consider exactly this numbers as reference.}
-%\red{I am going off of conversations with Zeljko and how we {\it actually} computed the metrics in the Science Book (I have the scripts).  You are correct that several of these are slightly different than actually stated in the Science Book, or where the Science Book does not use very precise language as to what was done to compute the RMS or define the bias.  We can also cut out those specifics, or maybe say Ivezic private communication, maybe?  Also $\sigma_{z}$ defined in terms of IQR is exactly equivalent to the standard deviation when scaled by 1.349 for a Gaussian distribution, so the numbers are appropriate to cite in this context.  IQR is just a more robust way of calculating sigma for a distribution with outliers.--SJS }
-%\scc{I am very sorry I am not saying that IQR is not fine, I want to keep the IQR my concerns are related to the notation and the \textit{reader understanding}, if I wrote $\sigma$ somewhere in a table the reader will understand for sure that is the traditional standard deviation (a lot of people skips the indicators definition for the \textit{obvious} ones), I am suggesting to replace the notation $\sigma$ with the notation $\sigma_{IQR}$ (or something like this) to avoid any confusion, and also to change from $bias$ to $median$ for the same reason. I agree that say Ivezic private communication could be better.}
-.
+\item bias $b_{z} < 0.003$ 
+\item catastrophic outlier rate $f_{\mathrm{out}} < 10$ per cent 
 \end{itemize}
 
 \subsection{Comparison of \pz\ point estimate metrics}
@@ -165,13 +129,8 @@ The \trainz\ estimator (lower right sub-panels) has a shared $z_{PEAK}$ and $z_{
 \end{figure*}
 
 The finite grid spacing of the \pzpdf s induces some discretization in $z_{PEAK}$.
-%, particularly for \skynet.
 The features perpendicular to the $z_{phot} = z_{spec}$ line are due to the $4000$ \AA\ break passing through the gaps between adjacent filters.
-% and logically are more prominent for template-based codes
 Even the strongest codes feature populations far from the $z_{phot} = z_{spec}$ line representing a degeneracy in the space of colours and redshifts.
-% While use of the full information available via $p(z)$ mitigates their impact, a full understanding of the outlier population is critical for LSST science, particularly in tomographic applications.
-%\red{I forget what exactly I was trying to say here, if someone else wants to take a crack at this it might be helpful --SJS}
-%\scc{may be worth to say that the usage of further bands could mitigate this effect by removing the degeneration  usually induced from emission lines moving across different filters?}
 
 \begin{table*}
 \begin{center}
@@ -203,5 +162,4 @@ Even the strongest codes feature populations far from the $z_{phot} = z_{spec}$ 
 The intrinsic scatter, bias, and catastrophic outlier rate are given in Table~\ref{tab:pointestimates}.
 Perhaps unsurprisingly, performance under these metrics largely tracks that of the metrics of Section~\ref{sec:metrics} of the \pzpdf s from which the point estimates were derived.
 All twelve codes perform at or near the goals of the \lsst\ Science Requirements Document\footnote{available at: \url{http://ls.st/srd}} and \citet{Graham:17}, which is encouraging if not unexpected for $i < 25.3$.
-% But, it is still an encouraging sign, given an updated mock galaxy simulation and the expanded set of photo-$z$ codes tested.
-%\red{maybe say consistent with expectations, and a reference to Melissa's paper in here?  What else to say about nearly meeting point goals?}
+

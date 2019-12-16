@@ -1,6 +1,5 @@
 \section{Analysis}
 \label{sec:metrics}
-%(Alex Malz, Rongpu Zhou, Jeff Newman, Ofer Lahav)
 
 The goal of this study is to evaluate the degree to which \pzpdf s of each method can be trusted for a generic analysis.
 The overloaded ``$p(z)$'' is a widespread abuse of notation that obfuscates this goal, so we dedicate attention to dismantling it here.
@@ -33,7 +32,6 @@ Thus comparisons of $\hat{p}_{i}^{H}(z)$ isolate the effect of the method used t
 
 The exact implementation of the metrics theoretically depends on the parametrization of the \pzpdf s, which may differ across codes and can affect the precision of the estimator \citep{Malz:2018}.
 Even considering a single method under the same parametrization, such as the 200-bin $0 < z < 2$ piecewise constant function used here, the exact bin definitions must affect the result.
-%\red{Note: Let's address how the gridding (endpoints and spacing) affects the metrics, from the email correspondence Re: [LSST-DESC-MEMBERS] Summary of Nov 29 PZ Telecon. (AIM)}
 The piecewise constant format is chosen because of its established presence in the literature, and the choice of 200 bins was motivated by the approximate number of columns expected to be available for storage of \pzpdf s for the final \lsst\ Project tables.\footnote{See, e.~g.~the \lsst\ Data Products Definition Document, available at: \url{https://ls.st/dpdd}}
 We will discuss the choice of \pzpdf\ parameterization further in Section~\ref{sec:discussion}.
 
@@ -44,9 +42,6 @@ Those seeking a connection to previous comparison studies will find metrics of r
 
 \subsection{Metrics of \pzpdf \ ensembles}
 \label{sec:qualmet}
-%(Rongpu Zhou, Jeffrey Newman, Alex Malz)
-%(Alex Malz, Peter Freeman, Sam Schmidt)
-%(John Soo, Rongpu Zhou)
 
 Because \lsst's \pzpdf s will be used for many scientific applications, some of which require each individual catalogue entry to be accurate, we consider several metrics that probe the population-level performance of the \pzpdf s.
 As we have the true redshifts but not true \pzpdf s for comparison, we remind the reader of the Cumulative Distribution Function (CDF)
@@ -63,9 +58,6 @@ We describe metrics based on the CDF in Section~\ref{sec:qqpit} and metrics of s
 A quantile of a distribution is the value $q$ at which the CDF of the distribution is equal to $Q$; percentiles and quartiles are familiar examples of linearly spaced sets of 100 and 4 quantiles, respectively.
 The quantile-quantile (QQ) plot serves as a graphical visualization for comparing two distributions, where the quantiles of one distribution are plotted against the quantiles of the other distribution, providing an intuitive way to qualitatively assess the consistency between an estimated distribution and a true distribution.
 The closer the QQ plot is to diagonal, the closer the match between the distributions.
-% In this paper, QQ plots are used for two purposes: (1) for comparing $N(z)$ from \pzpdf s (estimated using Eq.~\ref{eq:stacked}) with the true $N(z)$, and (2) for assessing the overall consistency of an ensemble of \pzpdf s with their true redshifts on a population level, where the distribution of the PIT values (see previous section) is compared to a uniform distribution between $0$ and $1$.
-%\red{is this enough reason to include both?--SJS}
-%\aim{Maybe we should explain why we expect the distribution of CDFs to be uniform.}\red{Note: this is just describing the PIT.  I'm going to swap the order of PIT to come before this, and then say we are evaluating the distribution of PIT values.  I will also add why we expect this to be uniform--SJS}
 
 The probability integral transform (PIT)
 \begin{align}
@@ -79,24 +71,7 @@ Catastrophic outliers with a true redshift outside the support of its \pzpdf\ ha
 
 The PIT distribution has been used to quantify the performance of \pzpdf\ methods in the past \citep[e.~g.~][]{Bordoloi:10,Polsterer:16,Tanaka:17}.
 \citet{Tanaka:17} use the histogram of PIT values as a diagnostic indicator of overall code performance, while \citet{Freeman:17} independently define the PIT and demonstrate how its individual values may be used both to perform hypothesis testing (via, e.~g.~ the KS, CvM, and AD tests; see below) and to construct QQ plots.
-%\red{We might want to divide this by redshift to get trends, as the overall PIT could be impacted by true n(z).
-%For example, a PIT with nontrivial shape could be due to that behavior being uniform as a function of redshift or significant inaccuracy only in a small range of redshifts where $n(z)$ is large and a flat PIT elsewhere.}
 Following Kodra \& Newman (in prep.) we define the PIT-based catastrophic outlier rate as the fraction of galaxies with $\mathrm{PIT} < 0.0001$ or $\mathrm{PIT} > 0.9999$, which should total 0.0002 for an ideal uniform distribution.
-
-%\subsubsection{Continuous Ranked Probability Score (CRPS)}
-%\label{sec:crps}
-%\red{The CRPS is used to assess the accuracy of two probabilistic models respectively.}
-
-%\subsubsection{Root-mean-square error (RMSE)}
-%\label{sec:rmse}
-%%(Alex Malz)%
-%We employ the familiar root-mean-square error
-%\begin{equation}
-%\mathrm{RMSE} \equiv \sqrt{\int_{-\infty}^{\infty}\left(\hat{f}(z)-f'(z)\right)^{2}\,dz} .
-%\end{equation}
-%%may be used for two purposes in this analysis.
-%%We calculate it between the true redshift distribution $N'(z)$ and each estimator $\hat{N}(z)$ (derived by Eq.~\ref{eq:stacked}) as well as between the ideal QQ and PIT curves from each method studied and the ideal curves.
-%Though this metric does not account for the fact that the redshift distribution function is, in fact, a probability distribution, it can still be interpreted as a measure of the integrated difference between the estimated distribution and the true distribution.%, and it can be used to quantify the otherwise qualitative metrics.
 
 \subsubsection{Summary statistics of CDF-based metrics}
 \label{sec:summqqpit}
@@ -107,14 +82,6 @@ We evaluate a number of quantitative metrics derived from the visually interpret
   \mathrm{KS} \equiv \max_{z} \left( \left| \mathrm{CDF}[\hat{f}, z] - \mathrm{CDF}[\tilde{f}, z] \right| \right),
 \end{equation}
 interpretable as the maximum difference between the CDFs of the empirical distribution of PIT values for the test sample $\hat{f}(z)$ and a reference distribution $\tilde{f}(z)$, in this case $U(0,1)$, for the ideal distribution of PIT values.
-% $CDF_{\rm phot}(z)$ and $CDF_{\rm spec}(z)$, the CDFs of the photo-$z$ and spectroscopic redshift respectively:
-%The KS test quantifies whether the two redshift distributions are drawn from a similar distribution, independent of binning.
-% The KS test quantifies the similarity between two distributions, independent of binning.
-% A lower $N_{\rm KS}$ value corresponds to more similar distributions.
-%We calculate two KS test statistics, one to test the distribution of $p(z)$ values, and one to test the stacked estimator $\hat{n}(z)$ of the redshift distribution.
-%The $p(z)$ test compares the CDF of the PIT values described in the previous section to that of a uniform distribution.
-%The $n(z)$ test compares the CDF of the distribution formed by stacking the $p(z)$ for every object in our test set against the CDF of the corresponding true redshifts.
-%In this case a lower $N_{\rm KS}$ value means that the photo-$z$ distribution fits the spectroscopic redshift distribution well. $F_{\rm phot}(z)$ is calculated by stacking the PDFs of every single object in the sample, producing a smooth cumulative $n(z)$ to be compared with $F_{\rm spec}(z)$.
 We also consider two variants of the KS statistic.
 A cousin of the KS statistic, the Cramer-von Mises (CvM) statistic
 \begin{equation}
@@ -127,21 +94,10 @@ The Anderson-Darling (AD) statistic
   \mathrm{AD}^2 \equiv N_{tot}\int_{-\infty}^{+\infty} \frac{\big(\mathrm{CDF}[\hat{f}, z] - \mathrm{CDF}[\tilde{f}, z]\big)^2} {\mathrm{CDF}[\tilde{f}, z] (1 -\mathrm{CDF}[\tilde{f}, z])} \mathrm{d}\mathrm{CDF}[\tilde{f}, z]
 \end{equation}
 is a weighted mean-squared difference featuring enhanced sensitivity to discrepancies in the tails of the distribution.
-%The KS statistic and the CvM and AD statistics related to it are all used to evaluate the performance of both $\hat{n}(z)$ and the QQ and PIT of the CDFs of the ensemble of photo-$z$ interim posteriors.
 In anticipation of a substantial fraction of galaxies having PIT of 0 or 1, a consequence of catastrophic outliers, we evaluate the AD statistic with modified bounds of integration $(0.01, 0.99)$ to exclude those extremes in the name of numerical stability.
-
-%\subsubsection{Kullback-Leibler Divergence (KLD)}
-%\label{sec:kl}
-%(Alex Malz)
-%The KLD is a measure of the loss in information when using a probability distribution that is an estimate of a known true probability distribution, so we use
-%\begin{equation}
-%\mathrm{KLD} = \int_{-\infty}^{\infty}n'(z)\log\left[\frac{n'(z)}{\hat{n}(z)}\right]dz
-%\end{equation}
-%as a metric on the stacked redshift distribution estimator of Eq.~\ref{eq:stacked}. Noting the assumptions made in using Eq.~\ref{eq:stacked}, we say that a photo-$z$ PDFs method whose stacked redshift distribution estimator $\hat{n}(z)$ more closely resembles the true redshift distribution $n'(z)$ is desired, i.e. we seek to minimize the KLD.
 
 \subsection{Conditional Density Estimate (CDE) Loss: a metric of individual \pzpdf s}
 \label{sec:CDE_loss}
-%(Alex Malz, Ann Lee)
 
 The \buzz\ simulation process precludes testing the degree to which samples from our \pz\ posteriors reconstruct the space of $p(z, \mathrm{data})$.
 To the knowledge of the authors, there is only one metric that can be used to evaluate the performance of individual \pzpdf\ estimators in the absence of true \pz\ posteriors.

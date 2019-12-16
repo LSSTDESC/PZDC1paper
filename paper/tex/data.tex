@@ -24,7 +24,6 @@ For each simulated galaxy, a galaxy with similar absolute $r$-band magnitude and
 \label{sec:buzzlimitations}
 
 By necessity, \textsc{Buzzard} does not contain all of the complicating factors present in real data, and here we discuss the most pertinent ways that these limitations affect our experiment.
-% In several cases, the simplification is done with a purpose, with potentially confounding effects excluded in order to better isolate the differences between current-generation photo-$z$ codes and their causes.
 \textsc{Buzzard} includes only galaxies, not stars nor AGN.
 The catalogue-based construction excludes image-level effects, such as deblending errors, photometric measurement issues, contamination from sky background (Zodiacal light, scattered light, etc.), lensing magnification, and Galactic reddening.
 
@@ -39,7 +38,6 @@ While these idealized conditions limit the realism of our mock data, they are ir
 
 Given the SED, absolute $r$-band magnitude, and true redshift of each simulated galaxy, we computed apparent magnitudes in the six \lsst\ filter passbands, $ugrizy$.
 We assigned magnitude errors in the six bands using the simple model of \citet{Ivezic:08}, assuming achievement of the full 10-year depth, with a modification of fiducial \lsst\ total numbers of 30-second visits for photometric error generation: we assume 60 visits in $u$-band, 80 visits in $g$-band, 180 visits in $r$-band, 180 visits in $i$-band, 160 visits in $z$-band, and 160 visits in $y$-band.
-%numbers taken from Alex Abate's photErrorModel.py script in PhotoZDC1 repository, which was used with nYrObs=10.
 
 As a consequence of adding Gaussian-distributed photometric errors, 2.0 per cent of our galaxies exhibit a negative flux in one or more bands, the vast majority of which are in the $u$-band.
 We deem such negative fluxes \textit{non-detections} and assign a placholder magnitude of 99.0 in the catalogue to indicate to the \pzpdf\ codes that such galaxies would be ``looked at but not seen'' in multi-band forced photometry.
@@ -53,7 +51,6 @@ We refer to this final set of galaxies as DC1, for the first \lsstdesc\ Data Cha
 \subsection{Shared prior information}
 \label{sec:controlled}
 
-% NOW MOTIVATE THE SHARED PRIOR INFORMATION
 For the purpose of performing a controlled experiment that compares \pzpdf\ codes on equal footing as a baseline for a future sensitivity analysis, we take care to provide each with optimal prior information.
 Redshift estimation approaches built upon physical modeling and machine learning alike have a notion of prior information considered beyond the photometry of the data for which redshift is to be constrained: that information is derived from a template library for a model-based code and a training set for a data-driven code.
 In this initial study, we seek to set a baseline for a later comparison of the performance of \pzpdf\ codes under incomplete and non-representative prior information that will propagate differently in the space of data-driven and model-based algorithms.
@@ -65,7 +62,6 @@ We outline the equivalent ways of providing all codes perfect prior information 
 
 Following the findings of \citet{Bernstein:10}, \citet{Newman:2015}, and \citet{Masters:2015} that only $\sim\!10^{4}$ spectra are necessary to calibrate \pz s to Stage IV requirements, we aimed to set aside a randomly selected training set of $3-5\times 10^{4}$ galaxies, $\sim 10$ per cent of the full sample.
 After all cuts described above, we designated the \textit{DC1 training set} of $44\,404$ galaxies for which observed photometry, true SEDs, and true redshifts would be provided to all codes and the blinded \textit{DC1 test set} of $399\,356$ galaxies for which photometry alone would be provided to all codes and \pzpdf s would be requested.
-%The resulting catalogues contain $111\,171$ training galaxies and $1\,000\,883$ test galaxies.
 The exact form of \lsst\ photometric filter transmission curves were also considered public information that could be used by any code.
 
 \subsubsection{Template library construction}
