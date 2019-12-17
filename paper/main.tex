@@ -1,5 +1,5 @@
-\RequirePackage[switch, columnwise, running, mathlines, displaymath,
-mathlines]{lineno}
+\RequirePackage[switch, columnwise, running, mathlines, displaymath
+]{lineno}
 \RequirePackage{docswitch}
 % \flag is set by the user, through the makefile:
 %    make note
@@ -100,15 +100,15 @@ mathlines]{lineno}
 % ======================================================================
 %\hypersetup{draft}
 \begin{document}
-\linenumbers
+%\linenumbers
 
-\title{Evaluation of probabilistic photometric redshift estimation approaches for \textsc{LSST}}
+\title[Photo-z estimation approaches for LSST]{Evaluation of probabilistic photometric redshift estimation approaches for \textsc{LSST}}
 
 \maketitlepre
 
 \begin{abstract}
 
-Many scientific investigations of photometric galaxy surveys require redshift estimates, whose uncertainty properties are best encapsulated by photometric redshift (photo-$z$) posterior probability distribution functions (PDFs).
+Many scientific investigations of photometric galaxy surveys require redshift estimates, whose uncertainty properties are best encapsulated by photometric redshift (photo-$z$) posterior probability density functions (PDFs).
 A plethora of photo-$z$ PDF estimation methodologies abound, producing discrepant results with no consensus on a preferred approach.
 We present the results of a comprehensive experiment comparing twelve photo-$z$ algorithms applied to mock data produced for the Large Synoptic Survey Telescope (\textsc{LSST}) Dark Energy Science Collaboration (\textsc{DESC}).
 By supplying perfect prior information, in the form of the complete template library and a representative training set as inputs to each code, we demonstrate the impact of the assumptions underlying each technique on the output photo-$z$ PDFs.
@@ -146,7 +146,8 @@ Furthermore, we raise attention to the limitations of established metrics for as
 
 %%% Here is where you should add your specific acknowledgments, remembering that some standard thanks will be added via the \code{desc-tex/ack/*.tex} and \code{contributions.tex} files.
 
-This paper has undergone internal review in the LSST Dark Energy Science Collaboration, the internal reviewers were: Daniel Gruen, Markus Rau, and Michael Troxel. % REQUIRED if true
+This paper has undergone internal review in the LSST Dark Energy Science Collaboration.
+The authors acknowledge feedback from the internal reviewers: Daniel Gruen, Markus Rau, and Michael Troxel. % REQUIRED if true
 
 \input{contributions} % Standard papers only: author contribution statements. For examples, see http://blogs.nature.com/nautilus/2007/11/post_12.html
 
@@ -154,15 +155,26 @@ This paper has undergone internal review in the LSST Dark Energy Science Collabo
 
 % Standard papers only: A.B.C. acknowledges support from grant 1234 from ...
 
-The authors would like to thank their LSST-DESC publication review committee for comments that improved the paper draft.
+The authors express immense gratitude to Alex Abate, without whom this paper would not have gotten started.
+% The authors would like to thank their LSST-DESC publication review committee for comments that improved the paper draft.
 % hack event acknowledgments are important
-%We thank Stony Brook University for hosting the Summer 2017 LSST-DESC Hack Day at which this work was partially completed.
+We thank Stony Brook University for hosting the Summer 2017 LSST-DESC Hack Day at which this work was partially completed.
 
-{ \red{personal funding sources}}
-SJS acknowledges support from DOE grant DE-SC0009999 and NSF/AURA grant N56981C.
+SJS and EN acknowledge support from DOE grant DE-SC0009999.  SJS acknowledges support from NSF/AURA grant N56981C.
 AIM acknowledges support from the Max Planck Society and the Alexander von Humboldt Foundation in the framework of the Max Planck-Humboldt Research Award endowed by the Federal Ministry of Education and Research.
 During the completion of this work, AIM was advised by David W. Hogg and was supported by National Science Foundation grant AST-1517237.
-%JYHS is advised by Ofer Lahav and acknowledges support from the MyBrainSc Scholarship, provided by the Ministry of Education, Malaysia. JS would also like to thank Antonella Palmese and Boris Leistedt for guidance on the use of the algorithms ANNz2 and Delight respectively.
+JYHS acknowledges financial support from the MyBrainSc Scholarship (Ministry of Education, Malaysia), and the supervision of Ofer Lahav and Benjamin Joachimi.
+JYHS would also like to thank Antonella Palmese and Boris Leistedt for guidance on the use of the algorithms ANNz2 and Delight respectively.
+I.A. acknowledges the support of King Abdulaziz City for Science and Technology.
+MB acknowledges support from the Agreement ASI/INAF 2018-23-HH.0 - Phase D.
+AJC and JBK acknowledges support from DOE grant DE-SC-0011635. AJC, JBK, MLG, CBM acknowledge support from the DIRAC Institute in the Department of Astronomy at the University of Washington. The DIRAC Institute is supported through generous gifts from the Charles and Lisa Simonyi Fund for Arts and Sciences, and the Washington Research Foundation.
+PEF acknowledges support from NSF grant 1521786.
+MJJ acknowledges support from Oxford Hintze Centre for Astrophysical Surveys which is funded through generous support from the Hintze Family Charitable Foundation.
+ABL and TP acknowledge support from NSF DMS grant 1520786.
+GL acknowledges partial funding from the EU funded ITN Marie Curie Network SUNDIAL.
+CBM is supported in part by the National Science Foundation through Cooperative Agreement 1258333 managed by the Association of Universities for Research in Astronomy(AURA), and the Department of Energy under Contract No. DE-AC02-76SF00515 with the SLAC National Accelerator Laboratory. Additional LSST funding comes from private donations, grants to universities, and in-kind support from LSSTC Institutional Members.
+JAN and RZ were supported by the U.S. Department of Energy, Office of Science, Office of High Energy Physics under award number DE-SC0007914.
+RI acknowledges support from FAPESP grant 2019/11321-9 and CNPq grant 306943/2017-4.
 
 In addition to packages cited in the text, analyses performed in this paper used the following software packages: \code{Numpy} and \code{Scipy} \citep{numpyscipy}, \code{Matplotlib} \citep{matplotlib}, \code{Seaborn} \citep{seaborn}, \code{minFunc} \citep{minfunc}, \code{qp} \citep{Malz:qp, Malz:2018}, \code{pySkyNet} \citep{pyskynet}, and \code{photUtils} from the \lsst\ simulations package \citep{lsstphotutils}.
 
@@ -171,6 +183,36 @@ In addition to packages cited in the text, analyses performed in this paper used
 \input{./tex/appendix}
 
 \bibliography{main,lsstdesc}
+
+\section*{Affiliations}
+$^{1}$ Department of Physics, University of California, One Shields Ave., Davis, CA, 95616, USA\\
+$^{2}$ German Centre of Cosmological Lensing, Ruhr-Universitaet Bochum, Universitaetsstra{\ss}e 150, 44801 Bochum, Germany\\
+$^{3}$ Center for Cosmology and Particle Physics, New York University, 726 Broadway, New York, 10003, USA\\
+$^{4}$ Department of Physics, New York University, 726 Broadway, New York, 10003, USA\\
+$^{5}$ School of Physics, University of Science Malaysia, 11800 USM, Pulau Pinang, Malaysia\\
+$^{6}$ Department of Physics and Astronomy, University College London, Gower Street, London WC1E 6BT, UK\\
+$^{7}$ King Abdulaziz City for Science and Technology, Riyadh 11442, Saudi Arabia\\
+$^{8}$ Information Engineering, Parks Road, Oxford, OX1 3PJ, UK\\
+$^{9}$ INAF-Astronomical Observatory of Capodimonte, Salita Moiariello 16, 80131 Napoli, Italy\\
+$^{10}$ Department of Physics E. Pancini, University Federico II, via Cinthia 6, I-80126, Napoli, Italy\\
+$^{11}$ Laboratoire Univers et Particules de Montpellier, Universit\'e de Montpellier, CNRS, Montpellier, France\\
+$^{12}$ DIRAC Institute and Department of Astronomy, University of Washington, Box 351580, U.W., Seattle WA 98195, USA\\
+$^{13}$ Santa Cruz Institute for Particle Physics, Santa Cruz, CA 95064, USA\\
+$^{14}$ Berkeley Center for Cosmological Physics, Department of Physics, University of California, Berkeley CA 94720\\
+$^{15}$ Lawrence Berkeley National Laboratory, 1 Cyclotron Road, Berkeley, CA 94720, USA\\
+$^{16}$ Kavli Institute for Particle Astrophysics and Cosmology and Department of Physics, Stanford University, Stanford, CA 94305, USA\\
+$^{17}$ Department of Particle Physics and Astrophysics, SLAC National Accelerator Laboratory, Stanford, CA 94305, USA\\
+$^{18}$ Department of Statistics \& Data Science, Carnegie Mellon University, 5000 Forbes Avenue, Pittsburgh, PA 15213, USA\\
+$^{19}$ Dunlap Institute for Astronomy \& Astrophysics, University of Toronto, 50 St. George Street, Toronto, ON M5S 3H4, Canada\\
+$^{20}$ Department of Physics and Astronomy, Rutgers, The State University of New Jersey, 136 Frelinghuysen Road, Piscataway, NJ 08854-8019 USA\\
+$^{21}$ Astrophysics, Department of Physics, University of Oxford, Denys Wilkinson Building, Keble Road, Oxford, OX1 3RH, UK\\
+$^{22}$ Department of Physics and Astronomy, University of the Western Cape, Bellville 7535, South Africa\\
+$^{23}$ Argonne National Laboratory, Lemont, IL 60439, USA\\
+$^{24}$ Department of Physics and Astronomy and the Pittsburgh Particle Physics, Astrophysics and Cosmology Center (PITT PACC), University of Pittsburgh, Pittsburgh, PA 15260, USA\\
+$^{25}$ Department of Physics, Stanford University, 382 Via Pueblo Mall, Stanford, CA 94305, USA\\
+$^{26}$ SLAC National Accelerator Laboratory, Menlo Park, CA, 94025, USA\\
+$^{27}$ Department of Statistics, Federal University of Sao Carlos, Sao Carlos, Brazil\\
+$^{28}$ External collaborator\\
 
 \end{document}
 
