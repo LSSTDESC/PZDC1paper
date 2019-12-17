@@ -7,8 +7,8 @@ We reiterate that under our idealized experimental conditions, differences betwe
 
 \begin{figure*}
 %\centering
-\includegraphics[width=0.49\textwidth]{fig/pz_12codes_261931_noseaborn_crop.jpg}\includegraphics[width=0.49\textwidth]{fig/pz_12codes_471167_noseaborn_crop.jpg}\\
-\includegraphics[width=0.49\textwidth]{fig/pz_12codes_713178_noseaborn_crop.jpg}\includegraphics[width=0.49\textwidth]{fig/pz_12codes_982747_noseaborn_crop.jpg}
+\includegraphics[width=0.49\textwidth]{fig/pz_12codes_261931_noseaborn_crop.pdf}\includegraphics[width=0.49\textwidth]{fig/pz_12codes_471167_noseaborn_crop.pdf}\\
+\includegraphics[width=0.49\textwidth]{fig/pz_12codes_713178_noseaborn_crop.pdf}\includegraphics[width=0.49\textwidth]{fig/pz_12codes_982747_noseaborn_crop.pdf}
 \caption{The individual \pzpdf s (blue) distributions produced by the twelve codes (small panels) on four exemplary galaxies' photometry (large panels) with different true redshifts (red).
 All \pzpdf s have been scaled to the same peak value.
 The \pzpdf s of all codes share some features for the example galaxies due to physical colour degeneracies and photometric errors: tight unimodal $p(z)$ (upper left), broad unimodal $p(z)$ (upper right), bimodal $p(z)$ (lower right), and complex/multimodal $p(z)$ (lower left).
@@ -33,7 +33,7 @@ The existence of deviations in the PIT histograms outside of this gray shaded un
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.74\textwidth]{fig/PITANDQQplot_12codes_withsigmaband_crop.jpg}
+\includegraphics[width=0.74\textwidth]{fig/PITANDQQplot_12codes_withsigmaband_crop.pdf}
 \caption{The QQ plot (red) and PIT histogram (blue) of the \pzpdf\ codes (panels) along with the ideal QQ (black dashed diagonal) and ideal PIT (gray horizontal) curves, as well as a difference plot for the QQ difference from the ideal diagonal (lower inset).
 The gray shaded region indicates the $2 \sigma$ range from a bootstrap resampling of the training set with a size of 30,000 galaxies using \trainz.
 The twelve codes exhibit varying degrees of four deviations from perfection: an overabundance of PIT values at the centre of the distribution indicate a catalogue of overly broad \pzpdf s, an excess of PIT values at the extrema indicates a catalogue of overly narrow \pzpdf s, catastrophic outliers manifest as overabundances at PIT values of 0 and 1, and asymmetry indicates systematic bias, a form of model misspecification.
@@ -81,7 +81,7 @@ As expected, \trainz\ achieves precisely the 0.0002 value expected of an ideal P
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_PIT_withnull_jpg.jpg}
+\includegraphics[width=0.74\textwidth]{fig/KSvsCvMvsAD_PIT_withnull_jpg.pdf}
 \caption{A visualization of the Kolmogorov-Smirnoff (KS, blue diamond), Cramer-von Mises (CvM, black star), and Anderson-Darling (AD, red asterisk) statistics for the PIT distributions.
 There is generally good agreement between these statistics, with differences corresponding to the codes with outstanding catastrophic outlier rates, a reflection of the differences in how each statistic weights the tails of the distribution.
 Horizontal lines indicate the level of uncertainty found by bootstrapping a training set sample of 30,000 galaxies using \trainz; none of the codes reach this conservative ideal floor in expected uncertainty.}
