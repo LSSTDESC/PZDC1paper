@@ -21,6 +21,7 @@ The \trainz\ estimator of Section~\ref{sec:trainz}, which assigns every galaxy a
 Because our training set is perfectly representative of the test set, $N(z)$ should be identical for both sets down to statistical noise.
 \textbf{We make the alarming observation that \trainz, the absurd experimental control, outperforms all codes on the CDF-based metrics, and all but one code on the $N(z)$ based statistics.}
 The PIT and other CDF-based metrics upon which modern \pzpdf\ comparisons are built \citep{Bordoloi:10,Polsterer:16,Tanaka:17} can be gamed by a trivial estimator that yields only an affirmation of prior knowledge uninformed by the data.
+\boldblue{The extreme case of \trainz\ also exemplifies the fact that characteristics of the training data are imprinted on the ensemble distributions via the prior, and any imperfections and biases in the training sample will be propagated to the measured \pzpdf s.}
 In other words, such ensemble metrics are insufficient for the task of selecting \pzpdf\ codes for analysis pipelines\footnote{That being said, we note that close relatives of \trainz\ have been employed by weak lensing surveys of the past and present \citep{Lima:08, Hildebrandt:17, Hoyle:18} to estimate $N(z)$ by assigning each test set galaxy the redshift distribution of a \emph{subset} of the training set, where the subset is defined as similar to the test set galaxy in the space of photometric data.
 The specific science goal naturally guides the choice of metric to focus on $N(z)$ rather than individual \pzpdf s, and on the basis of that metric such improvements upon \trainz\ are guaranteed to be more robust to training set imbalance.}.
 
@@ -29,7 +30,7 @@ As shown in Appendix~\ref{sec:pointmetrics}, \trainz ~has identical $ZPEAK$ and 
 The explicit dependence on the individual posteriors in the calculation of the CDE loss, described in Section~\ref{sec:cdelossresults}, distinguishes this metric from those of the \pzpdf\ ensemble and stacked estimator of the redshift distribution, despite their prevalence in the \pz\ literature.
 
 In summary, context is crucial to defend against deceptively strong performers such as \trainz;
-\textbf{the best \pzpdf\ method is the one that most effectively achieves the science goals of a particular study}, not the one that performs best on a metric that does not reflect those goals.
+the best \pzpdf\ method is the one that most effectively achieves the science goals of a particular study, not the one that performs best on a metric that does not reflect those goals.
 In the absence of a single scientific motivation or the information necessary for a principled metric definition, we must consider many metrics and be critical of the information transmitted by each.
 
 \subsection{Extensions to the experimental design}
