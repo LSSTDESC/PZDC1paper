@@ -113,7 +113,7 @@ Each of the five ANNs was trained with different random seeds for the initializa
 The colour-matched nearest-neighbours photometric redshift estimator \citep[\cmnn,][]{Graham:17} uses a training set of galaxies with known redshifts that has equivalent or better photometry than the test set in terms of quality and filter coverage.
 For each galaxy in the test set, \cmnn\ identifies a colour-matched subset of training galaxies using a threshold in the Mahalanobis distance $D_M = \sum_{j}^{N_{\mathrm{colours}}} (c_{\mathrm{j,train}} - c_{\mathrm{j,test}})^{2} / \delta c_{\mathrm{j,test}}^2$ in the space of available colours $c$, with colour measurement errors $\delta c_{\mathrm{test}}$ and $N_{\mathrm{colours}} = 5$ colours $j$ defined by the $ugrizy$ filters, which defines the set of colour-matched neighbours based on a value of the percent point function (PPF).
 As an example, for $N_{\mathrm{filt}}=5$ with PPF$=0.95$, $95$ per cent of all training galaxies consistent with the test galaxy will have $D_M < 11.07$.
-Undetected bands are dropped, thereby reducing the effective $N_{\mathrm{filt}}$ for that galaxy.
+\sout{Undetected bands} \boldblue{Bands in which the galaxy is not detected} are dropped, thereby reducing the effective $N_{\mathrm{filt}}$ for that galaxy.
 The \pzpdf\ of a given test set galaxy is the normalized distribution of redshifts of its colour-matched subset of training set galaxies.
 
 Here, we make two modifications to the implementation of \citet{Graham:17} to comply with the controlled experimental conditions.
