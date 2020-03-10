@@ -102,7 +102,8 @@ However, we remind the reader that only 2.0 per cent of our sample has non-detec
 In addition to accounting for errors on the input photometry, \annz\ uses the KNN-uncertainty estimate of \citet{Oyaizu:08} to quantify uncertainty in the choice of method over multiple runs.
 Using the Toolkit for Multivariate Data Analysis with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, \annz\ can return the results of running a single machine learning algorithm, a ``best'' choice of the results from simultaneously running multiple algorithms (based on evaluation the cumulative distribution functions of validation set objects), or a combination of the results of multiple algorithms weighted by their method uncertainties averaged over multiple runs.
 
-In this study, we used \annz-v.2.0.4 to output only the result of the ANN algorithm.
+In this study, we use \annz-v.2.0.4.  \boldblue{Several combinations of the ANN, BDT, and kNN machine learning algorithms were tested during the training/validation stage.  For this particular dataset, the optimal and most stable results came from a setup consisting solely of ANNs.  We present results for this case and do not include results from a mixture of multiple algorithms. }
+\sout{to output only the result of the ANN algorithm.}
 \Pzpdf s were produced by running an ensemble of 5 ANNs with a $6:12:12:1$ architecture corresponding to the 6 $ugrizy$ inputs, 2 hidden layers with 12 nodes each, and 1 output of redshift.
 Each of the five ANNs was trained with different random seeds for the initialization of input parameters, reserving half of the training set for validation to prevent overfitting.
 \boldblue{Galaxies not detected in the $u$-band} \sout{Undetected galaxies} were excluded from the training set, and per-band non-detections in the test set were replaced with the mean magnitude \boldblue{of the test set} in that band. \sout{within the entire test set.}
