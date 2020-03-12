@@ -42,7 +42,7 @@ Varying levels of agreement are seen among the codes, with the smallest deviatio
 \end{figure*}
 
 Many of the codes, including all the model-fitting approaches and \annz, \gpz, \metaphor, and \skynet\ from the data-driven camp, overestimate the redshift density at $z \sim 1.4$.
-This behavior is a consequence of the $4000$ \AA\ break passing through the gap between the $z$ and $y$ filters, which induces a genuine discontinuity in the $z - y$ colour as a function of redshift that can sway the \pzpdf\ estimates in the absence of bluer spectral features.
+This behavior is a consequence of the $4000$ \AA\ break passing through the gap between the $z$ and $y$ filters, which induces a \sout{genuine discontinuity}\boldblue{dramatic rise and fall} in the $z - y$ colour as a function of redshift\boldblue{.  With a dearth of strong spectral features blue-ward of the 4000 \AA\ break in most galaxy SEDs, the degeneracies on either side of the peak in $z - y$ colour tend to broaden the redshift PDFs near $z \sim 1.4$, which can lead to the ``bump'' seen in the stacked $\hat{N}(z)$ estimate.} \sout{that can sway the \pzpdf\ estimates in the absence of bluer spectral features.}
 
 \annz, \gpz, and \metaphor\ feature exaggerated peaks and troughs relative to the training set, a potential sign of overtraining.
 Further investigation on overtraining is needed, if present this is an obstacle that may be overcome with adjustment of the implementation.
@@ -50,8 +50,8 @@ Further investigation on overtraining is needed, if present this is an obstacle 
 As expected, \trainz\ perfectly recovers the true redshift distribution: as the training sample is selected from the same underlying distribution as the test set, the redshift distributions are identical, up to Poisson fluctuations due to the finite number of sample galaxies.
 \cmnn\ is also in excellent agreement for similar reasons: with a representative training sample of galaxies spanning the colour-space, the sum of the colour-matched neighbour redshifts should return the true redshift distribution.
 \flexzboost\ and \tpz\ also perform superb recovery of the true redshift distribution, with only a slight deviation at $z \sim 1.4$.
-Our metrics, however, cannot discern whether these four approaches, as well as \delight, are spared the $z \sim 1.4$ degeneracy in $\hat{N}(z)$ because they have more effectively used information in the data or if the impact is simply washed out by the stacked estimator's effective average over the test set galaxy sample.
-See Appendix~\ref{sec:pointmetrics} for further discussion of the $z \sim 1.4$ issue.
+\sout{Our metrics, however, cannot discern whether these four approaches, as well as \delight, are spared the $z \sim 1.4$ degeneracy in $\hat{N}(z)$ because they have more effectively used information in the data or if the impact is simply washed out by the stacked estimator's effective average over the test set galaxy sample.
+See Appendix~\ref{sec:pointmetrics} for further discussion of the $z \sim 1.4$ issue.}
 
 Figure~\ref{fig:nz_stats} shows the quantitative Kolmogorov-Smirnoff (KS), Cramer-Von Mises (CvM), and Anderson Darling (AD) test statistics for each of the codes for the $\hat{N}(z)$ based measures.
 The horizontal lines show the the result of a bootstrap resampling of the training set using 30,000 samples for \trainz, representing a conservative idealized limit on expected performance for a modest-sized representative training set of galaxies, as mentioned in Section~\ref{sec:pitqq}.
@@ -121,15 +121,15 @@ Point density is shown with mixed contours to emphasize that most of the galaxie
 
 \begin{figure*}
 \centering
-\includegraphics[width=0.49\textwidth]{fig/ZPEAK_szpz_threecolumn_12codes_navy_lowalpha.jpg}
-\includegraphics[width=0.49\textwidth]{fig/ZWEIGHT_szpz_threecolumn_12codes_navy_lowalpha.jpg}
+\includegraphics[width=0.49\textwidth]{fig/ZPEAK_szpz_threecolumn_12codes_biglabels_crop.jpg}
+\includegraphics[width=0.49\textwidth]{fig/ZWEIGHT_szpz_threecolumn_12codes_biglabels_crop.jpg}
 \caption{The density of \pz\ point estimates (contours) reduced from the \pzpdf s with outliers (blue) beyond the outlier cutoff (red dashed lines), via the mode ($z_{PEAK}$, left panel) and main-peak-mean ($z_{WEIGHT}$, right panel).
 The \trainz\ estimator (lower right sub-panels) has a shared $z_{PEAK}$ and $z_{WEIGHT}$ for the entire test set galaxy sample.}
 \label{fig:pz_pointestimates}
 \end{figure*}
 
 The finite grid spacing of the \pzpdf s induces some discretization in $z_{PEAK}$.
-The features perpendicular to the $z_{phot} = z_{spec}$ line are due to the $4000$ \AA\ break passing through the gaps between adjacent filters.  \boldblue{In the presence of genuine ambiguities in the colour space to redshift mapping, the compression of information down to a single number that is the point estimate redshift fails to adequately capture the more complex nature of the multimodal redshift matching: using the mode selects the highest peak while ignoring posterior probability in lower valued redshift peaks, while measuring the mean of a multimodal PDF often results in a value lying at a redshift between the peaks, removed from either/any of the most likely redshift solutions.  Thus,} \sout{E}even the strongest codes feature populations far from the $z_{phot} = z_{spec}$ line representing a \boldblue{genuine} degeneracy in the space of colours and redshifts.
+The features perpendicular to the $z_{phot} = z_{spec}$ line are due to the $4000$ \AA\ break passing through the gaps between adjacent filters\boldblue{,  most notably at $z \sim 0.4$ between the g and r filters, and at $z \sim 1.4$ between the z and y filters.  All codes show some level of concentrated catastrophic outliers, often due to degenerate redshift solutions for a single area of color space.  In the presence of genuine ambiguities in the colour space to redshift mapping, the compression of information down to a single number that is the point estimate redshift fails to adequately capture the more complex nature of the multimodal redshift matching: using the mode selects the highest peak while ignoring posterior probability in lower valued redshift peaks, while measuring the mean of a multimodal PDF often results in a value lying at a redshift between the peaks, removed from either/any of the most likely redshift solutions.  Thus,} \sout{E}even the strongest codes feature populations far from the $z_{phot} = z_{spec}$ line representing a \boldblue{genuine} degeneracy in the space of colours and redshifts.
 
 \begin{table*}
 \begin{center}
