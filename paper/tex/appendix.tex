@@ -54,7 +54,7 @@ As expected, \trainz\ perfectly recovers the true redshift distribution: as the 
 See Appendix~\ref{sec:pointmetrics} for further discussion of the $z \sim 1.4$ issue.}
 
 Figure~\ref{fig:nz_stats} shows the quantitative Kolmogorov-Smirnoff (KS), Cramer-Von Mises (CvM), and Anderson Darling (AD) test statistics for each of the codes for the $\hat{N}(z)$ based measures.
-The horizontal lines show the the result of a bootstrap resampling of the training set using 30,000 samples for \trainz, representing a conservative idealized limit on expected performance for a modest-sized representative training set of galaxies, as mentioned in Section~\ref{sec:pitqq}.
+The horizontal lines show the the result of a bootstrap resampling of the training set using 30,000 samples for \trainz, representing a conservative \sout{idealized limit on expected performance for}\boldblue{error estimate assuming} a modest-sized representative training set of galaxies, as mentioned in Section~\ref{sec:pitqq}.
 The AD bootstrap statistic is elevated due to its sensitivity to the tails of distributions.
 The stacked estimators of the redshift distribution for \cmnn\ and \trainz\ best estimate $\tilde{N}(z)$ under these metrics, whereas \eazy, \lephare, \metaphor, and \skynet\ underperform; \bpz, \gpz, and \tpz\ are within a factor of two of the conservative limit for all statistics.
 It is unsurprising that \cmnn\ scores well, as with a nearly complete and representative training set choosing neighbouring points in colour/magnitude space to construct an estimator should lead to excellent agreement in the final $\hat{N}(z)$.
