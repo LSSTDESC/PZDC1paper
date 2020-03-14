@@ -25,9 +25,9 @@ def main(argv):
     numquants = 1001 #number of zbins in each NZPLOT_vectors.out file
     numgals = 399356 #number of galaxies in each file
     xlevel = float(numgals/101.) #flat line definition for PIT hist
-    trainz_1sig = 501.2# 2sigma 250.6#1sigma
-    xlevel_low = xlevel-trainz_1sig
-    xlevel_high = xlevel+trainz_1sig
+    trainz_2sig = 446.5# 2sigma 223.27#1sigma
+    xlevel_low = xlevel-trainz_2sig
+    xlevel_high = xlevel+trainz_2sig
     
     pitvals = np.zeros([numcodes,numgals])
     qtvals = np.zeros([numcodes,numquants])

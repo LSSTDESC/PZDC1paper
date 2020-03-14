@@ -22,7 +22,7 @@ def main(argv):
     smooth_sigma = 75.81*0.4 #see note in docstring on bandwidth choice
     basepathpart = "./TESTDC1"
     codes = ("ANNZ2","BPZ","DELIGHT","EAZY","FLEXZ","GPZ/AUG2018","LEPHARE",
-             "METAPHOR","NN","SKYNET","TPZ","NULL2")
+             "METAPHOR","NN","SKYNET","TPZ","NULL")
     labels = ("ANNz2","BPZ","Delight","EAZY","FlexZBoost","GPz","LePhare",
               "METAPhoR","CMNN","SkyNet","TPZ","TrainZ")
     labeldict = dict(zip(codes,labels))
@@ -46,7 +46,7 @@ def main(argv):
         pzvals[i,:] = data[:,2]
         smooth_pzvals = scifilt.gaussian_filter1d(pzvals,smooth_sigma,
                                                   mode='constant')
-        print ("read in data for %s"%xfile)
+        print "read in data for %s"%xfile
         
 
     numrows = 3
@@ -59,7 +59,7 @@ def main(argv):
     
     for i in range(numcodes):
         ax = plt.subplot(numrows,numcols,i+1)
-        if i == 0: #only include label for first entry
+        if i == 0:
             plt.plot(z_array,szvals[i],c='b',linestyle='-',linewidth=2,
                      label="zspec", alpha=0.85)
         else:
@@ -70,12 +70,12 @@ def main(argv):
                  linewidth=2,label=tmplabel, alpha=0.85)
 
         ax.set_xlim([0.0,1.99])
-        ax.set_ylim([0.0,1.79])
+        ax.set_ylim([0.0,1.99])
         ax.yaxis.set_ticks(np.arange(0.,1.55,0.5))
-        if i ==0: #include lines only for first entry
-            ax.legend(loc="upper right",fontsize=14)
-        else: 
-            ax.legend(loc="upper right",fontsize=14, handletextpad=0,
+        if i == 0:
+            ax.legend(loc="upper left",fontsize=14)
+        else:
+            ax.legend(loc="upper left",fontsize=14,handletextpad=0.0,
                       handlelength=0)
         if (i<(numcodes-4)):
             ax.set_xticklabels([])
@@ -90,7 +90,7 @@ def main(argv):
         plt.yticks(fontsize=12)
 
    
-    plt.savefig("NZsumplot_12codes_scottsrule_biglabels.jpg",format='jpg')
+    plt.savefig("NZsumplot_12codes_scottsrule.jpg",format='jpg')
     plt.show()
 
 if __name__=="__main__":
