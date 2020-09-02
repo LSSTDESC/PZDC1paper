@@ -5,9 +5,9 @@ Here we summarize the twelve \pzpdf\ codes compared in this study, listed in Tab
 Though not exhaustive, this sample represents codes for which there was sufficient expertise within the \lsstdesc\ Photometric Redshifts Working Group.
 Some aspects of data treatment were left to the individual code runners, for example, whether/how to split the available data with known redshifts into separate training and validation sets.
 
-Another key difference is the treatment of non-detections in one or more bands: some codes ignore incomplete bands, while others replace the value with either an estimate for the detection limit, the mean of other values in the training set, or another default value.
+\sout{Another key difference is the treatment of non-detections in one or more bands: some codes ignore incomplete bands, while others replace the value with either an estimate for the detection limit, the mean of other values in the training set, or another default value.
 There are varying conventions among machine learning-based codes for treatment of non-detections, and no one prescription dominates in the \pz\ literature.
-However, we remind the reader that only 2.0 per cent of our sample has non-detections, almost exclusively in the $u$-band, and thus should not dominate the code performance differences.
+However, we remind the reader that only 2.0 per cent of our sample has non-detections, almost exclusively in the $u$-band, and thus should not dominate the code performance differences.}
 
 
 \begin{table*}  %%% DATA TABLE %%%
@@ -41,8 +41,8 @@ We test three publicly available and commonly used template-based codes that sha
 \begin{equation} \label{eq_temp_chi}
 \chi^{2}(z,T,A) = \sum_{i}^{N_{\mathrm{filt}}}\left(\frac{F^{i}_{\mathrm{obs}} - A \, F^{i}_{\mathrm{pred}}(T,z)}{\sigma^{i}_{\mathrm{obs}}}\right)^2
 \end{equation}
-\noindent where $A$ is a normalization factor, $F^i_{\mathrm{pred}}(T,z)$ is the flux predicted for a template $T$ at redshift $z$, $F^i_{\mathrm{obs}}$ is the observed flux in a given band $i$, $\sigma^i_{\mathrm{obs}}$ is the observed flux error, and $N_{\mathrm filt}$ is the total number of filters, in our case the six $ugrizy$ LSST filters.
-The likelihood is a sum of observed flux error $\sigma_{b}^{\mathrm{obs}}$-weighted squared differences between the observed flux $F^{\mathrm{obs}}_{b}$ and the normalized predicted flux $F^{\mathrm{mod}}_{b}(T, z)$ in $N_{\mathrm{filt}}$ photometric filters $b$, which are the \lsst\ $ugrizy$ filters in this case.
+\noindent where $A$ is a normalization factor, $F^i_{\mathrm{pred}}(T,z)$ is the flux predicted for a template $T$ at redshift $z$, $F^i_{\mathrm{obs}}$ is the observed flux in a given band $i$, $\sigma^i_{\mathrm{obs}}$ is the observed flux error, and $N_{\mathrm filt}$ is the total number of filters, in our case the six $ugrizy$ LSST filters.  \boldblue{All three template-based codes replace per-band non-detections with an estimate of the 1$\sigma$ magnitude limit as estimated from the photometric error model.}
+\sout{The likelihood is a sum of observed flux error $\sigma_{b}^{\mathrm{obs}}$-weighted squared differences between the observed flux $F^{\mathrm{obs}}_{b}$ and the normalized predicted flux $F^{\mathrm{mod}}_{b}(T, z)$ in $N_{\mathrm{filt}}$ photometric filters $b$, which are the \lsst\ $ugrizy$ filters in this case.}
 Specific implementation details of each code, e.~g.~prior form and implementation, are described below.
 
 \subsubsection{BPZ}
@@ -82,25 +82,31 @@ The template set can be semi-empirical or entirely synthetic.
 The reported \pzpdf\ is an arbitrary normalization of the likelihood evaluated on the output redshift grid.
 
 Here we use \lephare-v 2.2 with the DC1 template set of Section~\ref{sec:buzztemplates}.
-Unlike both \bpz\ and \eazy, \lephare\ uses generic, SED-independent priors that are not tuned to the DC1 data set.
+Unlike both \bpz\ and \eazy, \lephare\ uses generic, SED-independent priors that are not tuned to the DC1 data set.  \boldblue{The choice to use the generic prior form could lead to a degradation in code performance, given the slight mismatch between the galaxy distributions in the studied dataset and that parameterized in the \lephare\ prior.}
 
 \subsection{Machine Learning-based Approaches}
 \label{sec:trainingcodes}
 
 We compared nine data-driven \pz\ estimation approaches, eight of which are described in this section and one of which is discussed in Section~\ref{sec:trainz}.
 Because the algorithms differ more from one another and the techniques are relative newcomers to the astronomical literature, we provide somewhat more detail about the implementations below.
+\boldblue{A key difference between the codes is the treatment of non-detections in one or more bands: some codes ignore per-band non-detections, while others replace the value with either an estimate for the detection limit, the mean of other values in the training set, or another default value.
+There are varying conventions among machine learning-based codes for treatment of non-detections, and no one prescription dominates in the \pz\ literature.
+However, we remind the reader that only 2.0 per cent of our sample has non-detections, almost exclusively in the $u$-band, and thus should not dominate the code performance differences.
+}
+
 
 \subsubsection{ANNz2}
 \label{sec:annz2}
 
-\annz \citep{Sadeh:16} supports several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree, and k-nearest neighbour (KNN) regression.
+\annz\ \citep{Sadeh:16} supports several machine learning algorithms, including artificial neural networks (ANN), boosted decision tree, and k-nearest neighbour (KNN) regression.
 In addition to accounting for errors on the input photometry, \annz\ uses the KNN-uncertainty estimate of \citet{Oyaizu:08} to quantify uncertainty in the choice of method over multiple runs.
 Using the Toolkit for Multivariate Data Analysis with ROOT\footnote{\url{http://tmva.sourceforge.net/}}, \annz\ can return the results of running a single machine learning algorithm, a ``best'' choice of the results from simultaneously running multiple algorithms (based on evaluation the cumulative distribution functions of validation set objects), or a combination of the results of multiple algorithms weighted by their method uncertainties averaged over multiple runs.
 
-In this study, we used \annz-v.2.0.4 to output only the result of the ANN algorithm.
+In this study, we use \annz-v.2.0.4.  \boldblue{Several combinations of the ANN, BDT, and kNN machine learning algorithms were tested during the training/validation stage.  For this particular dataset, the optimal and most stable results came from a setup consisting solely of ANNs.  We present results for this case and do not include results from a mixture of multiple algorithms. }
+\sout{to output only the result of the ANN algorithm.}
 \Pzpdf s were produced by running an ensemble of 5 ANNs with a $6:12:12:1$ architecture corresponding to the 6 $ugrizy$ inputs, 2 hidden layers with 12 nodes each, and 1 output of redshift.
 Each of the five ANNs was trained with different random seeds for the initialization of input parameters, reserving half of the training set for validation to prevent overfitting.
-Undetected galaxies were excluded from the training set, and per-band non-detections in the test set were replaced with the mean magnitude in that band within the entire test set.
+\boldblue{Galaxies not detected in the $u$-band} \sout{Undetected galaxies} were excluded from the training set, and per-band non-detections in the test set were replaced with the mean magnitude \boldblue{of the test set} in that band. \sout{within the entire test set.}
 
 \subsubsection{Colour-Matched Nearest-Neighbours}
 \label{sec:cmnn}
@@ -108,7 +114,7 @@ Undetected galaxies were excluded from the training set, and per-band non-detect
 The colour-matched nearest-neighbours photometric redshift estimator \citep[\cmnn,][]{Graham:17} uses a training set of galaxies with known redshifts that has equivalent or better photometry than the test set in terms of quality and filter coverage.
 For each galaxy in the test set, \cmnn\ identifies a colour-matched subset of training galaxies using a threshold in the Mahalanobis distance $D_M = \sum_{j}^{N_{\mathrm{colours}}} (c_{\mathrm{j,train}} - c_{\mathrm{j,test}})^{2} / \delta c_{\mathrm{j,test}}^2$ in the space of available colours $c$, with colour measurement errors $\delta c_{\mathrm{test}}$ and $N_{\mathrm{colours}} = 5$ colours $j$ defined by the $ugrizy$ filters, which defines the set of colour-matched neighbours based on a value of the percent point function (PPF).
 As an example, for $N_{\mathrm{filt}}=5$ with PPF$=0.95$, $95$ per cent of all training galaxies consistent with the test galaxy will have $D_M < 11.07$.
-Undetected bands are dropped, thereby reducing the effective $N_{\mathrm{filt}}$ for that galaxy.
+\sout{Undetected bands} \boldblue{Bands in which the galaxy is not detected} are dropped, thereby reducing the effective $N_{\mathrm{filt}}$ for that galaxy.
 The \pzpdf\ of a given test set galaxy is the normalized distribution of redshifts of its colour-matched subset of training set galaxies.
 
 Here, we make two modifications to the implementation of \citet{Graham:17} to comply with the controlled experimental conditions.
@@ -123,7 +129,7 @@ Additionally, when the number of colour-matched training set galaxies is less th
 \label{sec:delight}
 %(John Soo)
 
-\delight \citep{Leistedt:17} is a hybrid technique that infers \pz s with a data-driven model of latent SEDs and a physical model of photometric fluxes as a function of redshift.
+\delight\ \citep{Leistedt:17} is a hybrid technique that infers \pz s with a data-driven model of latent SEDs and a physical model of photometric fluxes as a function of redshift.
 Generally, machine learning methods rely on representative training data with shared photometric filters, while template-based methods rely on a complete library of templates based on physical models constructed.
 \delight\ aims to take the best aspects of both approaches by constructing a large collection of latent SED templates (or physical flux-redshift models) from training data, with a template SED library as a guide to the learning of the model, thereby circumventing the machine learning prerequisite of representative training data in the same photometric bands and the template fitting requirement of detailed galaxy SED models.
 It models noisy observed flux $\mathbf{\hat{F}} = \mathbf{F} + F_{b}$ as a sum of a noiseless flux plus a Gaussian processes $F_b \sim \mathcal{GP}\left(\mu^F, k^F \right)$ with zero mean function $\mu^{F}$ and a physically motivated kernel $k^{F}$ that induces realistic correlations in flux-redshift space.
@@ -143,7 +149,7 @@ Photometric uncertainties from the inputs are propagated into the code, while no
 \subsubsection{FlexZBoost}
 \label{sec:flexzboost}
 
-\flexzboost \citep{Izbicki:17,Dalmasso:2019} is built on \texttt{FlexCode}, a general-purpose methodology for converting any conditional mean point estimator of $z$ to a conditional density estimator $p(z \vert \x) \equiv f(z \vert \x)$, where $\x$ here represents our photometric covariates and errors.
+\flexzboost\ \citep{Izbicki:17,Dalmasso:2019} is built on \texttt{FlexCode}, a general-purpose methodology for converting any conditional mean point estimator of $z$ to a conditional density estimator $p(z \vert \x) \equiv f(z \vert \x)$, where $\x$ here represents our photometric covariates and errors.
 \flexzboost\ expands the unknown function $f(z \vert \x) = \sum_{i}\beta_{i}(\x)\phi_{i}(z)$ using an orthonormal basis $\{\phi_{i}(z)\}_{i}$.
 By the orthogonality property, the expansion coefficients $\beta_{i}(\x) = \mathbb{E}\left[\phi_i(z)|\x\right] \equiv \int f(z \vert \x) \phi_{i}(z) dz$ are thus conditional means.
 The expectation value $\mathbb{E}\left[\phi_i(z) \vert \x\right]$ of the expansion coefficients conditioned on the data is equivalent to the regression of the space of possible redshifts on the space of possible photometry.
@@ -159,7 +165,7 @@ While \texttt{FlexCode}'s lossless native encoding stores each \pzpdf\ using the
 \subsubsection{GPz}
 \label{sec:gpz}
 
-\gpz \citep{Almosallam:16a,Almosallam:15b} is a sparse Gaussian process-based code, a scalable approximation of full Gaussian Processes \citep{Rasmussen:06}, that produces input-dependent variance estimates corresponding to heteroscedastic noise.
+\gpz\ \citep{Almosallam:16a,Almosallam:15b} is a sparse Gaussian process-based code, a scalable approximation of full Gaussian Processes \citep{Rasmussen:06}, that produces input-dependent variance estimates corresponding to heteroscedastic noise.
 The model assumes a Gaussian posterior probability $p(z \vert \x) = \mathcal{N}\left(z \vert \mu(\x), \sigma(\x)^{2}\right)$ of the output redshift $z$ given the input photometry $\x$.
 The mean $\mu(\x)$ and the variance $\sigma(\x)^{2}$ are modeled as functions $f(\x) = \sum_{i=1}^{m}w_{i}\phi_{i}(\x)$ that are linear combinations of $m$ basis functions $\left\{\phi_{i}(\x)\right\}_{i=1}^{m}$ with associated weights $\left\{w_{i}\right\}_{i=1}^{m}$.
 The details on how to learn the parameters of the model and the hyper-parameters of the basis functions are described in \citet{Almosallam:15b}.
@@ -184,7 +190,7 @@ The usual cross-validation of redshift estimates and PDFs was also omitted for t
 \subsubsection{SkyNet}
 \label{sec:skynet}
 
-\skynet \citep{Graff:14} employs a neural network based on a second-order conjugate gradient optimization scheme \citep[see][for further details]{Graff:14}. 
+\skynet\ \citep{Graff:14} employs a neural network based on a second-order conjugate gradient optimization scheme \citep[see][for further details]{Graff:14}. 
 The neural network is configured as a standard multilayer perceptron with three hidden layers and one input layer with 12 nodes corresponding to the 6 photometric magnitudes and their measurement errors.
 
 \skynet's classifier mode uses a cross-entropy error function with a 20:40:40 node (all rectified linear units) architecture for each hidden layer and an output layer of 200 nodes corresponding to 200 bins for the PDF, with a softmax activation function to enforce the normalization condition that the probabilities sum to unity.

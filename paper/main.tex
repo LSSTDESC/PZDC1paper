@@ -45,6 +45,7 @@
 \usepackage{amssymb}
 \usepackage{amsfonts}
 \usepackage{footmisc}
+\usepackage{ulem}
 \graphicspath{{./}{./figures/}}
 \bibliographystyle{mnras}%mn2e
 
@@ -93,6 +94,8 @@
 \newcommand{\erfan}[1]{\textcolor{newpink}{#1}} % Erfan Nourbakhsh comments in pink
 \newcommand{\jan}[1]{\textcolor{orange}{#1}}%Jeff Newman comments in Orange
 
+\newcommand{\boldblue}[1]{{\bf \textcolor{blue}{#1}}}
+
 \def\X{{\mathbf{X}}}
 \def\x{{\mathbf{x}}}
 \def\E{{\mathbb{E}}}
@@ -102,7 +105,7 @@
 \begin{document}
 %\linenumbers
 
-\title[Photo-z estimation approaches for LSST]{Evaluation of probabilistic photometric redshift estimation approaches for \textsc{LSST}}
+\title[Photo-z estimation approaches for LSST]{Evaluation of probabilistic photometric redshift estimation approaches for \boldblue{ \textsc{The Rubin Observatory Legacy Survey of Space and Time} (LSST)}}
 
 \maketitlepre
 
@@ -110,7 +113,7 @@
 
 Many scientific investigations of photometric galaxy surveys require redshift estimates, whose uncertainty properties are best encapsulated by photometric redshift (photo-$z$) posterior probability density functions (PDFs).
 A plethora of photo-$z$ PDF estimation methodologies abound, producing discrepant results with no consensus on a preferred approach.
-We present the results of a comprehensive experiment comparing twelve photo-$z$ algorithms applied to mock data produced for the Large Synoptic Survey Telescope (\textsc{LSST}) Dark Energy Science Collaboration (\textsc{DESC}).
+We present the results of a comprehensive experiment comparing twelve photo-$z$ algorithms applied to mock data produced for \sout{Large Synoptic Survey Telescope} \boldblue{The Rubin Observatory Legacy Survey of Space and Time} (\textsc{LSST}) Dark Energy Science Collaboration (\textsc{DESC}).
 By supplying perfect prior information, in the form of the complete template library and a representative training set as inputs to each code, we demonstrate the impact of the assumptions underlying each technique on the output photo-$z$ PDFs.
 In the absence of a notion of true, unbiased photo-$z$ PDFs, we evaluate and interpret multiple metrics of the ensemble properties of the derived photo-$z$ PDFs as well as traditional reductions to photo-$z$ point estimates.
 We report systematic biases and overall over/under-breadth of the photo-$z$ PDFs of many popular codes, which may indicate avenues for improvement in the algorithms or implementations.
@@ -145,7 +148,7 @@ Furthermore, we raise attention to the limitations of established metrics for as
 \subsection*{Acknowledgments}
 
 %%% Here is where you should add your specific acknowledgments, remembering that some standard thanks will be added via the \code{desc-tex/ack/*.tex} and \code{contributions.tex} files.
-
+The authors would like to thank the journal referee, who made many insightful suggestions that improved the draft.
 This paper has undergone internal review in the LSST Dark Energy Science Collaboration.
 The authors acknowledge feedback from the internal reviewers: Daniel Gruen, Markus Rau, and Michael Troxel. % REQUIRED if true
 
@@ -155,7 +158,7 @@ The authors acknowledge feedback from the internal reviewers: Daniel Gruen, Mark
 
 % Standard papers only: A.B.C. acknowledges support from grant 1234 from ...
 
-The authors express immense gratitude to Alex Abate, without whom this paper would not have gotten started.
+The authors express immense gratitude to Alex Abate, without whom this paper would not have gotten started.  We would also like to thank Ofer Lahav and Will Hartley for contributions during the writing of the draft.
 % The authors would like to thank their LSST-DESC publication review committee for comments that improved the paper draft.
 % hack event acknowledgments are important
 We thank Stony Brook University for hosting the Summer 2017 LSST-DESC Hack Day at which this work was partially completed.
@@ -181,6 +184,9 @@ In addition to packages cited in the text, analyses performed in this paper used
 \input{desc-tex/ack/standard} % also available: key standard_short
 
 \input{./tex/appendix}
+
+\section*{Data Availability}
+The data underlying this article were provided by the makers of the Buzzard Flock simulation group by permission.  Data will be shared on request to the corresponding authors upon permission of the Buzzard Flock simulation group.  For updated and larger datasets, requests can be made directly to the authors of the Buzzard Flock simulations \citep{DeRose:19}.  All analysis and plotting scripts used in the writing of this paper are available on GitHub in the \texttt{metric\_scripts} and \texttt{plotting\_scripts} directories of the following repository: \url{https://github.com/LSSTDESC/PZDC1paper}.
 
 \bibliography{main,lsstdesc}
 

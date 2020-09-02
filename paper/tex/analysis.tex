@@ -6,8 +6,9 @@ The overloaded ``$p(z)$'' is a widespread abuse of notation that obfuscates this
 
 Galaxies have redshifts $z$ and photometric data $d$ drawn from a joint probability space $p(z, d)$ in nature, and each observed galaxy $i$ has a \textit{true posterior \pzpdf}\ $p(z \vert d_{i})$.
 There are a number of metrics that can be used to test the accuracy of a \pz\ posterior as an estimator of a true \pz\ posterior if the true \pzpdf\ is known.
-However, the true \pzpdf\ of observed data is not accessible, and existing mock catalogues produce redshift-photometry pairs $(z, d)$ by a deterministic algorithm that does not correspond to a joint probability density from which one can take samples.
-In these cases there is no ``true PDF'' for an individual object, and most measures of PDF fidelity will necessarily be restricted to probing the quality of the ensemble of \pzpdf s.
+However, the true \pzpdf\ of the observed data is not accessible, as existing mock catalogues produce redshift-photometry pairs $(z, d)$ by a deterministic algorithm that does not correspond to a joint probability density from which one can take samples.
+In these cases there is no ``true PDF'' for an individual object
+\footnote{\boldblue{While a discrete approximation to the true $p(z,d)$ is possible by sampling the local neighbourhood of parameter space in large datasets with methods like a nearest neighbor or conditional density estimate, we do not make an explicit computation of such an approximate distribution.  Rather, we note that the CMNN and FlexZBoost algorithms are specific implementations of such algorithms which can be used as examples of such approximations in the absence of knowledge of the true $p(z,d)$.}}, and most measures of PDF fidelity will necessarily be restricted to probing the quality of the ensemble of \pzpdf s.
 (See \S,\ref{sec:futureexperiments} for a discussion of how one might circumvent this limitation.)
 
 Before describing the metrics appropriate to the DC1 data set, we outline the philosophy behind our choices.
@@ -114,4 +115,5 @@ We estimate the CDE loss via
   \hat{L}(f, \widehat{f}) = \mathbb{E}_\X \left[\int \widehat{f}(z \mid \X)^{2} dz\right] - 2 \mathbb{E}_{\X, Z}\left[\widehat{f}(Z \mid \X)\right] + K_{f},
 \end{equation}
 where the first term is the expectation value of the \pz\ posterior with respect to the marginal distribution of the photometric covariates $\X$, the second term is the expectation value with respect to the joint distribution of $\X$ and the space $Z$ of all possible redshifts, and the third term $K_{f}$ is a constant depending only upon the true conditional densities $f(z \vert \x)$.
-We may estimate these expectations empirically on the test or validation data \citep[Eq.~7 in][]{Izbicki:17b} without knowledge of the true densities.
+\sout{We may estimate these expectations empirically on the test or validation data} \citep[Eq.~7 in][]{Izbicki:17b} \sout{without knowledge of the true densities.}
+\boldblue{One of the most powerful features of the CDE loss is the ability to estimate the loss function up to a constant even in the absence of knowledge of the true underlying distribution (see Eq.~7 and accompanying discussion in \citet{Izbicki:17} for more details).  This feature enables a quantitative comparison of our estimation methods with our current dataset where we lack access to the true $f(z \vert \x)$.}

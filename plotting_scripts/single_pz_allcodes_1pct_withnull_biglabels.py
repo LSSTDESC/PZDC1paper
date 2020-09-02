@@ -7,11 +7,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.interpolate as sps
 import string
-import seaborn as sns
+#import seaborn as sns
 
 
 def getunsortedwhichline(direcpath,whichline):
     unsortfile = "goldunorderedidline.out"
+    totalpath = os.path.join(direcpath,unsortfile)
+    print("total path: %s"%totalpath)
     tmpdata = np.loadtxt(os.path.join(direcpath,unsortfile))
     tmpidd = np.int32(tmpdata[:,0])
     strid = np.array([str(np.int32(i)) for i in tmpidd])
@@ -31,13 +33,19 @@ def main(argv):
     endskiplines = totlines - whichline
 
     basepathpart = "./TESTDC1"
-    codes = ("ANNZ2","BPZ","DELIGHT","EAZY","FLEXZ","GPZ","LEPHARE","METAPHOR","NN","SKYNET","TPZ","NULL2")
-    labels = ("ANNz2","BPZ","Delight","EAZY","FlexZBoost","GPz","LePhare","METAPhoR","CMNN","SkyNet","TPZ","TrainZ")
+    codes = ("ANNZ2","BPZ","DELIGHT","EAZY","FLEXZ","GPZ/AUG2018","LEPHARE",
+             "METAPHOR","NN","SKYNET","TPZ","NULL2")
+    labels = ("ANNz2","BPZ","Delight","EAZY","FlexZBoost","GPz","LePhare",
+              "METAPhoR","CMNN","SkyNet","TPZ","TrainZ")
     #files = ("1pct_ANNz2gold","1pct_BPZgold", "1pct_Delightgold_v3", "1pct_EAZYgold", "1pct_Dec1Flexzgold", "1pct_GPZgold","1pct_LEPHAREgold", "1pct_Metaphorgold", "dec8NNgold", "Skynetgold", "TPZgold")
-    files = ("1pct_ANNz2gold","1pct_BPZgold", "1pct_Delightgold", "1pct_EAZYgold", "1pct_Mar5Flexzgold", "1pct_GPZgold","1pct_LEPHAREgold", "1pct_Metaphorgold", "dec8NNgold", "Skynetgold", "TPZgold","1pct_null")
+    files = ("1pct_ANNz2gold","1pct_BPZgold", "1pct_Delightgold", 
+             "1pct_EAZYgold", "1pct_Mar5Flexzgold", "1pct_GPZgold",
+             "1pct_LEPHAREgold", "1pct_Metaphorgold", "dec8NNgold", 
+             "Skynetgold", "TPZgold","1pct_null")
 
 #    filesorted = (True,True,True,True,True,True,True,True,False,False,False)
-    filesorted = (True,True,True,True,True,True,True,True,False,False,False,True)
+    filesorted = (True,True,True,True,True,True,True,True,False,False,False,
+                  True)
 
     labeldict = dict(zip(codes,labels))
     filedict = dict(zip(codes,files))
@@ -61,7 +69,7 @@ def main(argv):
 
     fig,axes = plt.subplots(numcodes, sharex=True, sharey=True, figsize=(12.1,9))
     fig.subplots_adjust(hspace=0.025, wspace=0.055)
-    sns.set()
+    #sns.set()
 
     absmax = -9999.
 
@@ -113,21 +121,21 @@ def main(argv):
 #PLOTTING STUFF
     
         ax = plt.subplot(numrows,numcols,i+1)
-        tmplabel = "%s p(z)"%(labels[i])
+        tmplabel = "%s"%(labels[i])
         plt.plot(zarray,pzdata,c='b',linestyle='-',linewidth=3,label=tmplabel)
 #take out qp
 #        plt.plot(xxx,yyy,c='r',linestyle='-',linewidth=1,label="qp fit")
         plt.plot([truez,truez],[0.,maxval],c='r',linestyle='-',linewidth=2)
         ax.set_xlim([0.0,1.99])
         ax.set_ylim([0.0,maxval])
-        ax.legend(loc="upper left",fontsize=12, bbox_to_anchor=(0.0,1.))
+        ax.legend(loc="upper left",fontsize=16, bbox_to_anchor=(0.0,1.))
         if (i<(numcodes-4)):
             ax.set_xticklabels([])
         else:
             #ax.set_xticklabels(['',0.2, 0.4, 0.6, 0.8, 1.0,1.2,1.4,1.6,1.8,2.0])
-            ax.set_xlabel("redshift",fontsize=18)
+            ax.set_xlabel("redshift",fontsize=22)
         if i%4==0:
-            ax.set_ylabel("p(z)",fontsize=18)
+            ax.set_ylabel("p(z)",fontsize=22)
             #if i>0:
             fig.canvas.draw()
             #y_labels = [item.get_text() for item in ax.get_yticklabels()]
@@ -140,13 +148,13 @@ def main(argv):
             ax.set_yticklabels([])
             #ax.yaxis.set_ticks_position('none')
 
-        plt.xticks(fontsize=12)
+        plt.xticks(fontsize=16)
         #plt.yticks(fontsize=12)
 
    # tmptitle = "Buzzid: %d mag: %s specz: %s"%(whichtrueid,truemag,truez)
    # plt.suptitle(tmptitle,fontsize=22)
     print ("buzzID of gal: %d"%whichtrueid)
-    outputname = "pz_12codes_%d.jpg"%whichtrueid
+    outputname = "pz_12codes_%d_biglabels.jpg"%whichtrueid
 
     print ("absmax to set plot to: %g\n"%absmax)
 
