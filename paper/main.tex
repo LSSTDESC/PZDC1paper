@@ -94,7 +94,8 @@
 \newcommand{\erfan}[1]{\textcolor{newpink}{#1}} % Erfan Nourbakhsh comments in pink
 \newcommand{\jan}[1]{\textcolor{orange}{#1}}%Jeff Newman comments in Orange
 
-\newcommand{\boldblue}[1]{{\bf \textcolor{blue}{#1}}}
+\newcommand{\boldblue}[1]{{ \textcolor{black}{#1}}}
+\newcommand{\xsout}[1]{}
 
 \def\X{{\mathbf{X}}}
 \def\x{{\mathbf{x}}}
@@ -113,7 +114,7 @@
 
 Many scientific investigations of photometric galaxy surveys require redshift estimates, whose uncertainty properties are best encapsulated by photometric redshift (photo-$z$) posterior probability density functions (PDFs).
 A plethora of photo-$z$ PDF estimation methodologies abound, producing discrepant results with no consensus on a preferred approach.
-We present the results of a comprehensive experiment comparing twelve photo-$z$ algorithms applied to mock data produced for \sout{Large Synoptic Survey Telescope} \boldblue{The Rubin Observatory Legacy Survey of Space and Time} (\textsc{LSST}) Dark Energy Science Collaboration (\textsc{DESC}).
+We present the results of a comprehensive experiment comparing twelve photo-$z$ algorithms applied to mock data produced for\xsout{Large Synoptic Survey Telescope} \boldblue{The Rubin Observatory Legacy Survey of Space and Time} (\textsc{LSST}) Dark Energy Science Collaboration (\textsc{DESC}).
 By supplying perfect prior information, in the form of the complete template library and a representative training set as inputs to each code, we demonstrate the impact of the assumptions underlying each technique on the output photo-$z$ PDFs.
 In the absence of a notion of true, unbiased photo-$z$ PDFs, we evaluate and interpret multiple metrics of the ensemble properties of the derived photo-$z$ PDFs as well as traditional reductions to photo-$z$ point estimates.
 We report systematic biases and overall over/under-breadth of the photo-$z$ PDFs of many popular codes, which may indicate avenues for improvement in the algorithms or implementations.
